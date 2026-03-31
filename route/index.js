@@ -11,6 +11,7 @@ export const routes = {
   projectAdd: '/pages/project/sub/add/index',
   projectDetail: '/pages/project/sub/detail/index',
   projectArchived: '/pages/project/sub/archived/index',
+  disclaimer: '/pages/mine/sub/disclaimer/index',
 }
 
 export function goToProjectAdd() {
@@ -38,6 +39,10 @@ export function switchTab(pageName) {
   if (url) {
     uni.reLaunch({ url })
   }
+}
+
+export function goToDisclaimer() {
+  uni.navigateTo({ url: routes.disclaimer })
 }
 
 export function goBack() {

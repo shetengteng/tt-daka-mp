@@ -1,6 +1,6 @@
 <template>
-  <view class="page px-lg">
-    <view v-for="item in archivedProjects" :key="item._id" class="card mt-sm">
+  <view class="page px-lg pt-sm">
+    <view v-for="(item, idx) in archivedProjects" :key="item._id" class="card" :class="{ 'mt-sm': idx > 0 }">
       <view class="flex-between px-md py-md">
         <view class="flex-center-v flex-1 min-w-0">
           <view class="item-icon flex-center rounded-sm" :style="{ backgroundColor: `${item.color}15` }">
@@ -14,10 +14,10 @@
         
         <view class="flex-center-v">
           <view class="action-btn action-btn--restore flex-center rounded-md" @click="onRestore(item._id)">
-            <text class="text-xs">恢复</text>
+            <text class="text-xs text-foreground">恢复</text>
           </view>
           <view class="action-btn action-btn--delete flex-center rounded-md ml-xs" @click="onDelete(item._id)">
-            <text class="text-xs" style="color: #EF4444">删除</text>
+            <text class="text-xs text-error">删除</text>
           </view>
         </view>
       </view>
@@ -41,6 +41,9 @@ import { ref, onMounted } from 'vue'
 import { archiveProject } from '../../api/archiveProject'
 import { db, COLLECTIONS } from '@/cloud-emas/database/database'
 import { requireAccountId } from '@/utils/auth'
+import { useThemeStore } from '@/stores/theme'
+
+const themeStore = useThemeStore()
 
 const archivedProjects = ref([])
 const showDeleteDialog = ref(false)
@@ -82,6 +85,7 @@ async function confirmDelete() {
 }
 
 onMounted(() => {
+  themeStore.applyTheme()
   loadArchived()
 })
 </script>

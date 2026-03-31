@@ -1,8 +1,19 @@
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
 
+function loadPersistedMode() {
+  try {
+    const raw = uni.getStorageSync('dk-theme')
+    if (raw) {
+      const data = typeof raw === 'string' ? JSON.parse(raw) : raw
+      if (data.mode === 'dark' || data.mode === 'light') return data.mode
+    }
+  } catch (e) {}
+  return 'light'
+}
+
 export const useThemeStore = defineStore('theme', () => {
-  const mode = ref('light') // 'light' | 'dark'
+  const mode = ref(loadPersistedMode())
 
   function toggle() {
     mode.value = mode.value === 'light' ? 'dark' : 'light'
@@ -17,8 +28,13 @@ export const useThemeStore = defineStore('theme', () => {
 
     // #ifdef H5
     document.documentElement.setAttribute('data-theme', mode.value)
-    const pageEls = document.querySelectorAll('uni-page-body')
-    pageEls.forEach(el => el.setAttribute('data-theme', mode.value))
+    const applyToPageBodies = () => {
+      document.querySelectorAll('uni-page-body').forEach(el => {
+        el.setAttribute('data-theme', mode.value)
+      })
+    }
+    applyToPageBodies()
+    setTimeout(applyToPageBodies, 50)
     // #endif
 
     // #ifdef MP-WEIXIN

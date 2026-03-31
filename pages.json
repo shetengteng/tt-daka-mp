@@ -39,18 +39,24 @@
 				}
 			]
 		},
-		{
-			"root": "pages/mine",
-			"pages": [
-				{
-					"path": "index",
-					"style": {
-						"navigationStyle": "custom",
-						"enablePullDownRefresh": false
-					}
+	{
+		"root": "pages/mine",
+		"pages": [
+			{
+				"path": "index",
+				"style": {
+					"navigationStyle": "custom",
+					"enablePullDownRefresh": false
 				}
-			]
-		},
+			},
+			{
+				"path": "sub/disclaimer/index",
+				"style": {
+					"navigationBarTitleText": "免责声明"
+				}
+			}
+		]
+	},
 		{
 			"root": "pages/project",
 			"pages": [

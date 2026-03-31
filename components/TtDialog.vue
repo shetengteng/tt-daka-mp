@@ -112,12 +112,12 @@ function onConfirm() {
     }
 
     &--confirm {
-      color: #09090B;
+      color: var(--tt-foreground, #09090B);
       font-weight: 600;
     }
 
     &:active {
-      background: #F4F4F5;
+      background: var(--tt-accent, #F4F4F5);
     }
   }
 }
