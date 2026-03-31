@@ -66,12 +66,12 @@
 						"navigationBarTitleText": "新建打卡"
 					}
 				},
-				{
-					"path": "sub/detail/index",
-					"style": {
-						"navigationBarTitleText": ""
-					}
-				},
+			{
+				"path": "sub/detail/index",
+				"style": {
+					"navigationBarTitleText": ""
+				}
+			},
 				{
 					"path": "sub/archived/index",
 					"style": {
@@ -83,7 +83,7 @@
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "tt打卡",
+		"navigationBarTitleText": "DaKa",
 		"navigationBarBackgroundColor": "#ffffff",
 		"backgroundColor": "#ffffff"
 	},

@@ -2,8 +2,8 @@
   <view 
     class="daka-card" 
     :style="cardBgStyle"
-    @click="$emit('tap', project._id)"
-    @longpress="$emit('longpress', project._id)"
+    @click="$emit('card-tap', project._id)"
+    @longpress="$emit('card-longpress', project._id)"
   >
     <view class="daka-card__bar" :style="barStyle"></view>
     <view class="daka-card__body">
@@ -56,7 +56,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['toggle', 'tap', 'longpress'])
+const emit = defineEmits(['toggle', 'card-tap', 'card-longpress'])
 
 const cardBgStyle = computed(() => ({
   backgroundColor: props.checked ? '#DCFCE7' : '#F4F4F5'

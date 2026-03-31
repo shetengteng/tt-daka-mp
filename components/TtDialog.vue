@@ -8,11 +8,11 @@
         <text class="tt-dialog__message">{{ message }}</text>
       </view>
       <view class="tt-dialog__footer">
-        <view class="tt-dialog__btn tt-dialog__btn--cancel" @click="onCancel">
-          <text>取消</text>
+        <view v-if="showCancel" class="tt-dialog__btn tt-dialog__btn--cancel" @click="onCancel">
+          <text>{{ cancelText }}</text>
         </view>
         <view class="tt-dialog__btn tt-dialog__btn--confirm" @click="onConfirm">
-          <text>确定</text>
+          <text>{{ confirmText }}</text>
         </view>
       </view>
     </view>
@@ -24,6 +24,9 @@ const props = defineProps({
   visible: { type: Boolean, default: false },
   title: { type: String, default: '' },
   message: { type: String, default: '' },
+  showCancel: { type: Boolean, default: true },
+  confirmText: { type: String, default: '确定' },
+  cancelText: { type: String, default: '取消' },
 })
 
 const emit = defineEmits(['update:visible', 'confirm', 'cancel'])
@@ -84,6 +87,7 @@ function onConfirm() {
     font-size: 28rpx;
     color: #71717A;
     line-height: 1.5;
+    white-space: pre-line;
   }
 
   &__footer {
@@ -99,9 +103,12 @@ function onConfirm() {
     height: 96rpx;
     font-size: 30rpx;
 
+    &--cancel + &--confirm {
+      border-left: 1rpx solid #E4E4E7;
+    }
+
     &--cancel {
       color: #71717A;
-      border-right: 1rpx solid #E4E4E7;
     }
 
     &--confirm {

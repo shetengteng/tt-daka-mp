@@ -5,8 +5,10 @@
       <view class="big-icon flex-center rounded-xl" :style="{ backgroundColor: `${project.color}20` }">
         <TtSvg :name="project.icon || 'ri-checkbox-circle-line'" :size="64" :color="project.color" />
       </view>
-      <text class="text-lg font-bold text-foreground mt-md">{{ project.name }}</text>
-      <text class="text-sm text-muted">
+      <view class="edit-btn mt-sm" @click="goToProjectEdit(projectId)">
+        <text class="text-xs text-muted">编辑</text>
+      </view>
+      <text class="text-sm text-muted mt-xs">
         目标: {{ frequencyLabel }} · 创建于 {{ project.createTime?.slice(0, 10) }}
       </text>
     </view>
@@ -95,7 +97,8 @@ const recentRecords = computed(() => records.value.slice(0, showCount.value))
 function formatter(day) {
   const dateStr = formatDate(day.date)
   if (recordDateSet.value.has(dateStr)) {
-    day.style = { backgroundColor: 'rgba(34,197,94,0.3)', borderRadius: '8rpx' }
+    const color = project.value?.color || '#22C55E'
+    day.style = { backgroundColor: `${color}25` }
   }
 }
 
@@ -169,6 +172,12 @@ onLoad((options) => {
 .big-icon {
   width: 128rpx;
   height: 128rpx;
+}
+
+.edit-btn {
+  padding: 8rpx 24rpx;
+  border-radius: 12rpx;
+  background-color: #F4F4F5;
 }
 
 .stat-grid {

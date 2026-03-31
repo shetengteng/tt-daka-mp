@@ -25,7 +25,9 @@
         :class="cellClass(cell)"
         @click="onCellClick(cell)"
       >
-        <text v-if="cell.day" class="tt-cal__day" :class="dayTextClass(cell)">{{ cell.day }}</text>
+        <view v-if="cell.day" class="tt-cal__day-wrap" :style="cell.style">
+          <text class="tt-cal__day" :class="dayTextClass(cell)">{{ cell.day }}</text>
+        </view>
         <text v-if="cell.bottom" class="tt-cal__bottom">{{ cell.bottom }}</text>
       </view>
     </view>
@@ -183,6 +185,15 @@ watch(() => props.current, (val) => {
     &--disabled {
       opacity: 0.3;
     }
+  }
+
+  &__day-wrap {
+    width: 52rpx;
+    height: 52rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14rpx;
   }
 
   &__day {

@@ -22,5 +22,6 @@
 </script>
 
 <style lang="scss">
+	@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 	@import '@/styles/global.scss';
 </style>

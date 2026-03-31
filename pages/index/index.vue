@@ -3,12 +3,12 @@
     <!-- 顶部区域 -->
     <view class="header px-xl pt-lg">
       <view class="flex-between">
-        <text class="text-2xl font-bold text-foreground">tt打卡</text>
+        <text class="app-title text-foreground">DaKa</text>
         <text class="text-sm text-muted">{{ todayLabel }}</text>
       </view>
       
       <!-- 今日进度 -->
-      <view v-if="activeProjects.length > 0" class="progress-section card p-md mt-xl mb-xl">
+      <view v-if="activeProjects.length > 0" class="progress-section card p-lg mt-xl mb-lg">
         <view class="flex-between mb-sm">
           <text class="text-sm text-muted">今日进度</text>
           <text class="text-sm font-semibold text-foreground">
@@ -34,8 +34,8 @@
         :streak="item.streak"
         :totalDays="item.totalDays"
         @toggle="onToggle"
-        @tap="onCardTap"
-        @longpress="onCardLongpress"
+        @card-tap="onCardTap"
+        @card-longpress="onCardLongpress"
       />
       
       <!-- 空状态 -->
@@ -168,10 +168,12 @@ async function confirmCancelDaka() {
 }
 
 function onCardTap(id) {
+  if (!id || typeof id !== 'string') return
   goToProjectDetail(id)
 }
 
 function onCardLongpress(id) {
+  if (!id || typeof id !== 'string') return
   currentActionId.value = id
   showActionSheet.value = true
 }
@@ -195,6 +197,9 @@ function goAdd() {
 <style lang="scss" scoped>
 .header {
   padding-top: calc(var(--status-bar-height, 44px) + 24rpx);
+  /* #ifdef MP-WEIXIN */
+  padding-right: 200rpx;
+  /* #endif */
 }
 
 .progress-bar {
@@ -208,6 +213,13 @@ function goAdd() {
   background-color: #22C55E;
   transition: width 0.3s ease;
   min-width: 0;
+}
+
+.app-title {
+  font-size: 48rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  font-family: 'Pacifico', 'PingFang SC', cursive;
 }
 
 .add-btn {

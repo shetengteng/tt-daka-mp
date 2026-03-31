@@ -61,8 +61,8 @@
           <text class="text-sm text-foreground">清除缓存</text>
           <TtSvg name="ri-arrow-right-s-line" :size="32" color="#71717A" />
         </view>
-        <view class="list-item flex-between p-lg">
-          <text class="text-sm text-foreground">关于 TT Daka</text>
+        <view class="list-item flex-between p-lg" @click="showAbout = true">
+          <text class="text-sm text-foreground">关于 DaKa</text>
           <TtSvg name="ri-arrow-right-s-line" :size="32" color="#71717A" />
         </view>
       </view>
@@ -74,6 +74,15 @@
     
     <TtBottomPlaceholder />
     <TtTabbar current="mine" />
+    
+    <!-- 关于弹窗 -->
+    <TtDialog
+      v-model:visible="showAbout"
+      title="关于 DaKa"
+      :message="aboutMessage"
+      :showCancel="false"
+      confirmText="知道了"
+    />
   </view>
 </template>
 
@@ -85,6 +94,8 @@ const totalDays = ref(45)
 const reminderEnabled = ref(true)
 const reminderTime = ref('20:00')
 const darkMode = ref(false)
+const showAbout = ref(false)
+const aboutMessage = 'DaKa 是一款简洁高效的打卡习惯养成工具。\n\n支持自定义打卡项目、多种频率设置、补打卡、日历视图和统计分析，帮助你坚持每一天的好习惯。\n\n版本: v1.0.0'
 
 onMounted(() => {
   const cached = uni.getStorageSync('dk_reminder_enabled')

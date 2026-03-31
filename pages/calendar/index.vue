@@ -116,10 +116,10 @@ function formatter(day) {
   
   const { done, total } = data
   if (done === total && total > 0) {
-    day.style = { backgroundColor: 'rgba(34,197,94,0.25)', borderRadius: '8rpx' }
+    day.style = { backgroundColor: 'rgba(34,197,94,0.18)' }
     day.bottom = `${done}/${total}`
   } else if (done > 0) {
-    day.style = { backgroundColor: 'rgba(249,115,22,0.25)', borderRadius: '8rpx' }
+    day.style = { backgroundColor: 'rgba(249,115,22,0.18)' }
     day.bottom = `${done}/${total}`
   }
 }

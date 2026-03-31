@@ -135,6 +135,10 @@
 .page { min-height: 100vh; background-color: $tt-background; }
 .page-gray { min-height: 100vh; background-color: $tt-muted; }
 
+/* H5: hide scrollbar to avoid layout shift */
+::-webkit-scrollbar { display: none; }
+page { -ms-overflow-style: none; scrollbar-width: none; }
+
 /* Utils */
 .overflow-hidden { overflow: hidden; }
 .relative { position: relative; }
