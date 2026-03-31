@@ -204,13 +204,13 @@ function goAdd() {
 
 .progress-bar {
   height: 16rpx;
-  background-color: #E4E4E7;
+  background-color: var(--tt-border, #E4E4E7);
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background-color: #22C55E;
+  background-color: var(--tt-success, #22C55E);
   transition: width 0.3s ease;
   min-width: 0;
 }
@@ -223,7 +223,7 @@ function goAdd() {
 }
 
 .add-btn {
-  border: 3rpx dashed #E4E4E7;
+  border: 3rpx dashed var(--tt-border, #E4E4E7);
   padding: 32rpx;
 }
 
@@ -235,12 +235,12 @@ function goAdd() {
   border-radius: 20rpx;
 
   &--primary {
-    background: #09090B;
+    background: var(--tt-foreground, #09090B);
   }
 
   &__text {
     font-size: 28rpx;
-    color: #ffffff;
+    color: var(--tt-background, #ffffff);
     font-weight: 500;
   }
 }

@@ -59,8 +59,8 @@ const onChange = (name) => {
   left: 0;
   right: 0;
   height: 100rpx;
-  background: #ffffff;
-  border-top: 1rpx solid #E4E4E7;
+  background: var(--tt-background, #ffffff);
+  border-top: 1rpx solid var(--tt-border, #E4E4E7);
   display: flex;
   align-items: flex-start;
   padding-top: 12rpx;
@@ -72,10 +72,10 @@ const onChange = (name) => {
     flex-direction: column;
     align-items: center;
     gap: 4rpx;
-    color: #71717A;
+    color: var(--tt-muted-foreground, #71717A);
 
     &--active {
-      color: #09090B;
+      color: var(--tt-foreground, #09090B);
     }
   }
 

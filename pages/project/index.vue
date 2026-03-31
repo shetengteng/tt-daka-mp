@@ -52,6 +52,13 @@
     <view v-if="projects.length > 1" class="text-center mt-md mb-lg">
       <text class="text-xs text-muted">长按拖拽调整顺序</text>
     </view>
+    
+    <TtDialog
+      v-model:visible="showArchiveDialog"
+      title="归档项目"
+      message="归档后项目将不在首页显示，可在「已归档项目」中恢复。"
+      @confirm="onArchiveConfirm"
+    />
   </view>
 </template>
 
@@ -189,21 +196,21 @@ function onEdit(id) {
   goToProjectEdit(id)
 }
 
-async function onArchive(id) {
+const showArchiveDialog = ref(false)
+const archiveTargetId = ref('')
+
+function onArchive(id) {
   if (isDragging) return
-  uni.showModal({
-    title: '归档项目',
-    content: '归档后项目将不在首页显示，可在"已归档项目"中恢复。',
-    success: async (modalRes) => {
-      if (modalRes.confirm) {
-        const res = await archiveProject(id, true)
-        if (res.success) {
-          uni.showToast({ title: '已归档', icon: 'success' })
-          await loadProjects()
-        }
-      }
-    }
-  })
+  archiveTargetId.value = id
+  showArchiveDialog.value = true
+}
+
+async function onArchiveConfirm() {
+  const res = await archiveProject(archiveTargetId.value, true)
+  if (res.success) {
+    uni.showToast({ title: '已归档', icon: 'success' })
+    await loadProjects()
+  }
 }
 
 onMounted(() => {
@@ -286,6 +293,6 @@ onShow(() => {
 }
 
 .action-btn:active {
-  background-color: #f5f5f5;
+  background-color: var(--tt-accent, #f5f5f5);
 }
 </style>

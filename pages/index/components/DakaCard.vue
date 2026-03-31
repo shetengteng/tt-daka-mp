@@ -26,7 +26,7 @@
           <text class="text-xs text-white ml-xs font-medium">已打卡</text>
         </view>
         <view v-else class="daka-btn daka-btn--unchecked flex-center rounded-lg">
-          <TtSvg name="ri-checkbox-blank-circle-line" :size="28" color="#09090B" />
+          <TtSvg name="ri-checkbox-blank-circle-line" :size="28" :color="'var(--tt-foreground, #09090B)'" />
           <text class="text-xs ml-xs font-medium text-foreground">打卡</text>
         </view>
       </view>
@@ -59,7 +59,7 @@ const props = defineProps({
 const emit = defineEmits(['toggle', 'card-tap', 'card-longpress'])
 
 const cardBgStyle = computed(() => ({
-  backgroundColor: props.checked ? '#DCFCE7' : '#F4F4F5'
+  backgroundColor: props.checked ? '#DCFCE7' : 'var(--tt-card, #F4F4F5)'
 }))
 
 const barStyle = computed(() => ({
@@ -129,7 +129,7 @@ function onToggle() {
   }
   
   &--unchecked {
-    border: 1rpx solid #09090B;
+    border: 1rpx solid var(--tt-foreground, #09090B);
   }
 }
 </style>

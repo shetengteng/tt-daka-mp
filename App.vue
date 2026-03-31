@@ -1,9 +1,13 @@
 <script>
 	import { initEmas } from '@/cloud-emas/database/index'
+	import { useThemeStore } from '@/stores/theme'
 	
 	export default {
 		onLaunch: async function() {
 			console.log('App Launch')
+			
+			const themeStore = useThemeStore()
+			themeStore.applyTheme()
 			
 			try {
 				await initEmas()

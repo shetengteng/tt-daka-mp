@@ -54,7 +54,7 @@ function onConfirm() {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--tt-overlay, rgba(0, 0, 0, 0.4));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,7 +63,7 @@ function onConfirm() {
 
 .tt-dialog {
   width: 560rpx;
-  background: #ffffff;
+  background: var(--tt-popover, #ffffff);
   border-radius: 24rpx;
   overflow: hidden;
 
@@ -75,7 +75,7 @@ function onConfirm() {
   &__title {
     font-size: 32rpx;
     font-weight: 600;
-    color: #09090B;
+    color: var(--tt-foreground, #09090B);
   }
 
   &__body {
@@ -85,14 +85,14 @@ function onConfirm() {
 
   &__message {
     font-size: 28rpx;
-    color: #71717A;
+    color: var(--tt-muted-foreground, #71717A);
     line-height: 1.5;
     white-space: pre-line;
   }
 
   &__footer {
     display: flex;
-    border-top: 1rpx solid #E4E4E7;
+    border-top: 1rpx solid var(--tt-border, #E4E4E7);
   }
 
   &__btn {
@@ -104,11 +104,11 @@ function onConfirm() {
     font-size: 30rpx;
 
     &--cancel + &--confirm {
-      border-left: 1rpx solid #E4E4E7;
+      border-left: 1rpx solid var(--tt-border, #E4E4E7);
     }
 
     &--cancel {
-      color: #71717A;
+      color: var(--tt-muted-foreground, #71717A);
     }
 
     &--confirm {

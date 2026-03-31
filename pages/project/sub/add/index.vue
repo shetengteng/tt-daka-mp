@@ -282,10 +282,10 @@ onLoad(async (options) => {
 .icon-box {
   width: 96rpx;
   height: 96rpx;
-  background-color: #F4F4F5;
+  background-color: var(--tt-card, #F4F4F5);
   
   &--active {
-    background-color: #09090B !important;
+    background-color: var(--tt-foreground, #09090B) !important;
   }
 }
 
@@ -305,7 +305,7 @@ onLoad(async (options) => {
   border-radius: 50%;
   
   &--active {
-    outline: 3rpx solid #09090B;
+    outline: 3rpx solid var(--tt-foreground, #09090B);
     outline-offset: 4rpx;
   }
 }
@@ -322,11 +322,11 @@ onLoad(async (options) => {
 .day-chip {
   width: 72rpx;
   height: 72rpx;
-  border: 1rpx solid #e5e5e5;
+  border: 1rpx solid var(--tt-border, #e5e5e5);
   
   &--active {
-    background-color: #171717;
-    border-color: #171717;
+    background-color: var(--tt-foreground, #171717);
+    border-color: var(--tt-foreground, #171717);
   }
 }
 
@@ -352,7 +352,7 @@ onLoad(async (options) => {
   &__inner {
     flex: 1;
     font-size: 28rpx;
-    color: #09090B;
+    color: var(--tt-foreground, #09090B);
     background: transparent;
   }
 
@@ -364,7 +364,7 @@ onLoad(async (options) => {
 
   &__clear-icon {
     font-size: 32rpx;
-    color: #A1A1AA;
+    color: var(--tt-muted-foreground, #A1A1AA);
     line-height: 1;
   }
 }
@@ -373,21 +373,21 @@ onLoad(async (options) => {
   width: 36rpx;
   height: 36rpx;
   border-radius: 50%;
-  border: 2rpx solid #D4D4D8;
+  border: 2rpx solid var(--tt-disabled, #D4D4D8);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 
   &--checked {
-    border-color: #09090B;
+    border-color: var(--tt-foreground, #09090B);
   }
 
   &__dot {
     width: 20rpx;
     height: 20rpx;
     border-radius: 50%;
-    background-color: #09090B;
+    background-color: var(--tt-foreground, #09090B);
   }
 }
 
@@ -399,7 +399,7 @@ onLoad(async (options) => {
   border-radius: 20rpx;
 
   &--primary {
-    background: #09090B;
+    background: var(--tt-foreground, #09090B);
   }
 
   &--block {
@@ -413,11 +413,11 @@ onLoad(async (options) => {
 
   &__text {
     font-size: 28rpx;
-    color: #ffffff;
+    color: var(--tt-background, #ffffff);
     font-weight: 500;
 
     &--danger {
-      color: #EF4444;
+      color: var(--tt-error, #EF4444);
     }
   }
 }

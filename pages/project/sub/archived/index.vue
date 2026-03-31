@@ -101,7 +101,7 @@ onMounted(() => {
   padding: 8rpx 20rpx;
 
   &--restore {
-    border: 1rpx solid #D4D4D8;
+    border: 1rpx solid var(--tt-disabled, #D4D4D8);
   }
 
   &--delete {

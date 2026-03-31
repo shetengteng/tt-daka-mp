@@ -129,7 +129,7 @@ watch(() => props.current, (val) => {
 
 <style lang="scss" scoped>
 .tt-cal {
-  background: #F4F4F5;
+  background: var(--tt-card, #F4F4F5);
   border-radius: 24rpx;
   padding: 24rpx;
 
@@ -147,7 +147,7 @@ watch(() => props.current, (val) => {
   &__month {
     font-size: 28rpx;
     font-weight: 600;
-    color: #09090B;
+    color: var(--tt-foreground, #09090B);
   }
 
   &__weekdays {
@@ -159,7 +159,7 @@ watch(() => props.current, (val) => {
 
   &__weekday {
     font-size: 22rpx;
-    color: #71717A;
+    color: var(--tt-muted-foreground, #71717A);
     padding: 8rpx 0;
   }
 
@@ -198,7 +198,7 @@ watch(() => props.current, (val) => {
 
   &__day {
     font-size: 26rpx;
-    color: #09090B;
+    color: var(--tt-foreground, #09090B);
 
     &--today {
       width: 48rpx;
@@ -206,8 +206,8 @@ watch(() => props.current, (val) => {
       line-height: 48rpx;
       text-align: center;
       border-radius: 50%;
-      background: #09090B;
-      color: #ffffff;
+      background: var(--tt-foreground, #09090B);
+      color: var(--tt-background, #ffffff);
       font-weight: 600;
     }
 
@@ -217,15 +217,15 @@ watch(() => props.current, (val) => {
       line-height: 48rpx;
       text-align: center;
       border-radius: 50%;
-      background: #09090B;
-      color: #ffffff;
+      background: var(--tt-foreground, #09090B);
+      color: var(--tt-background, #ffffff);
       font-weight: 600;
     }
   }
 
   &__bottom {
     font-size: 18rpx;
-    color: #71717A;
+    color: var(--tt-muted-foreground, #71717A);
     margin-top: 2rpx;
   }
 }

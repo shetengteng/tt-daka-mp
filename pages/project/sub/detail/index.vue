@@ -65,6 +65,13 @@
     </view>
     
     <view class="pb-xl"></view>
+    
+    <TtDialog
+      v-model:visible="showRetroDialog"
+      title="补打卡"
+      :message="`确定补打卡 ${retroDate} 吗？`"
+      @confirm="onRetroConfirm"
+    />
   </view>
 </template>
 
@@ -111,6 +118,9 @@ function formatRecordTime(dateTime) {
   return dayjs(dateTime).format('HH:mm')
 }
 
+const showRetroDialog = ref(false)
+const retroDate = ref('')
+
 async function onDateSelect(date) {
   const dateStr = formatDate(date)
   const today = formatDate(new Date())
@@ -124,22 +134,19 @@ async function onDateSelect(date) {
     return
   }
   
-  uni.showModal({
-    title: '补打卡',
-    content: `确定补打卡 ${dateStr} 吗？`,
-    success: async (modalRes) => {
-      if (modalRes.confirm) {
-        const res = await retroactiveDaka(projectId.value, dateStr)
-        if (res.success) {
-          records.value.unshift(res.record)
-          records.value.sort((a, b) => b.date.localeCompare(a.date))
-          uni.showToast({ title: '补打卡成功', icon: 'success' })
-        } else {
-          uni.showToast({ title: res.error || '补打卡失败', icon: 'none' })
-        }
-      }
-    }
-  })
+  retroDate.value = dateStr
+  showRetroDialog.value = true
+}
+
+async function onRetroConfirm() {
+  const res = await retroactiveDaka(projectId.value, retroDate.value)
+  if (res.success) {
+    records.value.unshift(res.record)
+    records.value.sort((a, b) => b.date.localeCompare(a.date))
+    uni.showToast({ title: '补打卡成功', icon: 'success' })
+  } else {
+    uni.showToast({ title: res.error || '补打卡失败', icon: 'none' })
+  }
 }
 
 function showMore() {
@@ -177,7 +184,7 @@ onLoad((options) => {
 .edit-btn {
   padding: 8rpx 24rpx;
   border-radius: 12rpx;
-  background-color: #F4F4F5;
+  background-color: var(--tt-muted, #F4F4F5);
 }
 
 .stat-grid {

@@ -173,19 +173,19 @@ onPullDownRefresh(async () => {
 }
 
 .bar--success {
-  background-color: #22C55E;
+  background-color: var(--tt-success, #22C55E);
 }
 
 .bar--warn {
-  background-color: #F97316;
+  background-color: var(--tt-warning, #F97316);
 }
 
 .bar--disabled {
-  background-color: #D4D4D8;
+  background-color: var(--tt-disabled, #D4D4D8);
 }
 
 .text-disabled {
-  color: #D4D4D8;
+  color: var(--tt-disabled, #D4D4D8);
 }
 
 .items-end {
@@ -209,12 +209,12 @@ onPullDownRefresh(async () => {
   margin-left: 8rpx;
   
   &--done {
-    background-color: #22C55E;
+    background-color: var(--tt-success, #22C55E);
   }
   
   &--miss {
     background-color: transparent;
-    border: 1rpx solid #E4E4E7;
+    border: 1rpx solid var(--tt-border, #E4E4E7);
   }
 }
 
