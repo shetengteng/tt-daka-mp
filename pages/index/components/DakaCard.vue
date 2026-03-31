@@ -13,7 +13,7 @@
             <TtSvg :name="project.icon || 'ri-checkbox-circle-line'" :size="36" :color="iconColor" />
           </view>
           <view class="ml-md">
-            <text class="daka-card__name font-semibold text-base">{{ project.name }}</text>
+            <text class="daka-card__name font-semibold text-base text-foreground">{{ project.name }}</text>
             <view class="mt-xs">
               <text class="text-xs text-muted">连续{{ streak }}天 · 总计{{ totalDays }}天</text>
             </view>

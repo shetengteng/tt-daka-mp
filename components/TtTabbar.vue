@@ -10,7 +10,7 @@
       <TtSvg 
         :name="current === item.name ? item.selectedIcon : item.icon" 
         :size="40" 
-        :color="current === item.name ? '#09090B' : '#71717A'"
+        :color="current === item.name ? activeColor : inactiveColor"
       />
       <text class="tt-tabbar__text">{{ item.text }}</text>
     </view>
@@ -24,13 +24,18 @@ export default {
 </script>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useThemeStore } from '@/stores/theme'
 
 const props = defineProps({
   current: { type: String, default: 'home' }
 })
 
+const themeStore = useThemeStore()
 const safeBottom = ref(0)
+
+const activeColor = computed(() => themeStore.mode === 'dark' ? '#FAFAFA' : '#09090B')
+const inactiveColor = computed(() => themeStore.mode === 'dark' ? '#A1A1AA' : '#71717A')
 
 onMounted(() => {
   const info = uni.getSystemInfoSync()

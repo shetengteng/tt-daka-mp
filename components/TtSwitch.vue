@@ -20,13 +20,13 @@ defineEmits(['update:modelValue'])
   width: 88rpx;
   height: 48rpx;
   border-radius: 48rpx;
-  background: #D4D4D8;
+  background: var(--tt-disabled, #D4D4D8);
   position: relative;
   transition: background 0.2s;
   flex-shrink: 0;
 
   &--on {
-    background: #22C55E;
+    background: var(--tt-success, #22C55E);
 
     .tt-switch__thumb {
       transform: translateX(40rpx);

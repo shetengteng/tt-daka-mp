@@ -14,10 +14,19 @@ app.$mount()
 // #ifdef VUE3
 import { createSSRApp } from 'vue'
 import pinia from '@/stores/index'
+import { useThemeStore } from '@/stores/theme'
 
 export function createApp() {
   const app = createSSRApp(App)
   app.use(pinia)
+  
+  app.mixin({
+    onShow() {
+      const themeStore = useThemeStore()
+      themeStore.applyTheme()
+    }
+  })
+  
   return { app }
 }
 // #endif

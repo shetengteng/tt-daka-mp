@@ -26,7 +26,7 @@
               <view class="item-icon flex-center rounded-sm" :style="{ backgroundColor: `${item.color}15` }">
                 <TtSvg :name="item.icon || 'ri-checkbox-circle-line'" :size="32" :color="item.color" />
               </view>
-              <text class="text-base font-medium ml-sm truncate">{{ item.name }}</text>
+              <text class="text-base font-medium ml-sm truncate text-foreground">{{ item.name }}</text>
             </view>
           </view>
           

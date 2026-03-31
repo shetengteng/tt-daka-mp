@@ -7,7 +7,7 @@
             <TtSvg :name="item.icon || 'ri-checkbox-circle-line'" :size="32" :color="item.color" />
           </view>
           <view class="ml-sm flex-1 min-w-0">
-            <text class="text-base font-medium truncate block">{{ item.name }}</text>
+            <text class="text-base font-medium truncate block text-foreground">{{ item.name }}</text>
             <text class="text-xs text-muted">归档于 {{ item.updateTime?.slice(0, 10) }}</text>
           </view>
         </view>
