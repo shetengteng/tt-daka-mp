@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TT Daka 原型</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#FFFFFF',
+            card: '#F4F4F5',
+            fg: '#09090B',
+            muted: '#71717A',
+            border: '#E4E4E7',
+            success: '#22C55E',
+            'success-bg': '#DCFCE7',
+            warn: '#F97316',
+            danger: '#EF4444',
+            disabled: '#D4D4D8',
+          },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+        }
+      }
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: #E4E4E7; display: flex; justify-content: center; padding: 20px; gap: 20px; flex-wrap: wrap; }
+    .phone { width: 375px; height: 812px; background: #fff; border-radius: 40px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.15); position: relative; flex-shrink: 0; }
+    .phone-inner { height: 100%; overflow-y: auto; padding-bottom: 80px; }
+    .phone-inner::-webkit-scrollbar { display: none; }
+    .statusbar { height: 44px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #09090B; }
+    .tabbar { position: absolute; bottom: 0; left: 0; right: 0; height: 80px; background: #fff; border-top: 1px solid #E4E4E7; display: flex; align-items: flex-start; padding-top: 8px; }
+    .tabbar-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; color: #71717A; cursor: pointer; }
+    .tabbar-item.active { color: #09090B; }
+    .tabbar-item.active svg { stroke-width: 2.5; }
+    .color-dot { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; transition: all 0.15s; }
+    .color-dot:hover { transform: scale(1.15); }
+    .color-dot.selected { outline: 2px solid #09090B; outline-offset: 2px; }
+    .icon-btn { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; background: #F4F4F5; }
+    .icon-btn:hover { background: #E4E4E7; }
+    .icon-btn.selected { background: #09090B; color: #fff; }
+    .page-label { position: absolute; top: -28px; left: 0; font-size: 12px; font-weight: 600; color: #71717A; white-space: nowrap; }
+  </style>
+</head>
+<body>
+
+<!-- ========== PAGE 1: 首页 ========== -->
+<div style="position:relative">
+  <div class="page-label">1. 首页（打卡列表）</div>
+  <div class="phone">
+    <div class="phone-inner">
+      <div class="statusbar">9:41</div>
+      <div class="px-5 pb-4">
+        <div class="flex justify-between items-center mb-5">
+          <span class="text-xl font-bold text-fg">tt打卡</span>
+          <span class="text-sm text-muted">2026.03.31</span>
+        </div>
+
+        <div class="bg-card rounded-xl p-4 mb-5">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm text-muted">今日进度</span>
+            <span class="text-sm font-semibold text-fg">2/3</span>
+          </div>
+          <div class="w-full h-2 bg-border rounded-full overflow-hidden">
+            <div class="h-full bg-success rounded-full" style="width:67%"></div>
+          </div>
+        </div>
+
+        <!-- Card: 运动 - 已打卡 -->
+        <div class="rounded-xl overflow-hidden mb-3 cursor-pointer" style="background:#DCFCE7">
+          <div class="flex">
+            <div class="w-1 bg-success"></div>
+            <div class="flex-1 p-4">
+              <div class="flex justify-between items-start">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-success/20 flex items-center justify-center">
+                    <i data-lucide="dumbbell" class="w-5 h-5 text-success"></i>
+                  </div>
+                  <div>
+                    <div class="font-semibold text-fg">运动</div>
+                    <div class="text-xs text-muted mt-0.5">连续15天 · 总计45天</div>
+                  </div>
+                </div>
+                <button class="px-3 py-1.5 rounded-lg bg-success text-white text-xs font-medium flex items-center gap-1">
+                  <i data-lucide="check" class="w-3.5 h-3.5"></i> 已打卡
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card: 阅读 - 已打卡 -->
+        <div class="rounded-xl overflow-hidden mb-3 cursor-pointer" style="background:#DCFCE7">
+          <div class="flex">
+            <div class="w-1 bg-success"></div>
+            <div class="flex-1 p-4">
+              <div class="flex justify-between items-start">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                    <i data-lucide="book-open" class="w-5 h-5 text-blue-500"></i>
+                  </div>
+                  <div>
+                    <div class="font-semibold text-fg">阅读</div>
+                    <div class="text-xs text-muted mt-0.5">连续7天 · 总计30天</div>
+                  </div>
+                </div>
+                <button class="px-3 py-1.5 rounded-lg bg-success text-white text-xs font-medium flex items-center gap-1">
+                  <i data-lucide="check" class="w-3.5 h-3.5"></i> 已打卡
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card: 早起 - 未打卡 -->
+        <div class="rounded-xl overflow-hidden mb-3 bg-card cursor-pointer">
+          <div class="flex">
+            <div class="w-1" style="background:#F97316"></div>
+            <div class="flex-1 p-4">
+              <div class="flex justify-between items-start">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
+                    <i data-lucide="sunrise" class="w-5 h-5 text-orange-500"></i>
+                  </div>
+                  <div>
+                    <div class="font-semibold text-fg">早起</div>
+                    <div class="text-xs text-muted mt-0.5">连续0天 · 总计12天</div>
+                  </div>
+                </div>
+                <button class="px-3 py-1.5 rounded-lg border border-fg text-fg text-xs font-medium flex items-center gap-1 hover:bg-fg hover:text-white transition-colors">
+                  <i data-lucide="circle" class="w-3.5 h-3.5"></i> 打卡
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 新建按钮 -->
+        <div class="border-2 border-dashed border-border rounded-xl p-4 flex items-center justify-center cursor-pointer hover:border-muted transition-colors mt-4">
+          <i data-lucide="plus" class="w-4 h-4 text-muted mr-2"></i>
+          <span class="text-sm text-muted">新建打卡项目</span>
+        </div>
+      </div>
+    </div>
+    <div class="tabbar">
+      <div class="tabbar-item active"><i data-lucide="check-circle" class="w-5 h-5"></i><span>打卡</span></div>
+      <div class="tabbar-item"><i data-lucide="calendar" class="w-5 h-5"></i><span>日历</span></div>
+      <div class="tabbar-item"><i data-lucide="bar-chart-3" class="w-5 h-5"></i><span>统计</span></div>
+      <div class="tabbar-item"><i data-lucide="user" class="w-5 h-5"></i><span>我的</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PAGE 2: 日历页 ========== -->
+<div style="position:relative">
+  <div class="page-label">2. 日历页</div>
+  <div class="phone">
+    <div class="phone-inner">
+      <div class="statusbar">9:41</div>
+      <div class="px-5 pb-4">
+        <div class="text-xl font-bold text-fg mb-5">打卡日历</div>
+
+        <div class="bg-card rounded-xl p-4 mb-5">
+          <div class="flex justify-between items-center mb-4">
+            <i data-lucide="chevron-left" class="w-5 h-5 text-muted cursor-pointer"></i>
+            <span class="font-semibold text-fg">2026 年 3 月</span>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-muted cursor-pointer"></i>
+          </div>
+          <div class="grid grid-cols-7 text-center text-xs text-muted mb-2">
+            <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+          </div>
+          <div class="grid grid-cols-7 text-center text-sm gap-y-1">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+            <span class="py-1.5">1</span>
+            <span class="py-1.5">2</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">3</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">4</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">5</span>
+            <span class="py-1.5">6</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">7</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">8</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">9</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">10</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">11</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">12</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">13</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">14</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">15</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">16</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">17</span>
+            <span class="py-1.5">18</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(249,115,22,0.2)">19</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">20</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">21</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">22</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">23</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">24</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">25</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">26</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">27</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">28</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">29</span>
+            <span class="py-1.5 rounded-lg" style="background:rgba(34,197,94,0.2)">30</span>
+            <span class="py-1.5 rounded-full bg-fg text-white font-semibold">31</span>
+          </div>
+        </div>
+
+        <div class="text-sm font-semibold text-fg mb-3">3月31日 周一</div>
+
+        <div class="bg-card rounded-xl overflow-hidden mb-3">
+          <div class="flex items-center p-3 border-b border-border">
+            <div class="w-1 h-8 bg-success rounded-full mr-3"></div>
+            <i data-lucide="dumbbell" class="w-4 h-4 text-success mr-2"></i>
+            <span class="text-sm font-medium text-fg flex-1">运动</span>
+            <span class="text-xs text-muted">09:15 打卡</span>
+          </div>
+          <div class="flex items-center p-3 border-b border-border">
+            <div class="w-1 h-8 bg-success rounded-full mr-3"></div>
+            <i data-lucide="book-open" class="w-4 h-4 text-blue-500 mr-2"></i>
+            <span class="text-sm font-medium text-fg flex-1">阅读</span>
+            <span class="text-xs text-muted">21:30 打卡</span>
+          </div>
+          <div class="flex items-center p-3">
+            <div class="w-1 h-8 bg-transparent mr-3"></div>
+            <i data-lucide="sunrise" class="w-4 h-4 text-orange-400 mr-2"></i>
+            <span class="text-sm font-medium text-fg flex-1">早起</span>
+            <span class="text-xs text-disabled">未打卡</span>
+          </div>
+        </div>
+
+        <div class="bg-card rounded-xl p-3 flex justify-between items-center">
+          <span class="text-xs text-muted">本月</span>
+          <span class="text-sm font-semibold text-fg">25/31 天 · 完成率 81%</span>
+        </div>
+      </div>
+    </div>
+    <div class="tabbar">
+      <div class="tabbar-item"><i data-lucide="check-circle" class="w-5 h-5"></i><span>打卡</span></div>
+      <div class="tabbar-item active"><i data-lucide="calendar" class="w-5 h-5"></i><span>日历</span></div>
+      <div class="tabbar-item"><i data-lucide="bar-chart-3" class="w-5 h-5"></i><span>统计</span></div>
+      <div class="tabbar-item"><i data-lucide="user" class="w-5 h-5"></i><span>我的</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PAGE 3: 统计页 ========== -->
+<div style="position:relative">
+  <div class="page-label">3. 统计页</div>
+  <div class="phone">
+    <div class="phone-inner">
+      <div class="statusbar">9:41</div>
+      <div class="px-5 pb-4">
+        <div class="text-xl font-bold text-fg mb-5">打卡统计</div>
+
+        <div class="grid grid-cols-3 gap-3 mb-5">
+          <div class="bg-card rounded-xl p-3 text-center">
+            <div class="text-2xl font-bold text-fg">45</div>
+            <div class="text-xs text-muted mt-1">总打卡(天)</div>
+          </div>
+          <div class="bg-card rounded-xl p-3 text-center">
+            <div class="text-2xl font-bold text-fg">22</div>
+            <div class="text-xs text-muted mt-1">最长连续</div>
+          </div>
+          <div class="bg-card rounded-xl p-3 text-center">
+            <div class="text-2xl font-bold text-fg">15</div>
+            <div class="text-xs text-muted mt-1">当前连续</div>
+          </div>
+        </div>
+
+        <div class="text-sm font-semibold text-fg mb-3">本周完成率</div>
+        <div class="bg-card rounded-xl p-4 mb-5">
+          <div class="flex items-end justify-between gap-2" style="height:100px">
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full rounded-t-md bg-success" style="height:100%"></div>
+              <span class="text-xs text-muted">一</span>
+              <span class="text-xs font-medium">100%</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full rounded-t-md bg-success" style="height:100%"></div>
+              <span class="text-xs text-muted">二</span>
+              <span class="text-xs font-medium">100%</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full rounded-t-md bg-success" style="height:100%"></div>
+              <span class="text-xs text-muted">三</span>
+              <span class="text-xs font-medium">100%</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full rounded-t-md bg-warn" style="height:67%"></div>
+              <span class="text-xs text-muted">四</span>
+              <span class="text-xs font-medium">67%</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full rounded-t-md bg-warn" style="height:33%"></div>
+              <span class="text-xs text-muted">五</span>
+              <span class="text-xs font-medium">33%</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full rounded-t-md bg-disabled" style="height:4px"></div>
+              <span class="text-xs text-muted">六</span>
+              <span class="text-xs text-disabled">--</span>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-1">
+              <div class="w-full rounded-t-md bg-disabled" style="height:4px"></div>
+              <span class="text-xs text-muted">日</span>
+              <span class="text-xs text-disabled">--</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-sm font-semibold text-fg mb-3">各项目统计</div>
+
+        <div class="bg-card rounded-xl p-4 mb-3 cursor-pointer">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-success/20 flex items-center justify-center">
+              <i data-lucide="dumbbell" class="w-4 h-4 text-success"></i>
+            </div>
+            <span class="font-semibold text-fg">运动</span>
+            <span class="text-xs text-success ml-auto font-medium">92%</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs text-muted mb-3">
+            <span>连续 15天 · 最长 22天</span>
+            <span class="text-right">本月 28/31</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <span class="text-xs text-muted mr-1">最近7天</span>
+            <span class="w-4 h-4 rounded-full bg-success"></span>
+            <span class="w-4 h-4 rounded-full bg-success"></span>
+            <span class="w-4 h-4 rounded-full bg-success"></span>
+            <span class="w-4 h-4 rounded-full bg-success"></span>
+            <span class="w-4 h-4 rounded-full bg-success"></span>
+            <span class="w-4 h-4 rounded-full bg-success"></span>
+            <span class="w-4 h-4 rounded-full border border-border"></span>
+          </div>
+        </div>
+
+        <div class="bg-card rounded-xl p-4 mb-3 cursor-pointer">
+          <div class="flex items-center gap-2 mb-3">
+            <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center">
+              <i data-lucide="book-open" class="w-4 h-4 text-blue-500"></i>
+            </div>
+            <span class="font-semibold text-fg">阅读</span>
+            <span class="text-xs text-blue-500 ml-auto font-medium">85%</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs text-muted mb-3">
+            <span>连续 7天 · 最长 12天</span>
+            <span class="text-right">本月 25/31</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <span class="text-xs text-muted mr-1">最近7天</span>
+            <span class="w-4 h-4 rounded-full bg-blue-500"></span>
+            <span class="w-4 h-4 rounded-full bg-blue-500"></span>
+            <span class="w-4 h-4 rounded-full border border-border"></span>
+            <span class="w-4 h-4 rounded-full bg-blue-500"></span>
+            <span class="w-4 h-4 rounded-full bg-blue-500"></span>
+            <span class="w-4 h-4 rounded-full bg-blue-500"></span>
+            <span class="w-4 h-4 rounded-full bg-blue-500"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tabbar">
+      <div class="tabbar-item"><i data-lucide="check-circle" class="w-5 h-5"></i><span>打卡</span></div>
+      <div class="tabbar-item"><i data-lucide="calendar" class="w-5 h-5"></i><span>日历</span></div>
+      <div class="tabbar-item active"><i data-lucide="bar-chart-3" class="w-5 h-5"></i><span>统计</span></div>
+      <div class="tabbar-item"><i data-lucide="user" class="w-5 h-5"></i><span>我的</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PAGE 4: 我的 ========== -->
+<div style="position:relative">
+  <div class="page-label">4. 我的</div>
+  <div class="phone">
+    <div class="phone-inner">
+      <div class="statusbar">9:41</div>
+      <div class="px-5 pb-4">
+        <div class="bg-card rounded-xl p-5 mb-5 flex items-center gap-4">
+          <div class="w-14 h-14 rounded-full bg-fg flex items-center justify-center">
+            <i data-lucide="user" class="w-7 h-7 text-white"></i>
+          </div>
+          <div>
+            <div class="font-semibold text-fg text-lg">微信用户</div>
+            <div class="text-sm text-muted">已坚持打卡 45 天</div>
+          </div>
+        </div>
+
+        <div class="text-xs text-muted mb-2 px-1">打卡管理</div>
+        <div class="bg-card rounded-xl overflow-hidden mb-5">
+          <div class="flex items-center justify-between p-4 border-b border-border cursor-pointer">
+            <span class="text-sm text-fg">打卡项目管理</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-muted"></i>
+          </div>
+          <div class="flex items-center justify-between p-4 cursor-pointer">
+            <span class="text-sm text-fg">已归档项目</span>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-muted">2</span>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-muted"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-xs text-muted mb-2 px-1">设置</div>
+        <div class="bg-card rounded-xl overflow-hidden mb-5">
+          <div class="flex items-center justify-between p-4 border-b border-border">
+            <span class="text-sm text-fg">打卡提醒</span>
+            <div class="w-11 h-6 bg-success rounded-full relative cursor-pointer">
+              <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 right-0.5 shadow-sm"></div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between p-4 border-b border-border cursor-pointer">
+            <span class="text-sm text-fg">提醒时间</span>
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-muted">20:00</span>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-muted"></i>
+            </div>
+          </div>
+          <div class="flex items-center justify-between p-4">
+            <span class="text-sm text-fg">深色模式</span>
+            <div class="w-11 h-6 bg-disabled rounded-full relative cursor-pointer">
+              <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 shadow-sm"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-xs text-muted mb-2 px-1">其他</div>
+        <div class="bg-card rounded-xl overflow-hidden mb-5">
+          <div class="flex items-center justify-between p-4 border-b border-border cursor-pointer">
+            <span class="text-sm text-fg">清除缓存</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-muted"></i>
+          </div>
+          <div class="flex items-center justify-between p-4 cursor-pointer">
+            <span class="text-sm text-fg">关于 TT Daka</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-muted"></i>
+          </div>
+        </div>
+
+        <div class="text-center text-xs text-disabled">v1.0.0</div>
+      </div>
+    </div>
+    <div class="tabbar">
+      <div class="tabbar-item"><i data-lucide="check-circle" class="w-5 h-5"></i><span>打卡</span></div>
+      <div class="tabbar-item"><i data-lucide="calendar" class="w-5 h-5"></i><span>日历</span></div>
+      <div class="tabbar-item"><i data-lucide="bar-chart-3" class="w-5 h-5"></i><span>统计</span></div>
+      <div class="tabbar-item active"><i data-lucide="user" class="w-5 h-5"></i><span>我的</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PAGE 5: 创建打卡 ========== -->
+<div style="position:relative">
+  <div class="page-label">5. 创建打卡项目</div>
+  <div class="phone">
+    <div class="phone-inner">
+      <div class="statusbar">9:41</div>
+      <div class="flex items-center justify-between px-5 py-3 border-b border-border">
+        <div class="flex items-center gap-2 cursor-pointer">
+          <i data-lucide="chevron-left" class="w-5 h-5 text-fg"></i>
+          <span class="text-sm text-muted">返回</span>
+        </div>
+        <span class="font-semibold text-fg">新建打卡</span>
+        <button class="text-sm font-semibold text-fg">保存</button>
+      </div>
+      <div class="px-5 py-4">
+        <div class="mb-5">
+          <div class="text-xs text-muted mb-2">项目名称</div>
+          <input type="text" placeholder="请输入打卡名称" class="w-full px-4 py-3 bg-card rounded-xl text-sm text-fg outline-none border border-transparent focus:border-fg transition-colors" value="运动">
+        </div>
+
+        <div class="mb-5">
+          <div class="text-xs text-muted mb-2">选择图标</div>
+          <div class="grid grid-cols-6 gap-2">
+            <div class="icon-btn selected"><i data-lucide="dumbbell" class="w-5 h-5"></i></div>
+            <div class="icon-btn"><i data-lucide="book-open" class="w-5 h-5 text-muted"></i></div>
+            <div class="icon-btn"><i data-lucide="sunrise" class="w-5 h-5 text-muted"></i></div>
+            <div class="icon-btn"><i data-lucide="droplets" class="w-5 h-5 text-muted"></i></div>
+            <div class="icon-btn"><i data-lucide="graduation-cap" class="w-5 h-5 text-muted"></i></div>
+            <div class="icon-btn"><i data-lucide="brain" class="w-5 h-5 text-muted"></i></div>
+            <div class="icon-btn"><i data-lucide="pen-tool" class="w-5 h-5 text-muted"></i></div>
+            <div class="icon-btn"><i data-lucide="footprints" class="w-5 h-5 text-muted"></i></div>
+            <div class="icon-btn"><i data-lucide="heart-pulse" class="w-5 h-5 text-muted"></i></div>
+            <div class="icon-btn"><i data-lucide="apple" class="w-5 h-5 text-muted"></i></div>
+            <div class="icon-btn"><i data-lucide="moon" class="w-5 h-5 text-muted"></i></div>
+            <div class="icon-btn"><i data-lucide="more-horizontal" class="w-5 h-5 text-muted"></i></div>
+          </div>
+        </div>
+
+        <div class="mb-5">
+          <div class="text-xs text-muted mb-2">选择颜色</div>
+          <div class="flex gap-3 flex-wrap">
+            <div class="color-dot" style="background:#EF4444"></div>
+            <div class="color-dot" style="background:#F97316"></div>
+            <div class="color-dot" style="background:#EAB308"></div>
+            <div class="color-dot selected" style="background:#22C55E"></div>
+            <div class="color-dot" style="background:#06B6D4"></div>
+            <div class="color-dot" style="background:#3B82F6"></div>
+            <div class="color-dot" style="background:#8B5CF6"></div>
+            <div class="color-dot" style="background:#EC4899"></div>
+            <div class="color-dot" style="background:#6B7280"></div>
+          </div>
+        </div>
+
+        <div class="mb-5">
+          <div class="text-xs text-muted mb-2">打卡频率</div>
+          <div class="bg-card rounded-xl overflow-hidden">
+            <label class="flex items-center p-3 border-b border-border cursor-pointer">
+              <input type="radio" name="freq" checked class="mr-3 accent-fg">
+              <span class="text-sm text-fg">每天</span>
+            </label>
+            <label class="flex items-center p-3 border-b border-border cursor-pointer">
+              <input type="radio" name="freq" class="mr-3 accent-fg">
+              <span class="text-sm text-fg">工作日（周一至周五）</span>
+            </label>
+            <label class="flex items-center p-3 cursor-pointer">
+              <input type="radio" name="freq" class="mr-3 accent-fg">
+              <span class="text-sm text-fg">自定义</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="text-xs text-muted mb-2">预览</div>
+        <div class="rounded-xl overflow-hidden bg-card">
+          <div class="flex">
+            <div class="w-1 bg-success"></div>
+            <div class="flex-1 p-4">
+              <div class="flex justify-between items-start">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-success/20 flex items-center justify-center">
+                    <i data-lucide="dumbbell" class="w-5 h-5 text-success"></i>
+                  </div>
+                  <div>
+                    <div class="font-semibold text-fg">运动</div>
+                    <div class="text-xs text-muted mt-0.5">目标: 每天 · 总计 0 天</div>
+                  </div>
+                </div>
+                <span class="px-3 py-1.5 rounded-lg border border-fg text-fg text-xs font-medium">○ 打卡</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PAGE 6: 项目详情 ========== -->
+<div style="position:relative">
+  <div class="page-label">6. 项目详情</div>
+  <div class="phone">
+    <div class="phone-inner">
+      <div class="statusbar">9:41</div>
+      <div class="flex items-center justify-between px-5 py-3 border-b border-border">
+        <div class="flex items-center gap-2 cursor-pointer">
+          <i data-lucide="chevron-left" class="w-5 h-5 text-fg"></i>
+        </div>
+        <span class="font-semibold text-fg">运动</span>
+        <span class="text-sm text-muted cursor-pointer">编辑</span>
+      </div>
+      <div class="px-5 py-4">
+        <div class="flex flex-col items-center mb-5">
+          <div class="w-16 h-16 rounded-2xl bg-success/20 flex items-center justify-center mb-3">
+            <i data-lucide="dumbbell" class="w-8 h-8 text-success"></i>
+          </div>
+          <div class="font-bold text-lg text-fg">运动</div>
+          <div class="text-sm text-muted">目标: 每天 · 创建于 2026-02-14</div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 mb-5">
+          <div class="bg-card rounded-xl p-3 text-center">
+            <div class="text-xl font-bold text-fg">45</div>
+            <div class="text-xs text-muted mt-1">总打卡</div>
+          </div>
+          <div class="bg-card rounded-xl p-3 text-center">
+            <div class="text-xl font-bold text-fg">22</div>
+            <div class="text-xs text-muted mt-1">最长连续</div>
+          </div>
+          <div class="bg-card rounded-xl p-3 text-center">
+            <div class="text-xl font-bold text-fg">15</div>
+            <div class="text-xs text-muted mt-1">当前连续</div>
+          </div>
+        </div>
+
+        <div class="text-sm font-semibold text-fg mb-3">打卡日历</div>
+        <div class="bg-card rounded-xl p-4 mb-5">
+          <div class="flex justify-between items-center mb-3">
+            <i data-lucide="chevron-left" class="w-4 h-4 text-muted cursor-pointer"></i>
+            <span class="text-sm font-medium text-fg">2026 年 3 月</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-muted cursor-pointer"></i>
+          </div>
+          <div class="grid grid-cols-7 text-center text-xs text-muted mb-1">
+            <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+          </div>
+          <div class="grid grid-cols-7 text-center text-xs gap-y-0.5">
+            <span></span><span></span><span></span><span></span><span></span><span></span>
+            <span class="py-1">1</span>
+            <span class="py-1">2</span>
+            <span class="py-1 rounded bg-success/20">3</span>
+            <span class="py-1 rounded bg-success/20">4</span>
+            <span class="py-1 rounded bg-success/20">5</span>
+            <span class="py-1">6</span>
+            <span class="py-1 rounded bg-success/20">7</span>
+            <span class="py-1 rounded bg-success/20">8</span>
+            <span class="py-1 rounded bg-success/20">9</span>
+            <span class="py-1 rounded bg-success/20">10</span>
+            <span class="py-1 rounded bg-success/20">11</span>
+            <span class="py-1 rounded bg-success/20">12</span>
+            <span class="py-1 rounded bg-success/20">13</span>
+            <span class="py-1 rounded bg-success/20">14</span>
+            <span class="py-1 rounded bg-success/20">15</span>
+            <span class="py-1 rounded bg-success/20">16</span>
+            <span class="py-1 rounded bg-success/20">17</span>
+            <span class="py-1">18</span>
+            <span class="py-1 rounded bg-success/20">19</span>
+            <span class="py-1 rounded bg-success/20">20</span>
+            <span class="py-1 rounded bg-success/20">21</span>
+            <span class="py-1 rounded bg-success/20">22</span>
+            <span class="py-1 rounded bg-success/20">23</span>
+            <span class="py-1 rounded bg-success/20">24</span>
+            <span class="py-1 rounded bg-success/20">25</span>
+            <span class="py-1 rounded bg-success/20">26</span>
+            <span class="py-1 rounded bg-success/20">27</span>
+            <span class="py-1 rounded bg-success/20">28</span>
+            <span class="py-1 rounded bg-success/20">29</span>
+            <span class="py-1 rounded bg-success/20">30</span>
+            <span class="py-1 rounded-full bg-fg text-white font-semibold">31</span>
+          </div>
+        </div>
+
+        <div class="text-sm font-semibold text-fg mb-3">最近打卡记录</div>
+        <div class="bg-card rounded-xl overflow-hidden">
+          <div class="flex items-center justify-between p-3 border-b border-border">
+            <span class="text-sm text-fg">03-31 周一</span>
+            <span class="text-xs text-muted">09:15</span>
+          </div>
+          <div class="flex items-center justify-between p-3 border-b border-border">
+            <span class="text-sm text-fg">03-30 周日</span>
+            <span class="text-xs text-muted">08:42</span>
+          </div>
+          <div class="flex items-center justify-between p-3 border-b border-border">
+            <span class="text-sm text-fg">03-29 周六</span>
+            <span class="text-xs text-muted">10:03</span>
+          </div>
+          <div class="flex items-center justify-between p-3 border-b border-border">
+            <span class="text-sm text-fg">03-28 周五</span>
+            <div class="flex items-center gap-2">
+              <span class="text-xs px-1.5 py-0.5 rounded bg-orange-100 text-orange-600">补</span>
+              <span class="text-xs text-muted">07:55</span>
+            </div>
+          </div>
+          <div class="p-3 text-center cursor-pointer">
+            <span class="text-xs text-muted">查看更多 ↓</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>lucide.createIcons();</script>
+</body>
+</html>

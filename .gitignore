@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Build output
+unpackage/
+dist/
+
+# IDE / Editor
+.cursor/
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# HBuilderX
+.hbuilderx/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+Thumbs.db
+
+# User input (dev tool)
+prompts.txt
+userinput.py
+
+# sard-uniapp (no longer used)
+uni_modules/sard-uniapp/

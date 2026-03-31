@@ -1,0 +1,46 @@
+/**
+ * 补打卡（限最近7天）
+ */
+import { db, COLLECTIONS } from '@/cloud-emas/database/database'
+import { checkEmasError } from '@/cloud-emas/database/error'
+import { requireAccountId } from '@/utils/auth'
+import { dayjs, formatDate } from '@/utils/date'
+
+/**
+ * @param {string} projectId
+ * @param {string} date - YYYY-MM-DD
+ */
+export async function retroactiveDaka(projectId, date) {
+  try {
+    const accountId = await requireAccountId()
+    const today = dayjs()
+    const targetDate = dayjs(date)
+    
+    const diffDays = today.diff(targetDate, 'day')
+    if (diffDays < 0) return { success: false, error: '不能打卡未来日期' }
+    if (diffDays > 7) return { success: false, error: '只能补打卡最近7天' }
+    
+    const existRes = await db.collection(COLLECTIONS.RECORDS)
+      .findOne({ accountId, projectId, date })
+    if (existRes?.result) return { success: false, error: '该日期已有打卡记录' }
+    
+    const now = dayjs().format('YYYY-MM-DD HH:mm:ss')
+    const record = {
+      accountId,
+      projectId,
+      date,
+      completedAt: now,
+      isRetroactive: true,
+      createTime: now,
+    }
+    
+    const res = await db.collection(COLLECTIONS.RECORDS).insertOne(record)
+    checkEmasError(res, '补打卡')
+    
+    record._id = res.result._id || res.result.insertedId
+    return { success: true, record }
+  } catch (error) {
+    console.error('[API] retroactiveDaka 失败:', error)
+    return { success: false, error: error.message }
+  }
+}

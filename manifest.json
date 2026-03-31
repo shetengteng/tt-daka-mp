@@ -1,0 +1,46 @@
+{
+    "name" : "tt-daka-mp",
+    "appid" : "",
+    "description" : "tt打卡 - 个人习惯打卡小程序",
+    "versionName" : "1.0.0",
+    "versionCode" : "100",
+    "transformPx" : false,
+    "app-plus" : {
+        "usingComponents" : true,
+        "nvueStyleCompiler" : "uni-app",
+        "compilerVersion" : 3,
+        "splashscreen" : {
+            "alwaysShowBeforeRender" : true,
+            "waiting" : true,
+            "autoclose" : true,
+            "delay" : 0
+        },
+        "modules" : {},
+        "distribute" : {
+            "android" : {
+                "permissions" : []
+            },
+            "ios" : {},
+            "sdkConfigs" : {}
+        }
+    },
+    "quickapp" : {},
+    "mp-weixin" : {
+        "appid" : "wx6797dbdc8e87ed7c",
+        "setting" : {
+            "urlCheck" : false,
+            "minified" : true,
+            "es6" : true,
+            "postcss" : true
+        },
+        "usingComponents" : true,
+        "lazyCodeLoading" : "requiredComponents",
+        "optimization" : {
+            "subPackages" : true
+        }
+    },
+    "uniStatistics" : {
+        "enable" : false
+    },
+    "vueVersion" : "3"
+}

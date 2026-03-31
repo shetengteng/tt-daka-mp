@@ -1,0 +1,7 @@
+{
+    "dependencies": {
+        "@alicloud/mpserverless-sdk": "^3.1.5",
+        "dayjs": "^1.11.14",
+        "pinia": "^2.1.7"
+    }
+}
