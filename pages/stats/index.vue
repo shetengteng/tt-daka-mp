@@ -55,7 +55,7 @@
           <view class="project-icon flex-center rounded-lg" :style="{ backgroundColor: `${item.project.color}20` }">
             <TtSvg :name="item.project.icon || 'ri-checkbox-circle-line'" :size="32" :color="item.project.color" />
           </view>
-          <text class="text-base font-semibold ml-sm">{{ item.project.name }}</text>
+          <text class="text-base font-semibold ml-sm text-foreground">{{ item.project.name }}</text>
           <text class="text-xs font-medium ml-auto" :style="{ color: item.project.color }">{{ item.completionRate }}%</text>
         </view>
         
@@ -89,6 +89,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { onPullDownRefresh } from '@dcloudio/uni-app'
+import { useThemeStore } from '@/stores/theme'
 import { getStats } from './api/getStats'
 
 const stats = reactive({
@@ -119,7 +120,10 @@ function barTextClass(percent) {
   return 'text-disabled'
 }
 
+const themeStore = useThemeStore()
+
 onMounted(async () => {
+  themeStore.applyTheme()
   const res = await getStats()
   if (res.success) {
     Object.assign(stats, res.data)

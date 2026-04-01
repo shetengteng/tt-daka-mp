@@ -190,12 +190,42 @@ page,
 .card-content { padding: $tt-spacing-lg; }
 
 /* Page */
-.page { min-height: 100vh; background-color: var(--tt-background); }
-.page-gray { min-height: 100vh; background-color: var(--tt-muted); }
+@keyframes tt-page-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.page { min-height: 100vh; background-color: var(--tt-background); animation: tt-page-fade-in 0.25s ease-out; }
+.page-gray { min-height: 100vh; background-color: var(--tt-muted); animation: tt-page-fade-in 0.25s ease-out; }
 
 /* H5: hide scrollbar to avoid layout shift */
 ::-webkit-scrollbar { display: none; }
 page { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* H5: sync navigation bar and page background with theme */
+uni-page-head,
+uni-page-head .uni-page-head,
+uni-page-head .uni-page-head-hd {
+  background-color: var(--tt-background) !important;
+}
+uni-page-head .uni-page-head__title {
+  color: var(--tt-foreground) !important;
+}
+uni-page-head .uni-btn-icon {
+  color: var(--tt-foreground) !important;
+}
+uni-page-head .uni-page-head-bd {
+  border-bottom-color: var(--tt-border) !important;
+}
+uni-page-head {
+  box-shadow: 0 8px 0 0 var(--tt-background) !important;
+}
+body,
+uni-app,
+uni-page,
+uni-page-wrapper,
+uni-page-body {
+  background-color: var(--tt-background) !important;
+}
 
 /* Utils */
 .overflow-hidden { overflow: hidden; }

@@ -54,8 +54,8 @@
           <text class="text-sm text-foreground">关于 DaKa</text>
           <TtSvg name="ri-arrow-right-s-line" :size="32" color="#71717A" />
         </view>
-        <view class="list-item flex-between p-lg" @click="goDisclaimer">
-          <text class="text-sm text-foreground">免责声明</text>
+        <view class="list-item flex-between p-lg" @click="goPrivacy">
+          <text class="text-sm text-foreground">隐私政策</text>
           <TtSvg name="ri-arrow-right-s-line" :size="32" color="#71717A" />
         </view>
       </view>
@@ -89,7 +89,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { goToProjectManage, goToProjectArchived, goToDisclaimer } from '@/route/index'
+import { goToProjectManage, goToProjectArchived, goToPrivacy } from '@/route/index'
 import { useThemeStore } from '@/stores/theme'
 
 const themeStore = useThemeStore()
@@ -114,8 +114,8 @@ function goArchived() {
   goToProjectArchived()
 }
 
-function goDisclaimer() {
-  goToDisclaimer()
+function goPrivacy() {
+  goToPrivacy()
 }
 
 

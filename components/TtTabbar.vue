@@ -52,7 +52,7 @@ const tabList = [
 const onChange = (name) => {
   if (name !== props.current) {
     const tab = tabList.find(item => item.name === name)
-    if (tab) uni.reLaunch({ url: tab.path })
+    if (tab) uni.redirectTo({ url: tab.path })
   }
 }
 </script>

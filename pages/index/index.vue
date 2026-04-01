@@ -80,6 +80,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { onPullDownRefresh } from '@dcloudio/uni-app'
+import { useThemeStore } from '@/stores/theme'
 import { useDakaStore } from '@/stores/daka'
 import { getProjectList } from './api/getProjectList'
 import { toggleDaka } from './api/toggleDaka'
@@ -87,6 +88,7 @@ import { goToProjectAdd, goToProjectDetail, goToProjectEdit } from '@/route/inde
 import { dayjs, formatDate } from '@/utils/date'
 import DakaCard from './components/DakaCard.vue'
 
+const themeStore = useThemeStore()
 const dakaStore = useDakaStore()
 
 const loading = ref(false)
@@ -125,6 +127,7 @@ const actionSheetItems = [
 ]
 
 onMounted(() => {
+  themeStore.applyTheme()
   loadData()
 })
 

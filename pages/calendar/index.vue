@@ -54,6 +54,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useThemeStore } from '@/stores/theme'
 import { getRecordsByMonth } from './api/getRecordsByMonth'
 import { goToProjectDetail } from '@/route/index'
 import { dayjs, formatDate } from '@/utils/date'
@@ -165,7 +166,10 @@ function onDetailTap(projectId) {
   goToProjectDetail(projectId)
 }
 
+const themeStore = useThemeStore()
+
 onMounted(() => {
+  themeStore.applyTheme()
   loadMonthData()
 })
 </script>

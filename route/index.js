@@ -11,7 +11,7 @@ export const routes = {
   projectAdd: '/pages/project/sub/add/index',
   projectDetail: '/pages/project/sub/detail/index',
   projectArchived: '/pages/project/sub/archived/index',
-  disclaimer: '/pages/mine/sub/disclaimer/index',
+  privacy: '/pages/mine/sub/privacy/index',
 }
 
 export function goToProjectAdd() {
@@ -41,8 +41,8 @@ export function switchTab(pageName) {
   }
 }
 
-export function goToDisclaimer() {
-  uni.navigateTo({ url: routes.disclaimer })
+export function goToPrivacy() {
+  uni.navigateTo({ url: routes.privacy })
 }
 
 export function goBack() {

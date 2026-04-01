@@ -185,6 +185,12 @@ watch(() => props.current, (val) => {
     &--disabled {
       opacity: 0.3;
     }
+
+    &--selected:not(&--today) {
+      .tt-cal__day-wrap {
+        background-color: var(--tt-accent, #f5f5f5);
+      }
+    }
   }
 
   &__day-wrap {

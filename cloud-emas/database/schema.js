@@ -10,6 +10,16 @@ export const COLLECTIONS = {
 }
 
 /**
+ * @typedef {Object} DakaUser
+ * @property {string} _id
+ * @property {string} accountId
+ * @property {string} nickname
+ * @property {string} avatar
+ * @property {string} createTime
+ * @property {string} updateTime
+ */
+
+/**
  * @typedef {Object} DakaProject
  * @property {string} _id
  * @property {string} accountId

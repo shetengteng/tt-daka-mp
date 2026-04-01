@@ -65,6 +65,7 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
+import { useThemeStore } from '@/stores/theme'
 import { archiveProject } from './api/archiveProject'
 import { batchUpdateSort } from './api/batchUpdateSort'
 import { goToProjectEdit } from '@/route/index'
@@ -213,7 +214,10 @@ async function onArchiveConfirm() {
   }
 }
 
+const themeStore = useThemeStore()
+
 onMounted(() => {
+  themeStore.applyTheme()
   loadProjects()
 })
 

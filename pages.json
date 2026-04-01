@@ -12,79 +12,57 @@
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": true
 			}
-		}
-	],
-	"subPackages": [
-		{
-			"root": "pages/calendar",
-			"pages": [
-				{
-					"path": "index",
-					"style": {
-						"navigationStyle": "custom",
-						"enablePullDownRefresh": false
-					}
-				}
-			]
 		},
 		{
-			"root": "pages/stats",
-			"pages": [
-				{
-					"path": "index",
-					"style": {
-						"navigationStyle": "custom",
-						"enablePullDownRefresh": true
-					}
-				}
-			]
-		},
-	{
-		"root": "pages/mine",
-		"pages": [
-			{
-				"path": "index",
-				"style": {
-					"navigationStyle": "custom",
-					"enablePullDownRefresh": false
-				}
-			},
-			{
-				"path": "sub/disclaimer/index",
-				"style": {
-					"navigationBarTitleText": "免责声明"
-				}
+			"path": "pages/calendar/index",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
 			}
-		]
-	},
+		},
 		{
-			"root": "pages/project",
-			"pages": [
-				{
-					"path": "index",
-					"style": {
-						"navigationBarTitleText": "打卡项目管理"
-					}
-				},
-				{
-					"path": "sub/add/index",
-					"style": {
-						"navigationBarTitleText": "新建打卡"
-					}
-				},
-			{
-				"path": "sub/detail/index",
-				"style": {
-					"navigationBarTitleText": ""
-				}
-			},
-				{
-					"path": "sub/archived/index",
-					"style": {
-						"navigationBarTitleText": "已归档项目"
-					}
-				}
-			]
+			"path": "pages/stats/index",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/mine/index",
+			"style": {
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": false
+			}
+		},
+		{
+			"path": "pages/mine/sub/privacy/index",
+			"style": {
+				"navigationBarTitleText": "隐私政策"
+			}
+		},
+		{
+			"path": "pages/project/index",
+			"style": {
+				"navigationBarTitleText": "打卡项目管理"
+			}
+		},
+		{
+			"path": "pages/project/sub/add/index",
+			"style": {
+				"navigationBarTitleText": "新建打卡"
+			}
+		},
+		{
+			"path": "pages/project/sub/detail/index",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/project/sub/archived/index",
+			"style": {
+				"navigationBarTitleText": "已归档项目"
+			}
 		}
 	],
 	"globalStyle": {
@@ -92,12 +70,6 @@
 		"navigationBarTitleText": "DaKa",
 		"navigationBarBackgroundColor": "#ffffff",
 		"backgroundColor": "#ffffff"
-	},
-	"preloadRule": {
-		"pages/index/index": {
-			"network": "all",
-			"packages": ["pages/calendar", "pages/stats", "pages/mine", "pages/project"]
-		}
 	},
 	"uniIdRouter": {}
 }

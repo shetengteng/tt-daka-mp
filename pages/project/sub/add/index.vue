@@ -147,6 +147,7 @@
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
+import { useThemeStore } from '@/stores/theme'
 import { createProject } from './api/createProject'
 import { updateProject } from './api/updateProject'
 import { deleteProject } from './api/deleteProject'
@@ -243,7 +244,10 @@ async function confirmDelete() {
   }
 }
 
+const themeStore = useThemeStore()
+
 onLoad(async (options) => {
+  themeStore.applyTheme()
   if (options?.id) {
     isEdit.value = true
     editId.value = options.id

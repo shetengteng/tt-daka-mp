@@ -78,6 +78,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
+import { useThemeStore } from '@/stores/theme'
 import { getProjectDetail } from './api/getProjectDetail'
 import { retroactiveDaka } from './api/retroactiveDaka'
 import { goToProjectEdit } from '@/route/index'
@@ -167,7 +168,10 @@ async function loadDetail() {
   }
 }
 
+const themeStore = useThemeStore()
+
 onLoad((options) => {
+  themeStore.applyTheme()
   if (options?.id) {
     projectId.value = options.id
     loadDetail()

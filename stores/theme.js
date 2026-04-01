@@ -33,8 +33,16 @@ export const useThemeStore = defineStore('theme', () => {
         el.setAttribute('data-theme', mode.value)
       })
     }
+    const applyToPageHead = () => {
+      const headDiv = document.querySelector('uni-page-head .uni-page-head')
+      if (headDiv) {
+        headDiv.style.backgroundColor = isDark ? '#09090B' : '#ffffff'
+        headDiv.style.color = isDark ? '#FAFAFA' : '#000000'
+      }
+    }
     applyToPageBodies()
-    setTimeout(applyToPageBodies, 50)
+    applyToPageHead()
+    setTimeout(() => { applyToPageBodies(); applyToPageHead() }, 50)
     // #endif
 
     // #ifdef MP-WEIXIN
