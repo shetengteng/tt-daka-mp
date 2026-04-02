@@ -3,6 +3,7 @@
  */
 
 export const routes = {
+  login: '/pages/login/index',
   home: '/pages/index/index',
   calendar: '/pages/calendar/index',
   stats: '/pages/stats/index',
