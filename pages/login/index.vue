@@ -211,6 +211,9 @@ function goPrivacy() {
   &__icon {
     width: 22rpx;
     height: 22rpx;
+    display: block;
+    margin: 0;
+    padding: 0;
   }
 }
 
