@@ -2,7 +2,6 @@
  * 打卡/取消打卡
  */
 import { db, COLLECTIONS } from '@/cloud-emas/database/database'
-import { checkEmasError } from '@/cloud-emas/database/error'
 import { requireAccountId } from '@/utils/auth'
 import { formatDate, dayjs } from '@/utils/date'
 
@@ -15,14 +14,14 @@ export async function toggleDaka(projectId, currentChecked) {
   try {
     const accountId = await requireAccountId()
     const today = formatDate(new Date())
-    
+
     if (currentChecked) {
-      const deleteRes = await db.collection(COLLECTIONS.RECORDS)
-        .deleteOne({ accountId, projectId, date: today })
-      checkEmasError(deleteRes, '取消打卡')
+      await db.collection(COLLECTIONS.RECORDS)
+        .where({ accountId, projectId, date: today })
+        .remove()
       return { success: true, action: 'cancel' }
     }
-    
+
     const now = dayjs().format('YYYY-MM-DD HH:mm:ss')
     const record = {
       accountId,
@@ -32,11 +31,9 @@ export async function toggleDaka(projectId, currentChecked) {
       isRetroactive: false,
       createTime: now,
     }
-    
-    const insertRes = await db.collection(COLLECTIONS.RECORDS).insertOne(record)
-    checkEmasError(insertRes, '打卡')
-    
-    record._id = insertRes.result._id || insertRes.result.insertedId
+
+    const addRes = await db.collection(COLLECTIONS.RECORDS).add(record)
+    record._id = addRes.id || addRes._id
     return { success: true, action: 'check', record }
   } catch (error) {
     console.error('[API] toggleDaka 失败:', error)

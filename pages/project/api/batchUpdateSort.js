@@ -12,7 +12,8 @@ export async function batchUpdateSort(items) {
     const accountId = await requireAccountId()
     for (const item of items) {
       await db.collection(COLLECTIONS.PROJECTS)
-        .updateOne({ _id: item._id, accountId }, { $set: { sortOrder: item.sortOrder } })
+        .where({ _id: item._id, accountId })
+        .update({ sortOrder: item.sortOrder })
     }
     return { success: true }
   } catch (error) {

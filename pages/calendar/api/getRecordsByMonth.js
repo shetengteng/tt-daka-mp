@@ -1,8 +1,7 @@
 /**
  * 按月查询所有项目打卡记录
  */
-import { db, COLLECTIONS } from '@/cloud-emas/database/database'
-import { checkEmasError } from '@/cloud-emas/database/error'
+import { db, COLLECTIONS, dbCmd } from '@/cloud-emas/database/database'
 import { requireAccountId } from '@/utils/auth'
 import { getDateRange } from '@/utils/date'
 
@@ -14,22 +13,21 @@ export async function getRecordsByMonth(monthDate) {
   try {
     const accountId = await requireAccountId()
     const { startDate, endDate } = getDateRange(monthDate, 'month')
-    
+
     const recordRes = await db.collection(COLLECTIONS.RECORDS)
-      .find({ accountId, date: { $gte: startDate, $lte: endDate } })
-      .sort({ date: 1, completedAt: 1 })
-      .exec()
-    checkEmasError(recordRes, '查询月度打卡记录')
-    
+      .where({ accountId, date: { $gte: startDate, $lte: endDate } })
+      .orderBy('date', 'asc')
+      .orderBy('completedAt', 'asc')
+      .get()
+
     const projectRes = await db.collection(COLLECTIONS.PROJECTS)
-      .find({ accountId })
-      .exec()
-    checkEmasError(projectRes, '查询项目列表')
-    
+      .where({ accountId })
+      .get()
+
     return {
       success: true,
-      list: recordRes.result || [],
-      projects: projectRes.result || [],
+      list: recordRes.data || [],
+      projects: projectRes.data || [],
     }
   } catch (error) {
     console.error('[API] getRecordsByMonth 失败:', error)

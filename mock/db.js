@@ -1,6 +1,6 @@
 /**
- * Mock 数据库 — 模拟 EMAS collection API
- * 支持 find/findOne/insertOne/updateOne/deleteOne/deleteMany/count + sort/exec 链式调用
+ * Mock 数据库 — 模拟 CloudBase 风格 API
+ * 支持 where/doc/orderBy/skip/limit/get/count/add/update/remove 链式调用
  */
 import { mockProjects, mockRecords } from './data'
 
@@ -42,23 +42,30 @@ function matchQuery(doc, query) {
 
 function createChain(collectionName) {
   const data = store[collectionName] || []
-  let _query = {}
-  let _sort = null
+  let _where = {}
+  let _docId = null
+  let _orderBy = []
+  let _skip = 0
   let _limit = 0
 
   const chain = {
-    find(query = {}) {
-      _query = query
+    where(condition) {
+      _where = condition
       return chain
     },
 
-    findOne(query = {}) {
-      const item = data.find(doc => matchQuery(doc, query))
-      return { result: item ? deepClone(item) : null }
+    doc(id) {
+      _docId = id
+      return chain
     },
 
-    sort(sortObj) {
-      _sort = sortObj
+    orderBy(field, order = 'asc') {
+      _orderBy.push({ field, order })
+      return chain
+    },
+
+    skip(n) {
+      _skip = n
       return chain
     },
 
@@ -67,66 +74,79 @@ function createChain(collectionName) {
       return chain
     },
 
-    count() {
-      const filtered = data.filter(doc => matchQuery(doc, _query))
-      return { result: filtered.length }
-    },
+    async get() {
+      if (_docId) {
+        const item = data.find(doc => doc._id === _docId)
+        return { data: item ? [deepClone(item)] : [], errMsg: 'ok' }
+      }
 
-    exec() {
-      let result = data.filter(doc => matchQuery(doc, _query))
+      let result = data.filter(doc => matchQuery(doc, _where))
 
-      if (_sort) {
-        const sortKey = Object.keys(_sort)[0]
-        const sortDir = _sort[sortKey]
+      if (_orderBy.length > 0) {
         result.sort((a, b) => {
-          if (a[sortKey] < b[sortKey]) return -1 * sortDir
-          if (a[sortKey] > b[sortKey]) return 1 * sortDir
+          for (const { field, order } of _orderBy) {
+            const dir = order === 'desc' ? -1 : 1
+            if (a[field] < b[field]) return -1 * dir
+            if (a[field] > b[field]) return 1 * dir
+          }
           return 0
         })
       }
 
-      if (_limit > 0) {
-        result = result.slice(0, _limit)
-      }
+      if (_skip > 0) result = result.slice(_skip)
+      if (_limit > 0) result = result.slice(0, _limit)
 
-      return { result: deepClone(result) }
+      return { data: deepClone(result), errMsg: 'ok' }
     },
 
-    insertOne(doc) {
+    async count() {
+      const filtered = data.filter(doc => matchQuery(doc, _where))
+      return { total: filtered.length, errMsg: 'ok' }
+    },
+
+    async add(doc) {
       const newDoc = deepClone(doc)
       if (!newDoc._id) {
         newDoc._id = `mock_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
       }
       data.push(newDoc)
-      return { result: { _id: newDoc._id, insertedId: newDoc._id } }
+      return { id: newDoc._id, _id: newDoc._id, errMsg: 'ok' }
     },
 
-    updateOne(query, update) {
-      const idx = data.findIndex(doc => matchQuery(doc, query))
-      if (idx < 0) return { result: { modifiedCount: 0 } }
-
-      if (update.$set) {
-        Object.assign(data[idx], update.$set)
+    async update(updateData) {
+      if (_docId) {
+        const idx = data.findIndex(doc => doc._id === _docId)
+        if (idx < 0) return { updated: 0, errMsg: 'ok' }
+        Object.assign(data[idx], updateData)
+        return { updated: 1, errMsg: 'ok' }
       }
-      return { result: { modifiedCount: 1 } }
+
+      let count = 0
+      for (const doc of data) {
+        if (matchQuery(doc, _where)) {
+          Object.assign(doc, updateData)
+          count++
+        }
+      }
+      return { updated: count, errMsg: 'ok' }
     },
 
-    deleteOne(query) {
-      const idx = data.findIndex(doc => matchQuery(doc, query))
-      if (idx < 0) return { result: { deletedCount: 0 } }
-      data.splice(idx, 1)
-      return { result: { deletedCount: 1 } }
-    },
+    async remove() {
+      if (_docId) {
+        const idx = data.findIndex(doc => doc._id === _docId)
+        if (idx < 0) return { deleted: 0, errMsg: 'ok' }
+        data.splice(idx, 1)
+        return { deleted: 1, errMsg: 'ok' }
+      }
 
-    deleteMany(query) {
       let count = 0
       for (let i = data.length - 1; i >= 0; i--) {
-        if (matchQuery(data[i], query)) {
+        if (matchQuery(data[i], _where)) {
           data.splice(i, 1)
           count++
         }
       }
-      return { result: { deletedCount: count } }
+      return { deleted: count, errMsg: 'ok' }
     },
   }
 

@@ -2,6 +2,8 @@
  * 项目配置
  */
 
+export const DEV_MODE = false
+
 export const PROJECT_CONFIG = {
   prefix: 'dk',
   name: 'tt打卡',
@@ -9,10 +11,10 @@ export const PROJECT_CONFIG = {
   version: '1.0.0',
 }
 
-export const WX_APPID = ''
+export const WX_APPID = 'wx6797dbdc8e87ed7c'
 
 export const EMAS_CONFIG = {
-  spaceId: '',
-  clientSecret: '',
-  endpoint: '',
+  spaceId: 'mp-7cc0e56a-b5a1-4347-8a40-f3868127df92',
+  clientSecret: 'WF5bbdgWDNbR51FMDQ1gEw==',
+  endpoint: 'https://api.next.bspapp.com',
 }

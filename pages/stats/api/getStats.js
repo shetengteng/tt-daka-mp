@@ -2,47 +2,44 @@
  * 获取统计数据
  */
 import { db, COLLECTIONS } from '@/cloud-emas/database/database'
-import { checkEmasError } from '@/cloud-emas/database/error'
 import { requireAccountId } from '@/utils/auth'
 import { dayjs, formatDate, getDateRange } from '@/utils/date'
 
 export async function getStats() {
   try {
     const accountId = await requireAccountId()
-    
+
     const projectRes = await db.collection(COLLECTIONS.PROJECTS)
-      .find({ accountId, archived: false })
-      .exec()
-    checkEmasError(projectRes, '查询项目')
-    const projects = projectRes.result || []
-    
+      .where({ accountId, archived: false })
+      .get()
+    const projects = projectRes.data || []
+
     const recordRes = await db.collection(COLLECTIONS.RECORDS)
-      .find({ accountId })
-      .sort({ date: -1 })
-      .exec()
-    checkEmasError(recordRes, '查询记录')
-    const allRecords = recordRes.result || []
-    
+      .where({ accountId })
+      .orderBy('date', 'desc')
+      .get()
+    const allRecords = recordRes.data || []
+
     const today = formatDate(new Date())
     const { startDate: monthStart, endDate: monthEnd } = getDateRange(new Date(), 'month')
-    
+
     const dateSet = new Set(allRecords.map(r => r.date))
     const totalDays = dateSet.size
-    
+
     const { currentStreak, longestStreak } = calcStreaks(dateSet, today)
-    
+
     const weekData = calcWeekData(allRecords, projects)
-    
+
     const projectStats = projects.map(p => {
       const pRecords = allRecords.filter(r => r.projectId === p._id)
       const pDateSet = new Set(pRecords.map(r => r.date))
       const monthRecords = pRecords.filter(r => r.date >= monthStart && r.date <= monthEnd)
       const daysInMonth = dayjs().daysInMonth()
       const daysPassed = Math.min(parseInt(dayjs().format('D')), daysInMonth)
-      
+
       const { currentStreak: pStreak, longestStreak: pLongest } = calcStreaks(pDateSet, today)
       const last7 = calcLast7Days(pDateSet)
-      
+
       return {
         project: p,
         totalDays: pDateSet.size,
@@ -54,7 +51,7 @@ export async function getStats() {
         last7,
       }
     })
-    
+
     return {
       success: true,
       data: { totalDays, currentStreak, longestStreak, weekData, projectStats }
@@ -70,7 +67,7 @@ function calcStreaks(dateSet, today) {
   let longestStreak = 0
   let streak = 0
   let d = dayjs(today)
-  
+
   for (let i = 0; i < 365; i++) {
     const dateStr = d.format('YYYY-MM-DD')
     if (dateSet.has(dateStr)) {
@@ -86,32 +83,32 @@ function calcStreaks(dateSet, today) {
     }
     d = d.subtract(1, 'day')
   }
-  
+
   return { currentStreak, longestStreak }
 }
 
 function calcWeekData(records, projects) {
   const weekStart = dayjs().startOf('isoWeek')
   const result = []
-  
+
   for (let i = 0; i < 7; i++) {
     const d = weekStart.add(i, 'day')
     const dateStr = d.format('YYYY-MM-DD')
     const today = formatDate(new Date())
-    
+
     if (dateStr > today) {
       result.push({ date: dateStr, label: d.format('ddd'), percent: -1 })
       continue
     }
-    
+
     const dayRecords = records.filter(r => r.date === dateStr)
     const total = projects.length
     const done = new Set(dayRecords.map(r => r.projectId)).size
     const percent = total > 0 ? Math.round((done / total) * 100) : 0
-    
+
     result.push({ date: dateStr, label: d.format('ddd'), percent, done, total })
   }
-  
+
   return result
 }
 
