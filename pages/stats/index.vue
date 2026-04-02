@@ -61,7 +61,7 @@
         
         <view class="flex-between text-xs text-muted mb-sm">
           <text>连续 {{ item.currentStreak }}天 · 最长 {{ item.longestStreak }}天</text>
-          <text>本月 {{ item.monthDone }}/{{ item.monthTotal }}</text>
+          <text>本月已打卡 {{ item.monthDone }}/{{ item.monthTotal }} 天</text>
         </view>
         
         <view class="flex-center-v">

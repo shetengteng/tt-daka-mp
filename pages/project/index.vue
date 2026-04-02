@@ -26,7 +26,10 @@
               <view class="item-icon flex-center rounded-sm" :style="{ backgroundColor: `${item.color}15` }">
                 <TtSvg :name="item.icon || 'ri-checkbox-circle-line'" :size="32" :color="item.color" />
               </view>
-              <text class="text-base font-medium ml-sm truncate text-foreground">{{ item.name }}</text>
+              <view class="flex-col ml-sm flex-1 min-w-0">
+                <text class="text-base font-medium truncate text-foreground">{{ item.name }}</text>
+                <text class="text-xs text-muted">已打卡 {{ item.totalDays || 0 }} 天</text>
+              </view>
             </view>
           </view>
           
@@ -68,9 +71,8 @@ import { onShow } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { archiveProject } from './api/archiveProject'
 import { batchUpdateSort } from './api/batchUpdateSort'
+import { getActiveProjects } from './api/getActiveProjects'
 import { goToProjectEdit } from '@/route/index'
-import { db, COLLECTIONS } from '@/cloud-emas/database/database'
-import { requireAccountId } from '@/utils/auth'
 
 const projects = ref([])
 const dragIdx = ref(-1)
@@ -84,12 +86,13 @@ let itemRects = []
 const LONG_PRESS_MS = 200
 
 async function loadProjects() {
-  const accountId = await requireAccountId()
-  const res = await db.collection(COLLECTIONS.PROJECTS)
-    .find({ accountId, archived: false })
-    .sort({ sortOrder: 1 })
-    .exec()
-  projects.value = res?.result || []
+  const res = await getActiveProjects()
+  if (res.success) {
+    projects.value = res.list
+    uni.setNavigationBarTitle({
+      title: `打卡项目管理 (${res.list.length})`,
+    })
+  }
 }
 
 function measureItems() {

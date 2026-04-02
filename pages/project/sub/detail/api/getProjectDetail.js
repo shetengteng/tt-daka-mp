@@ -9,17 +9,12 @@ export async function getProjectDetail(id) {
   try {
     const accountId = await requireAccountId()
 
-    const projectRes = await db.collection(COLLECTIONS.PROJECTS)
-      .where({ _id: id, accountId })
-      .limit(1)
-      .get()
+    const [projectRes, recordRes] = await Promise.all([
+      db.collection(COLLECTIONS.PROJECTS).where({ _id: id, accountId }).limit(1).get(),
+      db.collection(COLLECTIONS.RECORDS).where({ accountId, projectId: id }).orderBy('date', 'desc').get(),
+    ])
     const project = projectRes.data?.[0]
     if (!project) return { success: false, error: '项目不存在' }
-
-    const recordRes = await db.collection(COLLECTIONS.RECORDS)
-      .where({ accountId, projectId: id })
-      .orderBy('date', 'desc')
-      .get()
     const records = recordRes.data || []
 
     const today = formatDate(new Date())

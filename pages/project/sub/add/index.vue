@@ -3,18 +3,7 @@
     <!-- 项目名称 -->
     <view class="section">
       <text class="text-xs text-muted mb-sm block">项目名称</text>
-      <view class="tt-input card">
-        <input
-          v-model="form.name"
-          class="tt-input__inner"
-          placeholder="请输入打卡名称"
-          :maxlength="20"
-          type="text"
-        />
-        <view v-if="form.name" class="tt-input__clear flex-center" @click="form.name = ''">
-          <text class="tt-input__clear-icon">×</text>
-        </view>
-      </view>
+      <TtInput v-model="form.name" placeholder="请输入打卡名称" :maxlength="20" />
     </view>
     
     <!-- 选择图标 -->
@@ -62,21 +51,15 @@
       <text class="text-xs text-muted mb-sm block">打卡频率</text>
       <view class="card overflow-hidden">
         <view class="freq-item border-b flex-center-v" @click="form.frequency = 'daily'">
-          <view class="tt-radio" :class="{ 'tt-radio--checked': form.frequency === 'daily' }">
-            <view v-if="form.frequency === 'daily'" class="tt-radio__dot"></view>
-          </view>
+          <TtRadio :checked="form.frequency === 'daily'" />
           <text class="text-sm ml-md">每天</text>
         </view>
         <view class="freq-item border-b flex-center-v" @click="form.frequency = 'weekday'">
-          <view class="tt-radio" :class="{ 'tt-radio--checked': form.frequency === 'weekday' }">
-            <view v-if="form.frequency === 'weekday'" class="tt-radio__dot"></view>
-          </view>
+          <TtRadio :checked="form.frequency === 'weekday'" />
           <text class="text-sm ml-md">工作日（周一至周五）</text>
         </view>
         <view class="freq-item flex-center-v" @click="form.frequency = 'custom'">
-          <view class="tt-radio" :class="{ 'tt-radio--checked': form.frequency === 'custom' }">
-            <view v-if="form.frequency === 'custom'" class="tt-radio__dot"></view>
-          </view>
+          <TtRadio :checked="form.frequency === 'custom'" />
           <text class="text-sm ml-md">自定义</text>
         </view>
       </view>
@@ -122,17 +105,12 @@
     
     <!-- 删除按钮（编辑模式） -->
     <view v-if="isEdit" class="mt-xl mb-xl">
-      <view class="tt-btn tt-btn--danger-text" @click="onDelete">
-        <text class="tt-btn__text tt-btn__text--danger">删除此打卡项目</text>
-      </view>
+      <TtButton text="删除此打卡项目" type="danger-text" @click="onDelete" />
     </view>
     
     <!-- 底部保存 -->
     <view class="save-section mt-lg mb-xl">
-      <view class="tt-btn tt-btn--primary tt-btn--block" @click="onSave">
-        <text v-if="saving" class="tt-btn__text">保存中...</text>
-        <text v-else class="tt-btn__text">{{ isEdit ? '保存修改' : '创建项目' }}</text>
-      </view>
+      <TtButton :text="saving ? '保存中...' : (isEdit ? '保存修改' : '创建项目')" type="primary" block @click="onSave" />
     </view>
     
     <TtDialog
@@ -152,8 +130,7 @@ import { createProject } from './api/createProject'
 import { updateProject } from './api/updateProject'
 import { deleteProject } from './api/deleteProject'
 import { goBack } from '@/route/index'
-import { db, COLLECTIONS } from '@/cloud-emas/database/database'
-import { requireAccountId } from '@/utils/auth'
+import { getProjectById } from './api/getProjectById'
 
 const isEdit = ref(false)
 const editId = ref('')
@@ -253,11 +230,9 @@ onLoad(async (options) => {
     editId.value = options.id
     uni.setNavigationBarTitle({ title: '编辑打卡' })
     
-    const accountId = await requireAccountId()
-    const res = await db.collection(COLLECTIONS.PROJECTS)
-      .findOne({ _id: options.id, accountId })
-    if (res?.result) {
-      const p = res.result
+    const res = await getProjectById(options.id)
+    if (res.success) {
+      const p = res.data
       form.name = p.name
       form.icon = p.icon
       form.color = p.color
@@ -348,81 +323,4 @@ onLoad(async (options) => {
   padding: 12rpx 24rpx;
 }
 
-.tt-input {
-  display: flex;
-  align-items: center;
-  padding: 24rpx 32rpx;
-
-  &__inner {
-    flex: 1;
-    font-size: 28rpx;
-    color: var(--tt-foreground, #09090B);
-    background: transparent;
-  }
-
-  &__clear {
-    width: 40rpx;
-    height: 40rpx;
-    margin-left: 12rpx;
-  }
-
-  &__clear-icon {
-    font-size: 32rpx;
-    color: var(--tt-muted-foreground, #A1A1AA);
-    line-height: 1;
-  }
-}
-
-.tt-radio {
-  width: 36rpx;
-  height: 36rpx;
-  border-radius: 50%;
-  border: 2rpx solid var(--tt-disabled, #D4D4D8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-
-  &--checked {
-    border-color: var(--tt-foreground, #09090B);
-  }
-
-  &__dot {
-    width: 20rpx;
-    height: 20rpx;
-    border-radius: 50%;
-    background-color: var(--tt-foreground, #09090B);
-  }
-}
-
-.tt-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24rpx 40rpx;
-  border-radius: 20rpx;
-
-  &--primary {
-    background: var(--tt-foreground, #09090B);
-  }
-
-  &--block {
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  &--danger-text {
-    background: transparent;
-  }
-
-  &__text {
-    font-size: 28rpx;
-    color: var(--tt-background, #ffffff);
-    font-weight: 500;
-
-    &--danger {
-      color: var(--tt-error, #EF4444);
-    }
-  }
-}
 </style>

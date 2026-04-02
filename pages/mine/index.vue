@@ -19,12 +19,15 @@
       <view class="card overflow-hidden">
         <view class="list-item flex-between p-lg" @click="goManage">
           <text class="text-sm text-foreground">打卡项目管理</text>
-          <TtSvg name="ri-arrow-right-s-line" :size="32" color="#71717A" />
+          <view class="flex-center-v gap-sm">
+            <text v-if="activeCount > 0" class="text-xs text-muted">{{ activeCount }}</text>
+            <TtSvg name="ri-arrow-right-s-line" :size="32" color="#71717A" />
+          </view>
         </view>
         <view class="list-item flex-between p-lg" @click="goArchived">
           <text class="text-sm text-foreground">已归档项目</text>
           <view class="flex-center-v gap-sm">
-            <text class="text-xs text-muted">2</text>
+            <text v-if="archivedCount > 0" class="text-xs text-muted">{{ archivedCount }}</text>
             <TtSvg name="ri-arrow-right-s-line" :size="32" color="#71717A" />
           </view>
         </view>
@@ -89,12 +92,16 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 import { goToProjectManage, goToProjectArchived, goToPrivacy } from '@/route/index'
 import { useThemeStore } from '@/stores/theme'
+import { getMineStats } from './api/getMineStats'
 
 const themeStore = useThemeStore()
 
-const totalDays = ref(45)
+const totalDays = ref(0)
+const activeCount = ref(0)
+const archivedCount = ref(0)
 const darkMode = computed({
   get: () => themeStore.mode === 'dark',
   set: (val) => themeStore.setMode(val ? 'dark' : 'light'),
@@ -102,8 +109,21 @@ const darkMode = computed({
 const showAbout = ref(false)
 const aboutMessage = 'DaKa 是一款简洁高效的打卡习惯养成工具。\n\n支持自定义打卡项目、多种频率设置、补打卡、日历视图和统计分析，帮助你坚持每一天的好习惯。\n\n版本: v1.0.0'
 
+async function loadMineData() {
+  const res = await getMineStats()
+  if (res.success) {
+    totalDays.value = res.totalDays
+    activeCount.value = res.activeCount
+    archivedCount.value = res.archivedCount
+  }
+}
+
 onMounted(() => {
   themeStore.applyTheme()
+})
+
+onShow(() => {
+  loadMineData()
 })
 
 function goManage() {

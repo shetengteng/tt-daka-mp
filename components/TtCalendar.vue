@@ -173,13 +173,13 @@ watch(() => props.current, (val) => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 64rpx;
+    justify-content: flex-start;
+    height: 88rpx;
     padding: 4rpx 0;
     border-radius: 12rpx;
 
     &--empty {
-      min-height: 0;
+      height: 0;
     }
 
     &--disabled {
@@ -188,7 +188,11 @@ watch(() => props.current, (val) => {
 
     &--selected:not(&--today) {
       .tt-cal__day-wrap {
-        background-color: var(--tt-accent, #f5f5f5);
+        background-color: var(--tt-foreground, #09090B);
+      }
+      .tt-cal__day {
+        color: var(--tt-background, #ffffff);
+        font-weight: 600;
       }
     }
   }

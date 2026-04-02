@@ -2,13 +2,24 @@
   <view class="page">
     <!-- 顶部区域 -->
     <view class="header px-xl pt-lg">
-      <view class="flex-between">
-        <text class="app-title text-foreground">DaKa</text>
-        <text class="text-sm text-muted">{{ todayLabel }}</text>
+      <view class="header__top flex-between flex-center-v">
+        <view>
+          <text class="app-title text-foreground">DaKa</text>
+          <view class="header__greeting">
+            <text class="text-xs text-muted">{{ greeting }}</text>
+          </view>
+        </view>
+        <view class="header__date-badge flex-center-v" @click="goCalendar">
+          <text class="header__date-day">{{ todayDay }}</text>
+          <view class="header__date-info">
+            <text class="header__date-month">{{ todayMonth }}</text>
+            <text class="header__date-weekday">{{ todayWeekday }}</text>
+          </view>
+        </view>
       </view>
       
       <!-- 今日进度 -->
-      <view v-if="activeProjects.length > 0" class="progress-section card p-lg mt-xl mb-lg">
+      <view v-if="activeProjects.length > 0" class="progress-section card p-lg mt-lg mb-lg">
         <view class="flex-between mb-sm">
           <text class="text-sm text-muted">今日进度</text>
           <text class="text-sm font-semibold text-foreground">
@@ -39,11 +50,12 @@
       />
       
       <!-- 空状态 -->
-      <view v-if="!loading && activeProjects.length === 0" class="empty-state flex-col flex-center py-xl">
-        <TtEmpty description="还没有打卡项目" />
-        <view class="tt-btn tt-btn--primary mt-lg" @click="goAdd">
-          <text class="tt-btn__text">+ 创建打卡项目</text>
+      <view v-if="!loading && activeProjects.length === 0" class="empty-state flex-col flex-center">
+        <view class="empty-state__icon flex-center rounded-xl">
+          <TtSvg name="ri-checkbox-circle-line" :size="48" color="#D4D4D8" />
         </view>
+        <text class="text-sm text-muted mt-md">还没有打卡项目</text>
+        <TtButton text="+ 创建打卡项目" type="primary" class="mt-lg" @click="goAdd" />
       </view>
       
       <!-- 新建按钮 -->
@@ -78,8 +90,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { onPullDownRefresh } from '@dcloudio/uni-app'
+import { ref, computed } from 'vue'
+import { onShow, onPullDownRefresh } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { useDakaStore } from '@/stores/daka'
 import { getProjectList } from './api/getProjectList'
@@ -98,7 +110,18 @@ const currentActionId = ref('')
 const streakMap = ref({})
 const totalDaysMap = ref({})
 
-const todayLabel = computed(() => dayjs().format('YYYY.MM.DD'))
+const todayDay = computed(() => dayjs().format('D'))
+const todayMonth = computed(() => dayjs().format('MMM').toUpperCase())
+const todayWeekday = computed(() => dayjs().format('ddd'))
+
+const greeting = computed(() => {
+  const hour = dayjs().hour()
+  if (hour < 6) return '夜深了，早点休息'
+  if (hour < 12) return '早上好，新的一天开始了'
+  if (hour < 14) return '中午好，记得休息'
+  if (hour < 18) return '下午好，继续加油'
+  return '晚上好，今天辛苦了'
+})
 
 const activeProjects = computed(() => dakaStore.activeProjects)
 const todayProgress = computed(() => dakaStore.todayProgress)
@@ -126,7 +149,7 @@ const actionSheetItems = [
   { label: '删除', value: 'delete', color: '#EF4444' },
 ]
 
-onMounted(() => {
+onShow(() => {
   themeStore.applyTheme()
   loadData()
 })
@@ -195,6 +218,10 @@ function onActionSelect(item) {
 function goAdd() {
   goToProjectAdd()
 }
+
+function goCalendar() {
+  uni.switchTab({ url: '/pages/calendar/index' })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -203,6 +230,51 @@ function goAdd() {
   /* #ifdef MP-WEIXIN */
   padding-right: 200rpx;
   /* #endif */
+}
+
+.header__date-badge {
+  padding: 12rpx 20rpx;
+  border-radius: 16rpx;
+  background-color: var(--tt-card, #F4F4F5);
+  flex-shrink: 0;
+  gap: 12rpx;
+}
+
+.header__date-day {
+  font-size: 48rpx;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--tt-foreground);
+}
+
+.header__date-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.header__date-month {
+  font-size: 20rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  color: var(--tt-muted-foreground);
+  line-height: 1.3;
+}
+
+.header__date-weekday {
+  font-size: 20rpx;
+  font-weight: 500;
+  color: var(--tt-muted-foreground);
+  line-height: 1.3;
+}
+
+.empty-state {
+  min-height: 60vh;
+}
+
+.empty-state__icon {
+  width: 120rpx;
+  height: 120rpx;
+  background-color: var(--tt-card, #F4F4F5);
 }
 
 .progress-bar {
@@ -219,10 +291,15 @@ function goAdd() {
 }
 
 .app-title {
-  font-size: 48rpx;
+  font-size: 40rpx;
   font-weight: 700;
-  letter-spacing: 2rpx;
+  letter-spacing: 1rpx;
+  line-height: 1.2;
   font-family: 'Pacifico', 'PingFang SC', cursive;
+}
+
+.header__greeting {
+  margin-top: 4rpx;
 }
 
 .add-btn {
@@ -230,21 +307,4 @@ function goAdd() {
   padding: 32rpx;
 }
 
-.tt-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20rpx 40rpx;
-  border-radius: 20rpx;
-
-  &--primary {
-    background: var(--tt-foreground, #09090B);
-  }
-
-  &__text {
-    font-size: 28rpx;
-    color: var(--tt-background, #ffffff);
-    font-weight: 500;
-  }
-}
 </style>

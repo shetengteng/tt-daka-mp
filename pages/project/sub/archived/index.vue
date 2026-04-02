@@ -39,8 +39,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { archiveProject } from '../../api/archiveProject'
-import { db, COLLECTIONS } from '@/cloud-emas/database/database'
-import { requireAccountId } from '@/utils/auth'
+import { getArchivedProjects } from './api/getArchivedProjects'
+import { deleteProject } from '../add/api/deleteProject'
 import { useThemeStore } from '@/stores/theme'
 
 const themeStore = useThemeStore()
@@ -50,12 +50,10 @@ const showDeleteDialog = ref(false)
 const deleteTargetId = ref('')
 
 async function loadArchived() {
-  const accountId = await requireAccountId()
-  const res = await db.collection(COLLECTIONS.PROJECTS)
-    .find({ accountId, archived: true })
-    .sort({ updateTime: -1 })
-    .exec()
-  archivedProjects.value = res?.result || []
+  const res = await getArchivedProjects()
+  if (res.success) {
+    archivedProjects.value = res.list
+  }
 }
 
 async function onRestore(id) {
@@ -72,16 +70,12 @@ function onDelete(id) {
 }
 
 async function confirmDelete() {
-  const accountId = await requireAccountId()
-  
-  await db.collection(COLLECTIONS.RECORDS)
-    .deleteMany({ accountId, projectId: deleteTargetId.value })
-  await db.collection(COLLECTIONS.PROJECTS)
-    .deleteOne({ _id: deleteTargetId.value, accountId })
-  
-  uni.showToast({ title: '已删除', icon: 'success' })
-  showDeleteDialog.value = false
-  await loadArchived()
+  const res = await deleteProject(deleteTargetId.value)
+  if (res.success) {
+    uni.showToast({ title: '已删除', icon: 'success' })
+    showDeleteDialog.value = false
+    await loadArchived()
+  }
 }
 
 onMounted(() => {

@@ -9,15 +9,11 @@ export async function getStats() {
   try {
     const accountId = await requireAccountId()
 
-    const projectRes = await db.collection(COLLECTIONS.PROJECTS)
-      .where({ accountId, archived: false })
-      .get()
+    const [projectRes, recordRes] = await Promise.all([
+      db.collection(COLLECTIONS.PROJECTS).where({ accountId, archived: false }).get(),
+      db.collection(COLLECTIONS.RECORDS).where({ accountId }).orderBy('date', 'desc').get(),
+    ])
     const projects = projectRes.data || []
-
-    const recordRes = await db.collection(COLLECTIONS.RECORDS)
-      .where({ accountId })
-      .orderBy('date', 'desc')
-      .get()
     const allRecords = recordRes.data || []
 
     const today = formatDate(new Date())
@@ -35,7 +31,6 @@ export async function getStats() {
       const pDateSet = new Set(pRecords.map(r => r.date))
       const monthRecords = pRecords.filter(r => r.date >= monthStart && r.date <= monthEnd)
       const daysInMonth = dayjs().daysInMonth()
-      const daysPassed = Math.min(parseInt(dayjs().format('D')), daysInMonth)
 
       const { currentStreak: pStreak, longestStreak: pLongest } = calcStreaks(pDateSet, today)
       const last7 = calcLast7Days(pDateSet)
@@ -44,8 +39,8 @@ export async function getStats() {
         project: p,
         totalDays: pDateSet.size,
         monthDone: monthRecords.length,
-        monthTotal: daysPassed,
-        completionRate: daysPassed > 0 ? Math.round((monthRecords.length / daysPassed) * 100) : 0,
+        monthTotal: daysInMonth,
+        completionRate: daysInMonth > 0 ? Math.round((monthRecords.length / daysInMonth) * 100) : 0,
         currentStreak: pStreak,
         longestStreak: pLongest,
         last7,

@@ -14,15 +14,16 @@ export async function getRecordsByMonth(monthDate) {
     const accountId = await requireAccountId()
     const { startDate, endDate } = getDateRange(monthDate, 'month')
 
-    const recordRes = await db.collection(COLLECTIONS.RECORDS)
-      .where({ accountId, date: { $gte: startDate, $lte: endDate } })
-      .orderBy('date', 'asc')
-      .orderBy('completedAt', 'asc')
-      .get()
-
-    const projectRes = await db.collection(COLLECTIONS.PROJECTS)
-      .where({ accountId })
-      .get()
+    const [recordRes, projectRes] = await Promise.all([
+      db.collection(COLLECTIONS.RECORDS)
+        .where({ accountId, date: { $gte: startDate, $lte: endDate } })
+        .orderBy('date', 'asc')
+        .orderBy('completedAt', 'asc')
+        .get(),
+      db.collection(COLLECTIONS.PROJECTS)
+        .where({ accountId })
+        .get(),
+    ])
 
     return {
       success: true,
