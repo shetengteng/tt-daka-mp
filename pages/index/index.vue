@@ -105,7 +105,7 @@ const dakaStore = useDakaStore()
 
 const capsuleStyle = computed(() => {
   if (themeStore.capsuleRight > 0) {
-    return { paddingRight: `${themeStore.capsuleRight + 10}px` }
+    return { paddingRight: `${themeStore.capsuleRight + 16}px` }
   }
   return {}
 })
