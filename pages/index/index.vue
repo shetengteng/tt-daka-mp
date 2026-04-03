@@ -44,7 +44,6 @@
         :checked="item.checked"
         :streak="item.streak"
         :totalDays="item.totalDays"
-        :isDark="themeStore.mode === 'dark'"
         @toggle="onToggle"
         @card-tap="onCardTap"
         @card-longpress="onCardLongpress"
@@ -87,6 +86,14 @@
       message="确定取消今天的打卡记录吗？"
       @confirm="confirmCancelDaka"
     />
+    
+    <!-- 确认删除项目 -->
+    <TtDialog
+      v-model:visible="showDeleteDialog"
+      title="删除项目"
+      message="删除后所有打卡记录将一并删除，且不可恢复。"
+      @confirm="confirmDeleteProject"
+    />
   </view>
 </template>
 
@@ -97,6 +104,8 @@ import { useThemeStore } from '@/stores/theme'
 import { useDakaStore } from '@/stores/daka'
 import { getProjectList } from './api/getProjectList'
 import { toggleDaka } from './api/toggleDaka'
+import { archiveProject } from '@/pages/project/api/archiveProject'
+import { deleteProject } from '@/pages/project/sub/add/api/deleteProject'
 import { goToProjectAdd, goToProjectDetail, goToProjectEdit } from '@/route/index'
 import { dayjs, formatDate } from '@/utils/date'
 import DakaCard from './components/DakaCard.vue'
@@ -116,6 +125,7 @@ const capsuleStyle = computed(() => {
 const loading = ref(false)
 const showActionSheet = ref(false)
 const showCancelDialog = ref(false)
+const showDeleteDialog = ref(false)
 const currentActionId = ref('')
 const streakMap = ref({})
 const totalDaysMap = ref({})
@@ -214,15 +224,32 @@ function onCardLongpress(id) {
   showActionSheet.value = true
 }
 
-function onActionSelect(item) {
+async function onActionSelect(item) {
   showActionSheet.value = false
   if (item.value === 'edit') {
     goToProjectEdit(currentActionId.value)
   } else if (item.value === 'archive') {
-    // TODO: archiveProject API
+    const res = await archiveProject(currentActionId.value, true)
+    if (res.success) {
+      uni.showToast({ title: '已归档', icon: 'success' })
+      loadData()
+    } else {
+      uni.showToast({ title: res.error || '归档失败', icon: 'none' })
+    }
   } else if (item.value === 'delete') {
-    // TODO: deleteProject API with confirm
+    showDeleteDialog.value = true
   }
+}
+
+async function confirmDeleteProject() {
+  const res = await deleteProject(currentActionId.value)
+  if (res.success) {
+    uni.showToast({ title: '已删除', icon: 'success' })
+    loadData()
+  } else {
+    uni.showToast({ title: res.error || '删除失败', icon: 'none' })
+  }
+  showDeleteDialog.value = false
 }
 
 function goAdd() {

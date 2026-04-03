@@ -64,6 +64,20 @@ export const useThemeStore = defineStore('theme', () => {
   const statusBarHeight = ref(layout.statusBarHeight)
   const capsuleRight = ref(layout.capsuleRight)
 
+  const isDark = computed(() => mode.value === 'dark')
+
+  const c = computed(() => {
+    const dark = isDark.value
+    return {
+      fg: dark ? '#FAFAFA' : '#09090B',
+      bg: dark ? '#09090B' : '#ffffff',
+      card: dark ? '#1C1C1E' : '#F4F4F5',
+      muted: dark ? '#A1A1AA' : '#737373',
+      secondary: dark ? '#27272A' : '#F4F4F5',
+      border: dark ? '#3F3F46' : '#e5e5e5',
+    }
+  })
+
   const themeStyle = computed(() => {
     if (mode.value !== 'dark') return ''
     return Object.entries(DARK_VARS).map(([k, v]) => `${k}:${v}`).join(';')
@@ -118,7 +132,7 @@ export const useThemeStore = defineStore('theme', () => {
 
   watch(mode, () => applyTheme(), { immediate: false })
 
-  return { mode, statusBarHeight, capsuleRight, themeStyle, toggle, setMode, applyTheme }
+  return { mode, isDark, c, statusBarHeight, capsuleRight, themeStyle, toggle, setMode, applyTheme }
 }, {
   persist: {
     key: 'dk-theme',

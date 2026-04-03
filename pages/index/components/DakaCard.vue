@@ -26,7 +26,7 @@
           <text class="text-xs text-white ml-xs font-medium">已打卡</text>
         </view>
         <view v-else class="daka-btn daka-btn--unchecked flex-center rounded-lg">
-          <TtSvg name="ri-checkbox-blank-circle-line" :size="28" :color="isDark ? '#FAFAFA' : '#09090B'" />
+          <TtSvg name="ri-checkbox-blank-circle-line" :size="28" :color="c.fg" />
           <text class="text-xs ml-xs font-medium text-foreground">打卡</text>
         </view>
       </view>
@@ -36,50 +36,29 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useThemeStore } from '@/stores/theme'
 
 const props = defineProps({
-  project: {
-    type: Object,
-    required: true
-  },
-  checked: {
-    type: Boolean,
-    default: false
-  },
-  streak: {
-    type: Number,
-    default: 0
-  },
-  totalDays: {
-    type: Number,
-    default: 0
-  },
-  isDark: {
-    type: Boolean,
-    default: false
-  }
+  project: { type: Object, required: true },
+  checked: { type: Boolean, default: false },
+  streak: { type: Number, default: 0 },
+  totalDays: { type: Number, default: 0 },
 })
 
 const emit = defineEmits(['toggle', 'card-tap', 'card-longpress'])
+const { isDark, c } = useThemeStore()
 
 const cardBgStyle = computed(() => {
-  if (!props.checked) return { backgroundColor: 'var(--tt-card, #F4F4F5)' }
-  return { backgroundColor: props.isDark ? 'rgba(34,197,94,0.12)' : '#DCFCE7' }
+  if (!props.checked) return { backgroundColor: c.card }
+  return { backgroundColor: isDark ? 'rgba(34,197,94,0.12)' : '#DCFCE7' }
 })
 
 const barStyle = computed(() => ({
   backgroundColor: props.checked ? '#22C55E' : '#F97316'
 }))
 
-const nameColor = computed(() => {
-  if (props.isDark) return 'var(--tt-foreground)'
-  return props.checked ? '#0a0a0a' : 'var(--tt-foreground)'
-})
-
-const subColor = computed(() => {
-  if (props.isDark) return 'var(--tt-muted-foreground)'
-  return props.checked ? '#737373' : 'var(--tt-muted-foreground)'
-})
+const nameColor = computed(() => props.checked && !isDark ? '#0a0a0a' : c.fg)
+const subColor = computed(() => props.checked && !isDark ? '#737373' : c.muted)
 
 const iconColor = computed(() => {
   return props.checked ? '#22C55E' : (props.project.color || '#3B82F6')

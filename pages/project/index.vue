@@ -40,6 +40,9 @@
             <view class="action-btn flex-center rounded-md ml-xs" @click.stop="onArchive(item._id)">
               <TtSvg name="ri-archive-line" :size="28" color="#737373" />
             </view>
+            <view class="action-btn flex-center rounded-md ml-xs" @click.stop="onDelete(item._id)">
+              <TtSvg name="ri-delete-bin-line" :size="28" color="#EF4444" />
+            </view>
           </view>
         </view>
         
@@ -62,6 +65,13 @@
       message="归档后项目将不在首页显示，可在「已归档项目」中恢复。"
       @confirm="onArchiveConfirm"
     />
+    
+    <TtDialog
+      v-model:visible="showDeleteDialog"
+      title="删除项目"
+      message="删除后所有打卡记录将一并删除，且不可恢复。"
+      @confirm="onDeleteConfirm"
+    />
   </view>
 </template>
 
@@ -70,6 +80,7 @@ import { ref, onMounted, nextTick } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { archiveProject } from './api/archiveProject'
+import { deleteProject } from '@/pages/project/sub/add/api/deleteProject'
 import { batchUpdateSort } from './api/batchUpdateSort'
 import { getActiveProjects } from './api/getActiveProjects'
 import { goToProjectEdit } from '@/route/index'
@@ -201,7 +212,9 @@ function onEdit(id) {
 }
 
 const showArchiveDialog = ref(false)
+const showDeleteDialog = ref(false)
 const archiveTargetId = ref('')
+const deleteTargetId = ref('')
 
 function onArchive(id) {
   if (isDragging) return
@@ -214,6 +227,22 @@ async function onArchiveConfirm() {
   if (res.success) {
     uni.showToast({ title: '已归档', icon: 'success' })
     await loadProjects()
+  }
+}
+
+function onDelete(id) {
+  if (isDragging) return
+  deleteTargetId.value = id
+  showDeleteDialog.value = true
+}
+
+async function onDeleteConfirm() {
+  const res = await deleteProject(deleteTargetId.value)
+  if (res.success) {
+    uni.showToast({ title: '已删除', icon: 'success' })
+    await loadProjects()
+  } else {
+    uni.showToast({ title: res.error || '删除失败', icon: 'none' })
   }
 }
 

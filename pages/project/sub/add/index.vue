@@ -95,7 +95,7 @@
                 </view>
               </view>
             </view>
-            <view class="preview-btn flex-center rounded-lg" :style="{ border: `1rpx solid ${isDark ? '#FAFAFA' : '#09090B'}` }">
+            <view class="preview-btn flex-center rounded-lg" :style="{ border: `1rpx solid ${c.fg}` }">
               <text class="text-xs text-foreground">○ 打卡</text>
             </view>
           </view>
@@ -133,30 +133,23 @@ import { goBack } from '@/route/index'
 import { getProjectById } from './api/getProjectById'
 
 const themeStore = useThemeStore()
+const { isDark, c } = themeStore
 const isEdit = ref(false)
 const editId = ref('')
 const saving = ref(false)
 const showDeleteDialog = ref(false)
-const isDark = computed(() => themeStore.mode === 'dark')
 
 function iconBoxStyle(icon) {
   const selected = form.icon === icon
-  if (selected) {
-    return { backgroundColor: isDark.value ? '#FAFAFA' : '#09090B' }
-  }
-  return { backgroundColor: isDark.value ? '#27272A' : '#F4F4F5' }
+  return { backgroundColor: selected ? c.fg : c.secondary }
 }
 
 function iconSvgColor(icon) {
-  const selected = form.icon === icon
-  if (selected) return isDark.value ? '#09090B' : '#ffffff'
-  return isDark.value ? '#A1A1AA' : '#737373'
+  return form.icon === icon ? c.bg : c.muted
 }
 
 function dayChipTextColor(idx) {
-  const active = form.customDays.includes(idx)
-  if (active) return isDark.value ? '#09090B' : '#ffffff'
-  return isDark.value ? '#FAFAFA' : '#09090B'
+  return form.customDays.includes(idx) ? c.bg : c.fg
 }
 
 const form = reactive({
