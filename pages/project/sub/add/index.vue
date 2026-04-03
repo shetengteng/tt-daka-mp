@@ -19,9 +19,9 @@
           <view 
             class="icon-box flex-center rounded-lg" 
             :class="{ 'icon-box--active': form.icon === item.icon }"
-            :style="form.icon === item.icon ? { backgroundColor: '#09090B' } : {}"
+            :style="iconBoxStyle(item.icon)"
           >
-            <TtSvg :name="item.icon" :size="36" :color="form.icon === item.icon ? '#ffffff' : '#737373'" />
+            <TtSvg :name="item.icon" :size="36" :color="iconSvgColor(item.icon)" />
           </view>
         </view>
       </view>
@@ -52,15 +52,15 @@
       <view class="card overflow-hidden">
         <view class="freq-item border-b flex-center-v" @click="form.frequency = 'daily'">
           <TtRadio :checked="form.frequency === 'daily'" />
-          <text class="text-sm ml-md">每天</text>
+          <text class="text-sm ml-md text-foreground">每天</text>
         </view>
         <view class="freq-item border-b flex-center-v" @click="form.frequency = 'weekday'">
           <TtRadio :checked="form.frequency === 'weekday'" />
-          <text class="text-sm ml-md">工作日（周一至周五）</text>
+          <text class="text-sm ml-md text-foreground">工作日（周一至周五）</text>
         </view>
         <view class="freq-item flex-center-v" @click="form.frequency = 'custom'">
           <TtRadio :checked="form.frequency === 'custom'" />
-          <text class="text-sm ml-md">自定义</text>
+          <text class="text-sm ml-md text-foreground">自定义</text>
         </view>
       </view>
       
@@ -89,13 +89,13 @@
                 <TtSvg :name="form.icon" :size="36" :color="form.color" />
               </view>
               <view class="ml-md">
-                <text class="text-base font-semibold">{{ form.name || '打卡名称' }}</text>
+                <text class="text-base font-semibold text-foreground">{{ form.name || '打卡名称' }}</text>
                 <view class="mt-xs">
                   <text class="text-xs text-muted">目标: {{ frequencyText }} · 总计 0 天</text>
                 </view>
               </view>
             </view>
-            <view class="preview-btn flex-center rounded-lg" style="border: 1rpx solid #09090B">
+            <view class="preview-btn flex-center rounded-lg" :style="{ border: `1rpx solid ${isDark ? '#FAFAFA' : '#09090B'}` }">
               <text class="text-xs text-foreground">○ 打卡</text>
             </view>
           </view>
@@ -132,10 +132,26 @@ import { deleteProject } from './api/deleteProject'
 import { goBack } from '@/route/index'
 import { getProjectById } from './api/getProjectById'
 
+const themeStore = useThemeStore()
 const isEdit = ref(false)
 const editId = ref('')
 const saving = ref(false)
 const showDeleteDialog = ref(false)
+const isDark = computed(() => themeStore.mode === 'dark')
+
+function iconBoxStyle(icon) {
+  const selected = form.icon === icon
+  if (selected) {
+    return { backgroundColor: isDark.value ? '#FAFAFA' : '#09090B' }
+  }
+  return { backgroundColor: isDark.value ? '#27272A' : '#F4F4F5' }
+}
+
+function iconSvgColor(icon) {
+  const selected = form.icon === icon
+  if (selected) return isDark.value ? '#09090B' : '#ffffff'
+  return isDark.value ? '#A1A1AA' : '#737373'
+}
 
 const form = reactive({
   name: '',
@@ -220,8 +236,6 @@ async function confirmDelete() {
     setTimeout(() => goBack(), 500)
   }
 }
-
-const themeStore = useThemeStore()
 
 onLoad(async (options) => {
   themeStore.applyTheme()

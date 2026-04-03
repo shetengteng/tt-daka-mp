@@ -25,7 +25,7 @@
         :class="cellClass(cell)"
         @click="onCellClick(cell)"
       >
-        <view v-if="cell.day" class="tt-cal__day-wrap" :style="cell.style">
+        <view v-if="cell.day" class="tt-cal__day-wrap" :style="cell.isSelected ? null : cell.style">
           <text class="tt-cal__day" :class="dayTextClass(cell)">{{ cell.day }}</text>
         </view>
         <text v-if="cell.bottom" class="tt-cal__bottom">{{ cell.bottom }}</text>
