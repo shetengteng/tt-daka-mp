@@ -61,12 +61,14 @@
       <!-- 新建按钮 -->
       <view 
         v-if="activeProjects.length > 0" 
-        class="add-btn flex-center rounded-xl mt-md mb-lg"
+        class="add-btn flex-center rounded-xl mt-md"
         @click="goAdd"
       >
         <TtSvg name="ri-add-line" :size="28" color="#71717A" />
         <text class="text-sm text-muted ml-xs">新建打卡项目</text>
       </view>
+      
+      <text v-if="activeProjects.length > 0" class="text-xs text-muted block text-center mt-sm mb-lg" style="opacity:0.6">长按卡片可编辑、归档或删除</text>
     </view>
     
     <TtBottomPlaceholder />
