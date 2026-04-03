@@ -26,7 +26,7 @@
           <text class="text-xs text-white ml-xs font-medium">已打卡</text>
         </view>
         <view v-else class="daka-btn daka-btn--unchecked flex-center rounded-lg">
-          <TtSvg name="ri-checkbox-blank-circle-line" :size="28" :color="'var(--tt-foreground, #09090B)'" />
+          <TtSvg name="ri-checkbox-blank-circle-line" :size="28" :color="isDark ? '#FAFAFA' : '#09090B'" />
           <text class="text-xs ml-xs font-medium text-foreground">打卡</text>
         </view>
       </view>
