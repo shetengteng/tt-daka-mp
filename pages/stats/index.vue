@@ -87,7 +87,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { onShow, onPullDownRefresh } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { getStats } from './api/getStats'
@@ -115,23 +115,20 @@ function barColorClass(percent) {
 
 function barTextClass(percent) {
   if (percent < 0) return 'text-disabled'
-  if (percent >= 100) return ''
-  if (percent > 0) return ''
+  if (percent >= 100) return 'text-success'
+  if (percent > 0) return 'text-foreground'
   return 'text-disabled'
 }
 
 const themeStore = useThemeStore()
 const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
 
-onMounted(async () => {
+onShow(async () => {
+  themeStore.applyTheme()
   const res = await getStats()
   if (res.success) {
     Object.assign(stats, res.data)
   }
-})
-
-onShow(() => {
-  themeStore.applyTheme()
 })
 
 onPullDownRefresh(async () => {

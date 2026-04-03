@@ -92,7 +92,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { goToProjectManage, goToProjectArchived, goToPrivacy } from '@/route/index'
 import { useThemeStore } from '@/stores/theme'
@@ -120,12 +120,9 @@ async function loadMineData() {
   }
 }
 
-onMounted(() => {
-  loadMineData()
-})
-
 onShow(() => {
   themeStore.applyTheme()
+  loadMineData()
 })
 
 function goManage() {

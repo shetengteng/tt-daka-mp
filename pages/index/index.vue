@@ -326,12 +326,12 @@ function goCalendar() {
   font-size: 40rpx;
   font-weight: 700;
   letter-spacing: 1rpx;
-  line-height: 1.2;
+  line-height: 1;
   font-family: 'Pacifico', 'PingFang SC', cursive;
 }
 
 .header__greeting {
-  margin-top: 4rpx;
+  margin-top: 0;
 }
 
 .add-btn {

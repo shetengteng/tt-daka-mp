@@ -26,8 +26,8 @@
           @click="onDetailTap(item.project._id)"
         >
           <view class="detail-bar" :style="{ backgroundColor: item.record ? '#22C55E' : 'transparent' }"></view>
-          <TtSvg :name="item.project.icon || 'ri-checkbox-circle-line'" :size="32" :color="item.project.color" class="ml-md" />
-          <text class="text-sm font-medium text-foreground flex-1 ml-sm">{{ item.project.name }}</text>
+          <TtSvg :name="item.project.icon || 'ri-checkbox-circle-line'" :size="32" :color="item.project.color" class="ml-sm" />
+          <text class="text-sm font-medium text-foreground flex-1 ml-md">{{ item.project.name }}</text>
           <text class="text-xs" :style="{ color: item.record ? '#71717A' : '#D4D4D8' }">
             {{ item.record ? formatTime(item.record.completedAt) + ' 打卡' : '未打卡' }}
           </text>
@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { getRecordsByMonth } from './api/getRecordsByMonth'
@@ -170,21 +170,19 @@ function onDetailTap(projectId) {
 const themeStore = useThemeStore()
 const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
 
-onMounted(() => {
-  loadMonthData()
-})
-
 onShow(() => {
   themeStore.applyTheme()
+  loadMonthData()
 })
 </script>
 
 <style lang="scss" scoped>
 .detail-bar {
-  width: 4rpx;
+  width: 6rpx;
   height: 64rpx;
   border-radius: 9999rpx;
   flex-shrink: 0;
+  margin-right: 20rpx;
 }
 
 .block {

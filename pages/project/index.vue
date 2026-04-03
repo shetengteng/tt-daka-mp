@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, nextTick } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { archiveProject } from './api/archiveProject'
@@ -248,12 +248,8 @@ async function onDeleteConfirm() {
 
 const themeStore = useThemeStore()
 
-onMounted(() => {
-  themeStore.applyTheme()
-  loadProjects()
-})
-
 onShow(() => {
+  themeStore.applyTheme()
   loadProjects()
 })
 </script>

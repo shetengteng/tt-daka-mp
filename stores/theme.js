@@ -80,7 +80,7 @@ export const useThemeStore = defineStore('theme', () => {
 
   const themeStyle = computed(() => {
     if (mode.value !== 'dark') return ''
-    return Object.entries(DARK_VARS).map(([k, v]) => `${k}:${v}`).join(';')
+    return Object.entries(DARK_VARS).map(([k, v]) => `${k}:${v}`).join(';') + ';background-color:#09090B;color:#FAFAFA'
   })
 
   function toggle() {
@@ -116,7 +116,7 @@ export const useThemeStore = defineStore('theme', () => {
     try {
       uni.setNavigationBarColor({
         frontColor: isDark ? '#ffffff' : '#000000',
-        backgroundColor: isDark ? '#18181B' : '#ffffff',
+        backgroundColor: isDark ? '#09090B' : '#ffffff',
         animation: { duration: 0, timingFunc: 'easeIn' },
       })
     } catch (e) {}
