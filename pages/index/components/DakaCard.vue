@@ -13,9 +13,9 @@
             <TtSvg :name="project.icon || 'ri-checkbox-circle-line'" :size="36" :color="iconColor" />
           </view>
           <view class="ml-md">
-            <text class="daka-card__name font-semibold text-base" :style="{ color: checked ? '#0a0a0a' : 'var(--tt-foreground)' }">{{ project.name }}</text>
+            <text class="daka-card__name font-semibold text-base" :style="{ color: nameColor }">{{ project.name }}</text>
             <view class="mt-xs">
-              <text class="text-xs" :style="{ color: checked ? '#737373' : 'var(--tt-muted-foreground)' }">连续{{ streak }}天 · 总计{{ totalDays }}天</text>
+              <text class="text-xs" :style="{ color: subColor }">连续{{ streak }}天 · 总计{{ totalDays }}天</text>
             </view>
           </view>
         </view>
@@ -53,18 +53,33 @@ const props = defineProps({
   totalDays: {
     type: Number,
     default: 0
+  },
+  isDark: {
+    type: Boolean,
+    default: false
   }
 })
 
 const emit = defineEmits(['toggle', 'card-tap', 'card-longpress'])
 
-const cardBgStyle = computed(() => ({
-  backgroundColor: props.checked ? '#DCFCE7' : 'var(--tt-card, #F4F4F5)'
-}))
+const cardBgStyle = computed(() => {
+  if (!props.checked) return { backgroundColor: 'var(--tt-card, #F4F4F5)' }
+  return { backgroundColor: props.isDark ? 'rgba(34,197,94,0.12)' : '#DCFCE7' }
+})
 
 const barStyle = computed(() => ({
   backgroundColor: props.checked ? '#22C55E' : '#F97316'
 }))
+
+const nameColor = computed(() => {
+  if (props.isDark) return 'var(--tt-foreground)'
+  return props.checked ? '#0a0a0a' : 'var(--tt-foreground)'
+})
+
+const subColor = computed(() => {
+  if (props.isDark) return 'var(--tt-muted-foreground)'
+  return props.checked ? '#737373' : 'var(--tt-muted-foreground)'
+})
 
 const iconColor = computed(() => {
   return props.checked ? '#22C55E' : (props.project.color || '#3B82F6')

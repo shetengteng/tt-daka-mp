@@ -44,6 +44,7 @@
         :checked="item.checked"
         :streak="item.streak"
         :totalDays="item.totalDays"
+        :isDark="themeStore.mode === 'dark'"
         @toggle="onToggle"
         @card-tap="onCardTap"
         @card-longpress="onCardLongpress"
