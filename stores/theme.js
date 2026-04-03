@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 function loadPersistedMode() {
   try {
@@ -12,8 +12,62 @@ function loadPersistedMode() {
   return 'light'
 }
 
+function getSystemLayout() {
+  try {
+    const info = uni.getSystemInfoSync()
+    const statusBarHeight = info.statusBarHeight || 44
+    let capsuleRight = 0
+    // #ifdef MP-WEIXIN
+    try {
+      const capsule = wx.getMenuButtonBoundingClientRect()
+      capsuleRight = info.windowWidth - capsule.left
+    } catch (e) {
+      capsuleRight = 100
+    }
+    // #endif
+    return { statusBarHeight, capsuleRight }
+  } catch (e) {
+    return { statusBarHeight: 44, capsuleRight: 100 }
+  }
+}
+
+const DARK_VARS = {
+  '--tt-background': '#09090B',
+  '--tt-foreground': '#FAFAFA',
+  '--tt-card': '#1C1C1E',
+  '--tt-card-foreground': '#FAFAFA',
+  '--tt-popover': '#1C1C1E',
+  '--tt-popover-foreground': '#FAFAFA',
+  '--tt-primary': '#FAFAFA',
+  '--tt-primary-foreground': '#09090B',
+  '--tt-secondary': '#27272A',
+  '--tt-secondary-foreground': '#FAFAFA',
+  '--tt-muted': '#27272A',
+  '--tt-muted-foreground': '#A1A1AA',
+  '--tt-accent': '#27272A',
+  '--tt-accent-foreground': '#FAFAFA',
+  '--tt-border': '#3F3F46',
+  '--tt-input': '#3F3F46',
+  '--tt-ring': '#D4D4D8',
+  '--tt-success': '#4ADE80',
+  '--tt-warning': '#FB923C',
+  '--tt-error': '#F87171',
+  '--tt-disabled': '#52525B',
+  '--tt-shadow-color': 'rgba(0,0,0,0.3)',
+  '--tt-shadow-md': 'rgba(0,0,0,0.4)',
+  '--tt-overlay': 'rgba(0,0,0,0.6)',
+}
+
 export const useThemeStore = defineStore('theme', () => {
   const mode = ref(loadPersistedMode())
+  const layout = getSystemLayout()
+  const statusBarHeight = ref(layout.statusBarHeight)
+  const capsuleRight = ref(layout.capsuleRight)
+
+  const themeStyle = computed(() => {
+    if (mode.value !== 'dark') return ''
+    return Object.entries(DARK_VARS).map(([k, v]) => `${k}:${v}`).join(';')
+  })
 
   function toggle() {
     mode.value = mode.value === 'light' ? 'dark' : 'light'
@@ -45,16 +99,6 @@ export const useThemeStore = defineStore('theme', () => {
     setTimeout(() => { applyToPageBodies(); applyToPageHead() }, 50)
     // #endif
 
-    // #ifdef MP-WEIXIN
-    const pages = getCurrentPages()
-    if (pages.length > 0) {
-      const page = pages[pages.length - 1]
-      if (page && page.setData) {
-        page.setData({ themeClass: mode.value === 'dark' ? 'theme-dark' : '' })
-      }
-    }
-    // #endif
-
     try {
       uni.setNavigationBarColor({
         frontColor: isDark ? '#ffffff' : '#000000',
@@ -74,7 +118,7 @@ export const useThemeStore = defineStore('theme', () => {
 
   watch(mode, () => applyTheme(), { immediate: false })
 
-  return { mode, toggle, setMode, applyTheme }
+  return { mode, statusBarHeight, capsuleRight, themeStyle, toggle, setMode, applyTheme }
 }, {
   persist: {
     key: 'dk-theme',

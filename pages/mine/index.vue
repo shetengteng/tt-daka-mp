@@ -1,6 +1,6 @@
 <template>
-  <view class="page">
-    <view class="header px-xl">
+  <view class="page" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
+    <view class="header px-xl" :style="{ paddingTop: headerPaddingTop }">
       <!-- 用户信息卡片 -->
       <view class="user-card card flex-center-v">
         <view class="avatar flex-center rounded-full">
@@ -98,6 +98,7 @@ import { useThemeStore } from '@/stores/theme'
 import { getMineStats } from './api/getMineStats'
 
 const themeStore = useThemeStore()
+const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
 
 const totalDays = ref(0)
 const activeCount = ref(0)
@@ -152,10 +153,6 @@ function onClearCacheConfirm() {
 </script>
 
 <style lang="scss" scoped>
-.header {
-  padding-top: calc(var(--status-bar-height, 44px) + 24rpx);
-}
-
 .user-card {
   padding: 40rpx;
   gap: 32rpx;

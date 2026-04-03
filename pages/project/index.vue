@@ -1,5 +1,5 @@
 <template>
-  <view class="page px-lg">
+  <view class="page px-lg" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
     <view 
       class="drag-list"
       @touchmove.prevent="onDragMove"

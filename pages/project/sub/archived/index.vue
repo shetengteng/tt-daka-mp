@@ -1,5 +1,5 @@
 <template>
-  <view class="page px-lg pt-sm">
+  <view class="page px-lg pt-sm" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
     <view v-for="(item, idx) in archivedProjects" :key="item._id" class="card" :class="{ 'mt-sm': idx > 0 }">
       <view class="flex-between px-md py-md">
         <view class="flex-center-v flex-1 min-w-0">

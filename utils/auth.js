@@ -1,49 +1,64 @@
 /**
  * 用户身份工具
- * DEV_MODE: 使用 mock_user
- * 微信小程序: 使用 uni.login 获取 openid
- * H5 开发: 使用 config 中的固定 TEST_ACCOUNT_ID
+ * accountId 持久化到 storage，确保重启后身份不丢失
  */
 import { DEV_MODE, TEST_ACCOUNT_ID } from '@/config/index'
 
+const STORAGE_KEY = 'dk-account-id'
+
 let _accountId = ''
 
+function loadFromStorage() {
+  try {
+    return uni.getStorageSync(STORAGE_KEY) || ''
+  } catch (e) {
+    return ''
+  }
+}
+
+function saveToStorage(id) {
+  try {
+    uni.setStorageSync(STORAGE_KEY, id)
+  } catch (e) {}
+}
+
 export function getAccountId() {
+  if (!_accountId) {
+    _accountId = loadFromStorage()
+  }
   return _accountId
 }
 
 export function setAccountId(id) {
   _accountId = id
+  saveToStorage(id)
 }
 
 export async function requireAccountId() {
   if (_accountId) return _accountId
 
+  const stored = loadFromStorage()
+  if (stored) {
+    _accountId = stored
+    return _accountId
+  }
+
   if (DEV_MODE) {
-    _accountId = 'mock_user'
+    setAccountId('mock_user')
     return _accountId
   }
 
-  // 微信小程序环境：通过 uni.login 获取 code 作为 accountId
-  try {
-    const res = await new Promise((resolve, reject) => {
-      uni.login({
-        provider: 'weixin',
-        success: resolve,
-        fail: reject
-      })
-    })
-    _accountId = res.code || `wx_${Date.now()}`
-    return _accountId
-  } catch (error) {
-    console.warn('[Auth] uni.login 不可用，使用测试 accountId')
-  }
-
-  // H5 环境回退：使用固定测试 accountId
   _accountId = TEST_ACCOUNT_ID
   return _accountId
 }
 
-export function initAccountId() {
+export function isLoggedIn() {
+  return !!getAccountId()
+}
+
+export function clearAccountId() {
   _accountId = ''
+  try {
+    uni.removeStorageSync(STORAGE_KEY)
+  } catch (e) {}
 }

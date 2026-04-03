@@ -1,5 +1,5 @@
 <template>
-  <view class="page flex-col flex-center bg-background">
+  <view class="page flex-col flex-center bg-background" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
     <view class="login-area flex-col flex-center">
       <!-- 品牌区域 -->
       <view class="brand flex-col flex-center">
@@ -43,7 +43,7 @@ import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { DEV_MODE, TEST_ACCOUNT_ID } from '@/config/index'
-import { setAccountId } from '@/utils/auth'
+import { isLoggedIn, getAccountId, setAccountId } from '@/utils/auth'
 import { initEmas } from '@/cloud-emas/database/index'
 import { anonymousAuth } from '@/cloud-emas/database/api/anonymousAuth'
 
@@ -56,6 +56,11 @@ onLoad(() => {
 
   if (DEV_MODE) {
     autoLogin()
+    return
+  }
+
+  if (isLoggedIn()) {
+    goHome()
   }
 })
 
@@ -74,11 +79,11 @@ async function handleWechatLogin() {
 
   try {
     await initEmas()
-    const res = await new Promise((resolve, reject) => {
-      uni.login({ provider: 'weixin', success: resolve, fail: reject })
-    })
-    setAccountId(res.code || `wx_${Date.now()}`)
     await anonymousAuth()
+    const stored = getAccountId()
+    if (!stored) {
+      setAccountId(`wx_${Date.now()}`)
+    }
     goHome()
   } catch (error) {
     console.error('[Login] 微信登录失败:', error)

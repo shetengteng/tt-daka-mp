@@ -1,5 +1,5 @@
 <template>
-  <view class="page px-xl pt-lg">
+  <view class="page px-xl pt-lg" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
     <!-- 项目名称 -->
     <view class="section">
       <text class="text-xs text-muted mb-sm block">项目名称</text>

@@ -1,8 +1,8 @@
 <template>
-  <view class="page">
+  <view class="page" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
     <!-- 顶部区域 -->
-    <view class="header px-xl pt-lg">
-      <view class="header__top flex-between flex-center-v">
+    <view class="header px-xl pt-lg" :style="{ paddingTop: `${themeStore.statusBarHeight + 12}px` }">
+      <view class="header__top flex-between flex-center-v" :style="capsuleStyle">
         <view>
           <text class="app-title text-foreground">DaKa</text>
           <view class="header__greeting">
@@ -103,6 +103,12 @@ import DakaCard from './components/DakaCard.vue'
 const themeStore = useThemeStore()
 const dakaStore = useDakaStore()
 
+const capsuleStyle = computed(() => {
+  if (themeStore.capsuleRight > 0) {
+    return { paddingRight: `${themeStore.capsuleRight + 10}px` }
+  }
+  return {}
+})
 const loading = ref(false)
 const showActionSheet = ref(false)
 const showCancelDialog = ref(false)
@@ -225,13 +231,6 @@ function goCalendar() {
 </script>
 
 <style lang="scss" scoped>
-.header {
-  padding-top: calc(var(--status-bar-height, 44px) + 24rpx);
-  /* #ifdef MP-WEIXIN */
-  padding-right: 200rpx;
-  /* #endif */
-}
-
 .header__date-badge {
   padding: 12rpx 20rpx;
   border-radius: 16rpx;

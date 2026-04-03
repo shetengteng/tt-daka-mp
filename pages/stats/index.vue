@@ -1,6 +1,6 @@
 <template>
-  <view class="page">
-    <view class="header px-xl pt-lg">
+  <view class="page" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
+    <view class="header px-xl pt-lg" :style="{ paddingTop: headerPaddingTop }">
       <text class="text-xl font-bold text-foreground">打卡统计</text>
     </view>
     
@@ -87,7 +87,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { onPullDownRefresh } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { getStats } from './api/getStats'
@@ -121,6 +121,7 @@ function barTextClass(percent) {
 }
 
 const themeStore = useThemeStore()
+const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
 
 onMounted(async () => {
   themeStore.applyTheme()
@@ -140,10 +141,6 @@ onPullDownRefresh(async () => {
 </script>
 
 <style lang="scss" scoped>
-.header {
-  padding-top: calc(var(--status-bar-height, 44px) + 24rpx);
-}
-
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

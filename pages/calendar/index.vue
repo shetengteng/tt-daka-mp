@@ -1,6 +1,6 @@
 <template>
-  <view class="page">
-    <view class="header px-xl pt-lg">
+  <view class="page" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
+    <view class="header px-xl pt-lg" :style="{ paddingTop: headerPaddingTop }">
       <text class="text-xl font-bold text-foreground">打卡日历</text>
     </view>
     
@@ -167,6 +167,7 @@ function onDetailTap(projectId) {
 }
 
 const themeStore = useThemeStore()
+const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
 
 onMounted(() => {
   themeStore.applyTheme()
@@ -175,10 +176,6 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.header {
-  padding-top: calc(var(--status-bar-height, 44px) + 24rpx);
-}
-
 .detail-bar {
   width: 4rpx;
   height: 64rpx;

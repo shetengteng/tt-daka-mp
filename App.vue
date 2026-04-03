@@ -1,10 +1,17 @@
 <script>
 	import { useThemeStore } from '@/stores/theme'
+	import { isLoggedIn } from '@/utils/auth'
+	import { initEmas } from '@/cloud-emas/database/index'
+	import { anonymousAuth } from '@/cloud-emas/database/api/anonymousAuth'
 	
 	export default {
 		onLaunch: function() {
 			const themeStore = useThemeStore()
 			themeStore.applyTheme()
+			
+			if (isLoggedIn()) {
+				initEmas().then(() => anonymousAuth()).catch(() => {})
+			}
 		},
 		onShow: function() {},
 		onHide: function() {}

@@ -43,7 +43,7 @@ function close() {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: var(--tt-overlay, rgba(0, 0, 0, 0.4));
   display: flex;
   align-items: flex-end;
   z-index: 9999;
@@ -51,7 +51,7 @@ function close() {
 
 .tt-as {
   width: 100%;
-  background: #F4F4F5;
+  background: var(--tt-muted, #F4F4F5);
   border-radius: 24rpx 24rpx 0 0;
   padding-bottom: env(safe-area-inset-bottom);
 
@@ -61,30 +61,30 @@ function close() {
     justify-content: center;
     height: 104rpx;
     font-size: 30rpx;
-    color: #09090B;
-    background: #ffffff;
+    color: var(--tt-foreground, #09090B);
+    background: var(--tt-popover, #ffffff);
 
     &:first-child {
       border-radius: 24rpx 24rpx 0 0;
     }
 
     &:active {
-      background: #F4F4F5;
+      background: var(--tt-accent, #F4F4F5);
     }
 
     & + & {
-      border-top: 1rpx solid #E4E4E7;
+      border-top: 1rpx solid var(--tt-border, #E4E4E7);
     }
   }
 
   &__gap {
     height: 12rpx;
-    background: #F4F4F5;
+    background: var(--tt-muted, #F4F4F5);
   }
 
   &__cancel {
     border-radius: 0;
-    color: #71717A;
+    color: var(--tt-muted-foreground, #71717A);
   }
 }
 </style>
