@@ -47,6 +47,10 @@
     .icon-btn:hover { background: #E4E4E7; }
     .icon-btn.selected { background: #09090B; color: #fff; }
     .page-label { position: absolute; top: -28px; left: 0; font-size: 12px; font-weight: 600; color: #71717A; white-space: nowrap; }
+    .wx-capsule { position: absolute; top: 48px; right: 10px; width: 87px; height: 32px; border-radius: 16px; border: 1px solid rgba(0,0,0,0.15); background: rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-around; z-index: 10; }
+    .wx-capsule::after { content: ''; position: absolute; left: 50%; top: 6px; bottom: 6px; width: 1px; background: rgba(0,0,0,0.12); }
+    .wx-capsule-dot { width: 4px; height: 4px; border-radius: 50%; background: #333; }
+    .wx-capsule-dots { display: flex; flex-direction: column; gap: 3px; align-items: center; padding-left: 4px; }
   </style>
 </head>
 <body>
@@ -55,19 +59,25 @@
 <div style="position:relative">
   <div class="page-label">1. 首页（打卡列表）</div>
   <div class="phone">
+    <!-- 微信胶囊按钮 -->
+    <div class="wx-capsule">
+      <div class="wx-capsule-dots"><div class="wx-capsule-dot"></div><div class="wx-capsule-dot"></div><div class="wx-capsule-dot"></div></div>
+      <div style="width:16px;height:16px;border-radius:50%;border:1.5px solid #333"></div>
+    </div>
     <div class="phone-inner">
       <div class="statusbar">9:41</div>
       <div class="px-5 pb-4">
-        <div class="flex justify-between items-center mb-5">
+        <!-- 标题行：padding-right 避开胶囊 -->
+        <div class="flex justify-between items-center mb-5" style="padding-right:90px">
           <div>
             <div class="text-lg font-bold text-fg" style="font-family:'Pacifico',cursive;letter-spacing:0.5px;line-height:1.2">DaKa</div>
             <div class="text-[11px] text-muted" style="margin-top:2px">早上好，新的一天开始了</div>
           </div>
-          <div class="flex items-center gap-2 bg-card rounded-xl px-3 py-2 cursor-pointer">
-            <span class="text-2xl font-bold text-fg leading-none">2</span>
+          <div class="flex items-center gap-2 px-3 py-2 bg-card rounded-xl cursor-pointer">
+            <span class="text-2xl font-bold text-fg leading-none">3</span>
             <div class="flex flex-col">
               <span class="text-[10px] font-semibold text-muted tracking-wider leading-tight">APR</span>
-              <span class="text-[10px] text-muted leading-tight">Wed</span>
+              <span class="text-[10px] text-muted leading-tight">Fri</span>
             </div>
           </div>
         </div>
@@ -171,19 +181,24 @@
 <div style="position:relative">
   <div class="page-label">1b. 首页（空状态）</div>
   <div class="phone">
+    <!-- 微信胶囊按钮 -->
+    <div class="wx-capsule">
+      <div class="wx-capsule-dots"><div class="wx-capsule-dot"></div><div class="wx-capsule-dot"></div><div class="wx-capsule-dot"></div></div>
+      <div style="width:16px;height:16px;border-radius:50%;border:1.5px solid #333"></div>
+    </div>
     <div class="phone-inner" style="display:flex;flex-direction:column">
       <div class="statusbar">9:41</div>
       <div class="px-5">
-        <div class="flex justify-between items-center mb-5">
+        <div class="flex justify-between items-center mb-5" style="padding-right:90px">
           <div>
             <div class="text-lg font-bold text-fg" style="font-family:'Pacifico',cursive;letter-spacing:0.5px;line-height:1.2">DaKa</div>
             <div class="text-[11px] text-muted" style="margin-top:2px">早上好，新的一天开始了</div>
           </div>
-          <div class="flex items-center gap-2 bg-card rounded-xl px-3 py-2">
-            <span class="text-2xl font-bold text-fg leading-none">2</span>
+          <div class="flex items-center gap-2 px-3 py-2 bg-card rounded-xl">
+            <span class="text-2xl font-bold text-fg leading-none">3</span>
             <div class="flex flex-col">
               <span class="text-[10px] font-semibold text-muted tracking-wider leading-tight">APR</span>
-              <span class="text-[10px] text-muted leading-tight">Wed</span>
+              <span class="text-[10px] text-muted leading-tight">Fri</span>
             </div>
           </div>
         </div>
@@ -211,6 +226,10 @@
 <div style="position:relative">
   <div class="page-label">2. 日历页</div>
   <div class="phone">
+    <div class="wx-capsule">
+      <div class="wx-capsule-dots"><div class="wx-capsule-dot"></div><div class="wx-capsule-dot"></div><div class="wx-capsule-dot"></div></div>
+      <div style="width:16px;height:16px;border-radius:50%;border:1.5px solid #333"></div>
+    </div>
     <div class="phone-inner">
       <div class="statusbar">9:41</div>
       <div class="px-5 pb-4">
@@ -303,6 +322,10 @@
 <div style="position:relative">
   <div class="page-label">3. 统计页</div>
   <div class="phone">
+    <div class="wx-capsule">
+      <div class="wx-capsule-dots"><div class="wx-capsule-dot"></div><div class="wx-capsule-dot"></div><div class="wx-capsule-dot"></div></div>
+      <div style="width:16px;height:16px;border-radius:50%;border:1.5px solid #333"></div>
+    </div>
     <div class="phone-inner">
       <div class="statusbar">9:41</div>
       <div class="px-5 pb-4">
@@ -428,9 +451,14 @@
 <div style="position:relative">
   <div class="page-label">4. 我的</div>
   <div class="phone">
+    <div class="wx-capsule">
+      <div class="wx-capsule-dots"><div class="wx-capsule-dot"></div><div class="wx-capsule-dot"></div><div class="wx-capsule-dot"></div></div>
+      <div style="width:16px;height:16px;border-radius:50%;border:1.5px solid #333"></div>
+    </div>
     <div class="phone-inner">
       <div class="statusbar">9:41</div>
       <div class="px-5 pb-4">
+        <div class="text-xl font-bold text-fg mb-4">我的</div>
         <div class="bg-card rounded-xl p-5 mb-5 flex items-center gap-4">
           <div class="w-14 h-14 rounded-full bg-fg flex items-center justify-center">
             <i data-lucide="user" class="w-7 h-7 text-white"></i>
@@ -458,19 +486,6 @@
 
         <div class="text-xs text-muted mb-2 px-1">设置</div>
         <div class="bg-card rounded-xl overflow-hidden mb-5">
-          <div class="flex items-center justify-between p-4 border-b border-border">
-            <span class="text-sm text-fg">打卡提醒</span>
-            <div class="w-11 h-6 bg-success rounded-full relative cursor-pointer">
-              <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 right-0.5 shadow-sm"></div>
-            </div>
-          </div>
-          <div class="flex items-center justify-between p-4 border-b border-border cursor-pointer">
-            <span class="text-sm text-fg">提醒时间</span>
-            <div class="flex items-center gap-2">
-              <span class="text-sm text-muted">20:00</span>
-              <i data-lucide="chevron-right" class="w-4 h-4 text-muted"></i>
-            </div>
-          </div>
           <div class="flex items-center justify-between p-4">
             <span class="text-sm text-fg">深色模式</span>
             <div class="w-11 h-6 bg-disabled rounded-full relative cursor-pointer">
@@ -485,8 +500,12 @@
             <span class="text-sm text-fg">清除缓存</span>
             <i data-lucide="chevron-right" class="w-4 h-4 text-muted"></i>
           </div>
+          <div class="flex items-center justify-between p-4 border-b border-border cursor-pointer">
+            <span class="text-sm text-fg">关于 DaKa</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-muted"></i>
+          </div>
           <div class="flex items-center justify-between p-4 cursor-pointer">
-            <span class="text-sm text-fg">关于 TT Daka</span>
+            <span class="text-sm text-fg">隐私政策</span>
             <i data-lucide="chevron-right" class="w-4 h-4 text-muted"></i>
           </div>
         </div>
@@ -512,10 +531,9 @@
       <div class="flex items-center justify-between px-5 py-3 border-b border-border">
         <div class="flex items-center gap-2 cursor-pointer">
           <i data-lucide="chevron-left" class="w-5 h-5 text-fg"></i>
-          <span class="text-sm text-muted">返回</span>
         </div>
         <span class="font-semibold text-fg">新建打卡</span>
-        <button class="text-sm font-semibold text-fg">保存</button>
+        <div style="width:20px"></div>
       </div>
       <div class="px-5 py-4">
         <div class="mb-5">
@@ -594,6 +612,9 @@
             </div>
           </div>
         </div>
+
+        <!-- 底部保存按钮 -->
+        <button class="w-full h-12 rounded-xl bg-fg text-white text-sm font-medium mt-5 cursor-pointer hover:opacity-90 transition-opacity" style="border:none">创建项目</button>
       </div>
     </div>
   </div>
@@ -610,14 +631,14 @@
           <i data-lucide="chevron-left" class="w-5 h-5 text-fg"></i>
         </div>
         <span class="font-semibold text-fg">运动</span>
-        <span class="text-sm text-muted cursor-pointer">编辑</span>
+        <div style="width:20px"></div>
       </div>
       <div class="px-5 py-4">
         <div class="flex flex-col items-center mb-5">
-          <div class="w-16 h-16 rounded-2xl bg-success/20 flex items-center justify-center mb-3">
+          <div class="w-16 h-16 rounded-2xl bg-success/20 flex items-center justify-center mb-2">
             <i data-lucide="dumbbell" class="w-8 h-8 text-success"></i>
           </div>
-          <div class="font-bold text-lg text-fg">运动</div>
+          <div class="px-3 py-1 rounded-lg bg-card text-xs text-muted mb-2 cursor-pointer">编辑</div>
           <div class="text-sm text-muted">目标: 每天 · 创建于 2026-02-14</div>
         </div>
 

@@ -233,10 +233,10 @@ function goCalendar() {
 <style lang="scss" scoped>
 .header__date-badge {
   padding: 12rpx 20rpx;
-  border-radius: 16rpx;
-  background-color: var(--tt-card, #F4F4F5);
   flex-shrink: 0;
   gap: 12rpx;
+  background-color: var(--tt-card);
+  border-radius: 16rpx;
 }
 
 .header__date-day {

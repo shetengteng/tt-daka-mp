@@ -1,8 +1,9 @@
 <template>
   <view class="page" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
     <view class="header px-xl" :style="{ paddingTop: headerPaddingTop }">
+      <text class="text-xl font-bold text-foreground">我的</text>
       <!-- 用户信息卡片 -->
-      <view class="user-card card flex-center-v">
+      <view class="user-card card flex-center-v mt-lg">
         <view class="avatar flex-center rounded-full">
           <TtSvg name="ri-user-fill" :size="56" color="#ffffff" />
         </view>
