@@ -52,6 +52,8 @@
       overflow: hidden;
       position: relative;
       flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
     }
     .phone-frame::before {
       content: '';
@@ -64,9 +66,34 @@
       z-index: 10;
     }
     .phone-content {
-      height: 100%;
+      flex: 1;
       overflow: hidden;
-      padding: 32px 14px 14px;
+      padding: 32px 14px 8px;
+    }
+    .phone-tabbar {
+      height: 44px;
+      border-top: 1px solid #E4E4E7;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      flex-shrink: 0;
+    }
+    .phone-tabbar-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+    }
+    .phone-tabbar-item span {
+      font-size: 8px;
+      color: #A1A1AA;
+    }
+    .phone-tabbar-item.active span {
+      color: #09090B;
+    }
+    .phone-tabbar-item.active svg {
+      stroke: #09090B;
     }
 
     .qr-box {
@@ -100,13 +127,20 @@
 </head>
 <body>
 
-  <!-- Minimal Nav -->
+  <!-- Nav -->
   <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-border">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
       <span class="font-display text-xl text-fg">DaKa</span>
-      <a href="#try" class="text-sm font-medium text-fg border border-fg rounded-lg px-4 py-1.5 hover:bg-fg hover:text-white transition-colors duration-200 cursor-pointer">
-        体验小程序
-      </a>
+      <div class="flex items-center gap-6">
+        <div class="hidden sm:flex items-center gap-5">
+          <a href="#features" class="text-sm text-muted hover:text-fg transition-colors duration-200 cursor-pointer">功能</a>
+          <a href="#steps" class="text-sm text-muted hover:text-fg transition-colors duration-200 cursor-pointer">使用</a>
+          <a href="#try" class="text-sm text-muted hover:text-fg transition-colors duration-200 cursor-pointer">体验</a>
+        </div>
+        <a href="#try" class="text-sm font-medium text-fg border border-fg rounded-lg px-4 py-1.5 hover:bg-fg hover:text-white transition-colors duration-200 cursor-pointer">
+          体验小程序
+        </a>
+      </div>
     </div>
   </nav>
 
@@ -190,6 +224,24 @@
             </div>
           </div>
         </div>
+        <div class="phone-tabbar">
+          <div class="phone-tabbar-item active">
+            <i data-lucide="check-circle" class="w-4 h-4" style="color:#09090B"></i>
+            <span style="color:#09090B;font-weight:600">打卡</span>
+          </div>
+          <div class="phone-tabbar-item">
+            <i data-lucide="calendar" class="w-4 h-4" style="color:#A1A1AA"></i>
+            <span>日历</span>
+          </div>
+          <div class="phone-tabbar-item">
+            <i data-lucide="bar-chart-3" class="w-4 h-4" style="color:#A1A1AA"></i>
+            <span>统计</span>
+          </div>
+          <div class="phone-tabbar-item">
+            <i data-lucide="user" class="w-4 h-4" style="color:#A1A1AA"></i>
+            <span>我的</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -269,7 +321,7 @@
   <div class="divider"></div>
 
   <!-- How it works -->
-  <section class="py-16 sm:py-24 px-4 sm:px-6">
+  <section id="steps" class="py-16 sm:py-24 px-4 sm:px-6">
     <div class="max-w-content mx-auto text-center">
       <h2 class="text-2xl sm:text-3xl font-bold text-fg mb-3">三步开始</h2>
       <p class="text-muted mb-12">简单到没有借口</p>
