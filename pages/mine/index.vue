@@ -121,11 +121,11 @@ async function loadMineData() {
 }
 
 onMounted(() => {
-  themeStore.applyTheme()
+  loadMineData()
 })
 
 onShow(() => {
-  loadMineData()
+  themeStore.applyTheme()
 })
 
 function goManage() {

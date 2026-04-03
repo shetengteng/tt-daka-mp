@@ -103,7 +103,7 @@ export const useThemeStore = defineStore('theme', () => {
       uni.setNavigationBarColor({
         frontColor: isDark ? '#ffffff' : '#000000',
         backgroundColor: isDark ? '#18181B' : '#ffffff',
-        animation: { duration: 200, timingFunc: 'easeIn' },
+        animation: { duration: 0, timingFunc: 'easeIn' },
       })
     } catch (e) {}
 

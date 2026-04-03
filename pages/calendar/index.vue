@@ -54,6 +54,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { getRecordsByMonth } from './api/getRecordsByMonth'
 import { goToProjectDetail } from '@/route/index'
@@ -170,8 +171,11 @@ const themeStore = useThemeStore()
 const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
 
 onMounted(() => {
-  themeStore.applyTheme()
   loadMonthData()
+})
+
+onShow(() => {
+  themeStore.applyTheme()
 })
 </script>
 

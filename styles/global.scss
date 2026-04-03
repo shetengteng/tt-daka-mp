@@ -194,8 +194,11 @@ page,
   from { opacity: 0; }
   to { opacity: 1; }
 }
-.page { min-height: 100vh; background-color: var(--tt-background); animation: tt-page-fade-in 0.25s ease-out; }
-.page-gray { min-height: 100vh; background-color: var(--tt-muted); animation: tt-page-fade-in 0.25s ease-out; }
+.page { min-height: 100vh; background-color: var(--tt-background); }
+.page-gray { min-height: 100vh; background-color: var(--tt-muted); }
+
+/* 微信小程序原生 page 元素跟随主题 */
+page { background-color: var(--tt-background); }
 
 /* H5: hide scrollbar to avoid layout shift */
 ::-webkit-scrollbar { display: none; }

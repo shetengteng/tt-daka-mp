@@ -88,7 +88,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
-import { onPullDownRefresh } from '@dcloudio/uni-app'
+import { onShow, onPullDownRefresh } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { getStats } from './api/getStats'
 
@@ -124,11 +124,14 @@ const themeStore = useThemeStore()
 const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
 
 onMounted(async () => {
-  themeStore.applyTheme()
   const res = await getStats()
   if (res.success) {
     Object.assign(stats, res.data)
   }
+})
+
+onShow(() => {
+  themeStore.applyTheme()
 })
 
 onPullDownRefresh(async () => {
