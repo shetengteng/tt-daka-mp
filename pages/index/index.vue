@@ -2,7 +2,7 @@
   <view class="page" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
     <!-- 顶部区域 -->
     <view class="header px-xl pt-lg" :style="{ paddingTop: `${themeStore.statusBarHeight + 12}px` }">
-      <view class="header__top flex-between flex-center-v" :style="capsuleStyle">
+      <view class="header__top flex-between items-start" :style="capsuleStyle">
         <view>
           <text class="app-title text-foreground">DaKa</text>
           <view class="header__greeting">
