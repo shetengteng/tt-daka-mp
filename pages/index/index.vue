@@ -105,7 +105,10 @@ const dakaStore = useDakaStore()
 
 const capsuleStyle = computed(() => {
   if (themeStore.capsuleRight > 0) {
-    return { paddingRight: `${themeStore.capsuleRight + 16}px` }
+    const headerPadding = 20
+    const gap = 8
+    const pr = Math.max(themeStore.capsuleRight - headerPadding + gap, 0)
+    return { paddingRight: `${pr}px` }
   }
   return {}
 })
