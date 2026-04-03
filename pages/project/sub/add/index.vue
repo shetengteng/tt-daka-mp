@@ -72,7 +72,7 @@
           :class="{ 'day-chip--active': form.customDays.includes(idx) }"
           @click="toggleDay(idx)"
         >
-          <text class="text-sm" :class="form.customDays.includes(idx) ? 'text-white' : 'text-foreground'">{{ label }}</text>
+          <text class="text-sm" :style="{ color: dayChipTextColor(idx) }">{{ label }}</text>
         </view>
       </view>
     </view>
@@ -151,6 +151,12 @@ function iconSvgColor(icon) {
   const selected = form.icon === icon
   if (selected) return isDark.value ? '#09090B' : '#ffffff'
   return isDark.value ? '#A1A1AA' : '#737373'
+}
+
+function dayChipTextColor(idx) {
+  const active = form.customDays.includes(idx)
+  if (active) return isDark.value ? '#09090B' : '#ffffff'
+  return isDark.value ? '#FAFAFA' : '#09090B'
 }
 
 const form = reactive({
