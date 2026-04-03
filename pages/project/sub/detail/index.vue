@@ -1,5 +1,6 @@
 <template>
   <view class="page px-xl" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
+    <TtNavbar :title="project ? project.name : ''" />
     <!-- 项目信息 -->
     <view v-if="project" class="project-header flex-col flex-center mt-lg mb-xl">
       <view class="big-icon flex-center rounded-xl" :style="{ backgroundColor: `${project.color}20` }">
@@ -164,7 +165,6 @@ async function loadDetail() {
       currentStreak: res.data.currentStreak,
       longestStreak: res.data.longestStreak,
     }
-    uni.setNavigationBarTitle({ title: res.data.project.name })
   }
 }
 

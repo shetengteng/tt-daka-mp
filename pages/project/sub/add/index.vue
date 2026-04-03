@@ -1,5 +1,6 @@
 <template>
-  <view class="page px-xl pt-lg" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
+  <view class="page px-xl" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
+    <TtNavbar :title="isEdit ? '编辑打卡' : '新建打卡'" />
     <!-- 项目名称 -->
     <view class="section">
       <text class="text-xs text-muted mb-sm block">项目名称</text>
@@ -241,7 +242,6 @@ onLoad(async (options) => {
   if (options?.id) {
     isEdit.value = true
     editId.value = options.id
-    uni.setNavigationBarTitle({ title: '编辑打卡' })
     
     const res = await getProjectById(options.id)
     if (res.success) {

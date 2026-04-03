@@ -1,5 +1,6 @@
 <template>
-  <view class="page px-lg pt-sm" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
+  <view class="page px-lg" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
+    <TtNavbar title="已归档项目" />
     <view v-for="(item, idx) in archivedProjects" :key="item._id" class="card" :class="{ 'mt-sm': idx > 0 }">
       <view class="flex-between px-md py-md">
         <view class="flex-center-v flex-1 min-w-0">

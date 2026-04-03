@@ -198,8 +198,8 @@ page,
 .page { min-height: 100vh; background-color: var(--tt-background); }
 .page-gray { min-height: 100vh; background-color: var(--tt-muted); }
 
-/* 微信小程序原生 page 元素跟随主题 */
-page { background-color: var(--tt-background); }
+/* 微信小程序原生 page 元素跟随主题 — 使用 inherit 以便子元素覆盖 */
+page { background-color: var(--tt-background); color: var(--tt-foreground); }
 
 /* H5: hide scrollbar to avoid layout shift */
 ::-webkit-scrollbar { display: none; }

@@ -44,31 +44,31 @@
 		{
 			"path": "pages/mine/sub/privacy/index",
 			"style": {
-				"navigationBarTitleText": "隐私政策"
+				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/project/index",
 			"style": {
-				"navigationBarTitleText": "打卡项目管理"
+				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/project/sub/add/index",
 			"style": {
-				"navigationBarTitleText": "新建打卡"
+				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/project/sub/detail/index",
 			"style": {
-				"navigationBarTitleText": ""
+				"navigationStyle": "custom"
 			}
 		},
 		{
 			"path": "pages/project/sub/archived/index",
 			"style": {
-				"navigationBarTitleText": "已归档项目"
+				"navigationStyle": "custom"
 			}
 		}
 	],

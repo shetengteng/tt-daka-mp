@@ -1,5 +1,6 @@
 <template>
-  <view class="page px-xl py-lg" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
+  <view class="page px-xl" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
+    <TtNavbar title="隐私政策" />
     <text class="text-xs text-muted mb-lg block">更新日期：2026年4月1日</text>
     
     <view v-for="(section, idx) in sections" :key="idx" class="section mb-lg">

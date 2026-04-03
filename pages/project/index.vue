@@ -1,5 +1,6 @@
 <template>
   <view class="page px-lg" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
+    <TtNavbar :title="navTitle" />
     <view 
       class="drag-list"
       @touchmove.prevent="onDragMove"
@@ -76,7 +77,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { archiveProject } from './api/archiveProject'
@@ -100,9 +101,6 @@ async function loadProjects() {
   const res = await getActiveProjects()
   if (res.success) {
     projects.value = res.list
-    uni.setNavigationBarTitle({
-      title: `打卡项目管理 (${res.list.length})`,
-    })
   }
 }
 
@@ -247,6 +245,7 @@ async function onDeleteConfirm() {
 }
 
 const themeStore = useThemeStore()
+const navTitle = computed(() => `打卡项目管理 (${projects.value.length})`)
 
 onShow(() => {
   themeStore.applyTheme()

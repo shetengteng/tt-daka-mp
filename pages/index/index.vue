@@ -331,7 +331,7 @@ function goCalendar() {
 }
 
 .header__greeting {
-  margin-top: 0;
+  margin-top: -2rpx;
 }
 
 .add-btn {
