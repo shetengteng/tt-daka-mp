@@ -17,6 +17,7 @@ export const COLLECTIONS = {
  * @property {string} nickname
  * @property {string} avatar
  * @property {string} loginType - wechat / anonymous
+ * @property {number} [dataVersion] - 数据版本号（时间戳），每次写操作同步成功后更新
  * @property {string} createTime
  * @property {string} updateTime
  */

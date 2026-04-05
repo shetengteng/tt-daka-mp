@@ -52,8 +52,8 @@
     <view class="section px-xl mt-xl">
       <text class="text-xs text-muted mb-sm block px-xs">其他</text>
       <view class="card overflow-hidden">
-        <view class="list-item flex-between p-lg" @click="clearCache">
-          <text class="text-sm text-foreground">清除缓存</text>
+        <view class="list-item flex-between p-lg" @click="refreshCache">
+          <text class="text-sm text-foreground">刷新缓存</text>
           <TtSvg name="ri-arrow-right-s-line" :size="32" color="#71717A" />
         </view>
         <view class="list-item flex-between p-lg" @click="showAbout = true">
@@ -90,12 +90,12 @@
       confirmText="知道了"
     />
     
-    <!-- 清除缓存确认 -->
+    <!-- 刷新缓存确认 -->
     <TtDialog
-      v-model:visible="showClearCache"
-      title="清除缓存"
-      message="确定清除本地缓存数据吗？"
-      @confirm="onClearCacheConfirm"
+      v-model:visible="showRefreshCache"
+      title="刷新缓存"
+      message="将重新从云端拉取最新数据，确定刷新吗？"
+      @confirm="onRefreshCacheConfirm"
     />
     
     <!-- 退出登录确认 -->
@@ -167,13 +167,17 @@ import { useThemeStore } from '@/stores/theme'
 import { clearAccountId, getLoginType, clearLoginType } from '@/utils/auth'
 import { resetWechatAuthState } from '@/cloud-emas/database/api/wechatAuth'
 import { resetAuthState } from '@/cloud-emas/database/api/anonymousAuth'
-import { useDakaStore } from '@/stores/daka'
+import { useProjectStore } from '@/stores/project'
+import { getAccountId } from '@/utils/auth'
+import { getPendingCount } from '@/utils/pending-ops'
+import { clearUserCache } from '@/utils/local-store'
+import { clearPendingOps } from '@/utils/pending-ops'
 import { getMineStats } from './api/getMineStats'
 import { getUser } from './api/getUser'
 import { updateUserProfile } from './api/updateUserProfile'
 import { fileToBase64, isLocalFile, compressImage } from '@/utils/file'
 
-const dakaStore = useDakaStore()
+const projectStore = useProjectStore()
 let _mineLoaded = false
 
 const themeStore = useThemeStore()
@@ -216,7 +220,7 @@ async function loadMineData() {
 
 onShow(() => {
   themeStore.applyTheme()
-  if (!_mineLoaded || !dakaStore.isCacheValid()) {
+  if (!_mineLoaded || !projectStore.isCacheValid()) {
     loadMineData()
     _mineLoaded = true
   }
@@ -292,19 +296,43 @@ function goPrivacy() {
   goToPrivacy()
 }
 
-const showClearCache = ref(false)
+const showRefreshCache = ref(false)
 const showLogoutDialog = ref(false)
 
-function clearCache() {
-  showClearCache.value = true
+function refreshCache() {
+  showRefreshCache.value = true
 }
 
-function onClearCacheConfirm() {
-  uni.clearStorageSync()
-  uni.showToast({ title: '缓存已清除', icon: 'success' })
+async function onRefreshCacheConfirm() {
+  projectStore.markDirty()
+  _mineLoaded = false
+  await loadMineData()
+  uni.showToast({ title: '缓存已刷新', icon: 'success' })
 }
 
 function onLogoutConfirm() {
+  const accountId = getAccountId()
+  const pending = accountId ? getPendingCount(accountId) : 0
+
+  if (pending > 0) {
+    uni.showModal({
+      title: '未同步数据',
+      content: `有 ${pending} 条打卡记录未同步到云端，退出后将丢失。确定退出吗？`,
+      success: (res) => {
+        if (res.confirm) doLogout(accountId)
+      },
+    })
+    return
+  }
+
+  doLogout(accountId)
+}
+
+function doLogout(accountId) {
+  if (accountId) {
+    clearPendingOps(accountId)
+    clearUserCache(accountId)
+  }
   clearAccountId()
   clearLoginType()
   resetAuthState()

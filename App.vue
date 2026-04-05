@@ -1,14 +1,23 @@
 <script>
 	import { useThemeStore } from '@/stores/theme'
-	import { isLoggedIn, getLoginType } from '@/utils/auth'
+	import { useProjectStore } from '@/stores/project'
+	import { useRecordStore } from '@/stores/record'
+	import { isLoggedIn, getLoginType, getAccountId } from '@/utils/auth'
 	import { initEmas } from '@/cloud-emas/database/index'
 	import { anonymousAuth } from '@/cloud-emas/database/api/anonymousAuth'
 	import { wechatAuth } from '@/cloud-emas/database/api/wechatAuth'
+	import { syncPendingOps } from '@/utils/sync-manager'
+	import { getPendingCount } from '@/utils/pending-ops'
 	
 	export default {
 		onLaunch: function() {
 			const themeStore = useThemeStore()
 			themeStore.applyTheme()
+			
+			const projectStore = useProjectStore()
+			const recordStore = useRecordStore()
+			projectStore.restore()
+			recordStore.restore()
 			
 			if (isLoggedIn()) {
 				const loginType = getLoginType()
@@ -21,7 +30,12 @@
 					})
 			}
 		},
-		onShow: function() {},
+		onShow: function() {
+			const accountId = getAccountId()
+			if (accountId && getPendingCount(accountId) > 0) {
+				syncPendingOps(accountId)
+			}
+		},
 		onHide: function() {}
 	}
 </script>

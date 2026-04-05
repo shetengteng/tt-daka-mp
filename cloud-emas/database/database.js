@@ -45,6 +45,7 @@ class CollectionReference {
     this._skip = 0
     this._limit = 1000
     this._orderBy = []
+    this._projection = null
   }
 
   async _getCollection() {
@@ -79,6 +80,11 @@ class CollectionReference {
     return this
   }
 
+  field(projection) {
+    this._projection = projection
+    return this
+  }
+
   _buildSort() {
     if (this._orderBy.length === 0) return undefined
     const sort = {}
@@ -93,7 +99,9 @@ class CollectionReference {
       const collection = await this._getCollection()
 
       if (this._docId) {
-        const res = await collection.findOne({ _id: this._docId })
+        const findOneOpts = {}
+        if (this._projection) findOneOpts.projection = this._projection
+        const res = await collection.findOne({ _id: this._docId }, findOneOpts)
         const doc = res.result
         return { data: doc ? [doc] : [], errMsg: 'ok' }
       }
@@ -101,6 +109,7 @@ class CollectionReference {
       const options = { skip: this._skip, limit: this._limit }
       const sort = this._buildSort()
       if (sort) options.sort = sort
+      if (this._projection) options.projection = this._projection
 
       const res = await collection.find(this._where, options)
       return { data: res.result || [], errMsg: 'ok' }
@@ -152,6 +161,20 @@ class CollectionReference {
       }
     } catch (e) {
       handleEmasError(e, `新增 ${this._collectionName}`)
+    }
+  }
+
+  async addBatch(dataList) {
+    try {
+      const collection = await this._getCollection()
+      const res = await collection.insertMany(dataList)
+      return {
+        count: res.result ? Object.keys(res.result).length : 0,
+        ids: res.result || {},
+        errMsg: 'ok',
+      }
+    } catch (e) {
+      handleEmasError(e, `批量新增 ${this._collectionName}`)
     }
   }
 

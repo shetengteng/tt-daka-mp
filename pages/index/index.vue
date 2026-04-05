@@ -35,6 +35,15 @@
       </view>
     </view>
     
+    <!-- 离线状态条 -->
+    <view v-if="recordStore.pendingCount > 0" class="offline-bar mx-xl mt-sm mb-sm px-lg py-sm rounded-lg flex-between items-center">
+      <view class="flex-center-v gap-xs">
+        <TtSvg name="ri-cloud-off-line" :size="16" color="#F59E0B" />
+        <text class="text-xs" style="color: #F59E0B">{{ recordStore.pendingCount }} 条记录待同步</text>
+      </view>
+      <text class="text-xs font-medium" style="color: #F59E0B" @click="manualSync">立即同步</text>
+    </view>
+
     <!-- 打卡列表 -->
     <view class="list-section px-xl mt-md">
       <DakaCard
@@ -103,9 +112,13 @@
 import { ref, computed } from 'vue'
 import { onShow, onPullDownRefresh } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
-import { useDakaStore } from '@/stores/daka'
+import { useProjectStore } from '@/stores/project'
+import { useRecordStore } from '@/stores/record'
 import { getProjectList } from './api/getProjectList'
 import { toggleDaka } from './api/toggleDaka'
+import { syncPendingOps } from '@/utils/sync-manager'
+import { getAccountId } from '@/utils/auth'
+import { checkDataVersion, updateLocalVersion } from '@/utils/version-check'
 import { archiveProject } from '@/pages/project/api/archiveProject'
 import { deleteProject } from '@/pages/project/sub/add/api/deleteProject'
 import { goToProjectAdd, goToProjectDetail, goToProjectEdit } from '@/route/index'
@@ -113,7 +126,8 @@ import { dayjs, formatDate } from '@/utils/date'
 import DakaCard from './components/DakaCard.vue'
 
 const themeStore = useThemeStore()
-const dakaStore = useDakaStore()
+const projectStore = useProjectStore()
+const recordStore = useRecordStore()
 
 const capsuleStyle = computed(() => {
   if (themeStore.capsuleRight > 0) {
@@ -145,12 +159,12 @@ const greeting = computed(() => {
   return '晚上好，今天辛苦了'
 })
 
-const activeProjects = computed(() => dakaStore.activeProjects)
-const todayProgress = computed(() => dakaStore.todayProgress)
+const activeProjects = computed(() => projectStore.activeList)
+const todayProgress = computed(() => recordStore.todayProgress)
 
 const todayRecordMap = computed(() => {
   const map = {}
-  dakaStore.todayRecords.forEach(r => {
+  recordStore.todayRecords.forEach(r => {
     map[r.projectId] = r
   })
   return map
@@ -171,15 +185,27 @@ const actionSheetItems = [
   { label: '删除', value: 'delete', color: '#EF4444' },
 ]
 
-onShow(() => {
+onShow(async () => {
   themeStore.applyTheme()
-  if (!dakaStore.isCacheValid()) {
+  if (!projectStore.isCacheValid()) {
     loadData()
+  } else {
+    const accountId = getAccountId()
+    if (accountId) {
+      const { needRefresh, version } = await checkDataVersion(accountId)
+      if (needRefresh) {
+        await loadData()
+        updateLocalVersion(accountId, version)
+      }
+    }
   }
 })
 
 onPullDownRefresh(async () => {
-  dakaStore.markDirty()
+  const accountId = getAccountId()
+  if (accountId) await syncPendingOps(accountId)
+  projectStore.markDirty()
+  recordStore.markDirty()
   await loadData()
   uni.stopPullDownRefresh()
 })
@@ -188,9 +214,8 @@ async function loadData() {
   loading.value = true
   const res = await getProjectList()
   if (res.success) {
-    dakaStore.setProjects(res.list)
-    dakaStore.setTodayRecords(res.todayRecords)
-    dakaStore.markFresh()
+    projectStore.markFresh()
+    recordStore.markFresh()
   }
   loading.value = false
 }
@@ -205,17 +230,11 @@ async function onToggle(projectId) {
   }
   
   uni.vibrateShort()
-  const res = await toggleDaka(projectId, false)
-  if (res.success && res.record) {
-    dakaStore.addTodayRecord(res.record)
-  }
+  await toggleDaka(projectId, false)
 }
 
 async function confirmCancelDaka() {
-  const res = await toggleDaka(currentActionId.value, true)
-  if (res.success) {
-    dakaStore.removeTodayRecord(currentActionId.value)
-  }
+  await toggleDaka(currentActionId.value, true)
   showCancelDialog.value = false
 }
 
@@ -260,6 +279,14 @@ async function confirmDeleteProject() {
 
 function goAdd() {
   goToProjectAdd()
+}
+
+async function manualSync() {
+  const accountId = getAccountId()
+  if (accountId) {
+    await syncPendingOps(accountId)
+    recordStore.pendingCount = 0
+  }
 }
 
 function goCalendar() {
@@ -311,6 +338,11 @@ function goCalendar() {
   width: 120rpx;
   height: 120rpx;
   background-color: var(--tt-card, #F4F4F5);
+}
+
+.offline-bar {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 .progress-bar {

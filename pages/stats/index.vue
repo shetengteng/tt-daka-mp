@@ -90,10 +90,10 @@
 import { ref, reactive, computed } from 'vue'
 import { onShow, onPullDownRefresh } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
-import { useDakaStore } from '@/stores/daka'
+import { useProjectStore } from '@/stores/project'
 import { getStats } from './api/getStats'
 
-const dakaStore = useDakaStore()
+const projectStore = useProjectStore()
 let _statsLoaded = false
 
 const stats = reactive({
@@ -136,14 +136,14 @@ async function loadStats() {
 
 onShow(async () => {
   themeStore.applyTheme()
-  if (!_statsLoaded || !dakaStore.isCacheValid()) {
+  if (!_statsLoaded || !projectStore.isCacheValid()) {
     await loadStats()
     _statsLoaded = true
   }
 })
 
 onPullDownRefresh(async () => {
-  dakaStore.markDirty()
+  projectStore.markDirty()
   await loadStats()
   uni.stopPullDownRefresh()
 })
