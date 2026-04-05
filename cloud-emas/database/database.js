@@ -19,6 +19,7 @@ import { getDb, initEmas } from './index'
 import { mockDb } from '@/mock/db'
 import { DEV_MODE } from '@/config/index'
 import { COLLECTIONS } from './schema'
+import { handleEmasError } from './error'
 
 export const dbCmd = {
   eq: (val) => val,
@@ -88,20 +89,24 @@ class CollectionReference {
   }
 
   async get() {
-    const collection = await this._getCollection()
+    try {
+      const collection = await this._getCollection()
 
-    if (this._docId) {
-      const res = await collection.findOne({ _id: this._docId })
-      const doc = res.result
-      return { data: doc ? [doc] : [], errMsg: 'ok' }
+      if (this._docId) {
+        const res = await collection.findOne({ _id: this._docId })
+        const doc = res.result
+        return { data: doc ? [doc] : [], errMsg: 'ok' }
+      }
+
+      const options = { skip: this._skip, limit: this._limit }
+      const sort = this._buildSort()
+      if (sort) options.sort = sort
+
+      const res = await collection.find(this._where, options)
+      return { data: res.result || [], errMsg: 'ok' }
+    } catch (e) {
+      handleEmasError(e, `查询 ${this._collectionName}`)
     }
-
-    const options = { skip: this._skip, limit: this._limit }
-    const sort = this._buildSort()
-    if (sort) options.sort = sort
-
-    const res = await collection.find(this._where, options)
-    return { data: res.result || [], errMsg: 'ok' }
   }
 
   async getAll() {
@@ -127,44 +132,60 @@ class CollectionReference {
   }
 
   async count() {
-    const collection = await this._getCollection()
-    const res = await collection.count(this._where)
-    return { total: res.result || 0, errMsg: 'ok' }
+    try {
+      const collection = await this._getCollection()
+      const res = await collection.count(this._where)
+      return { total: res.result || 0, errMsg: 'ok' }
+    } catch (e) {
+      handleEmasError(e, `统计 ${this._collectionName}`)
+    }
   }
 
   async add(data) {
-    const collection = await this._getCollection()
-    const res = await collection.insertOne(data)
-    return {
-      id: res.result?.insertedId,
-      _id: res.result?.insertedId,
-      errMsg: 'ok'
+    try {
+      const collection = await this._getCollection()
+      const res = await collection.insertOne(data)
+      return {
+        id: res.result?.insertedId,
+        _id: res.result?.insertedId,
+        errMsg: 'ok'
+      }
+    } catch (e) {
+      handleEmasError(e, `新增 ${this._collectionName}`)
     }
   }
 
   async update(data) {
-    const collection = await this._getCollection()
-    const updateDoc = { $set: data }
+    try {
+      const collection = await this._getCollection()
+      const updateDoc = { $set: data }
 
-    if (this._docId) {
-      const res = await collection.updateOne({ _id: this._docId }, updateDoc)
+      if (this._docId) {
+        const res = await collection.updateOne({ _id: this._docId }, updateDoc)
+        return { updated: res.result?.modifiedCount || 0, errMsg: 'ok' }
+      }
+
+      const res = await collection.updateMany(this._where, updateDoc)
       return { updated: res.result?.modifiedCount || 0, errMsg: 'ok' }
+    } catch (e) {
+      handleEmasError(e, `更新 ${this._collectionName}`)
     }
-
-    const res = await collection.updateMany(this._where, updateDoc)
-    return { updated: res.result?.modifiedCount || 0, errMsg: 'ok' }
   }
 
   async remove() {
-    const collection = await this._getCollection()
+    try {
+      const collection = await this._getCollection()
 
-    if (this._docId) {
-      const res = await collection.deleteOne({ _id: this._docId })
+      if (this._docId) {
+        const res = await collection.deleteOne({ _id: this._docId })
+        return { deleted: res.result?.deletedCount || 0, errMsg: 'ok' }
+      }
+
+      const res = await collection.deleteMany(this._where)
       return { deleted: res.result?.deletedCount || 0, errMsg: 'ok' }
+    } catch (e) {
+      handleEmasError(e, `删除 ${this._collectionName}`)
     }
-
-    const res = await collection.deleteMany(this._where)
-    return { deleted: res.result?.deletedCount || 0, errMsg: 'ok' }
   }
 }
 
