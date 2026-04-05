@@ -93,7 +93,7 @@ export async function syncPendingOps(accountId) {
   return { synced: syncedCount, remaining: getPendingOps(accountId).length }
 }
 
-function mergeOps(ops) {
+export function mergeOps(ops) {
   const cancelMap = new Map()
 
   for (let i = ops.length - 1; i >= 0; i--) {
