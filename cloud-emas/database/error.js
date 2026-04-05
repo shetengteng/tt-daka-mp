@@ -4,7 +4,8 @@
  */
 
 const QUOTA_KEYWORDS = [
-  'quota', 'limit', 'exceeded', 'throttl', '503', 'rate limit',
+  'quota', 'limit', 'exceeded', 'exhausted', 'throttl', '503', 'rate limit',
+  'prepayresource', 'resource exhausted',
   '频率', '超限', '额度', '请求过多', 'too many request', 'service unavailable',
 ]
 
@@ -13,9 +14,9 @@ const QUOTA_TOAST_INTERVAL = 5000
 
 function isQuotaError(error) {
   const msg = (error?.message || error?.error?.message || String(error)).toLowerCase()
-  const code = error?.code || error?.status || error?.statusCode || 0
-  if (code === 503 || code === 429) return true
-  return QUOTA_KEYWORDS.some(k => msg.includes(k))
+  const code = String(error?.code || error?.status || error?.statusCode || '').toLowerCase()
+  if (code === '503' || code === '429' || code === 'prepayresourceexhausted') return true
+  return QUOTA_KEYWORDS.some(k => msg.includes(k) || code.includes(k))
 }
 
 export function handleEmasError(error, operation = '操作') {
