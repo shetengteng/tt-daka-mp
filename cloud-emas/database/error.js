@@ -12,7 +12,7 @@ const QUOTA_KEYWORDS = [
 let _lastQuotaToastTime = 0
 const QUOTA_TOAST_INTERVAL = 5000
 
-function isQuotaError(error) {
+export function isQuotaError(error) {
   const msg = (error?.message || error?.error?.message || String(error)).toLowerCase()
   const code = String(error?.code || error?.status || error?.statusCode || '').toLowerCase()
   if (code === '503' || code === '429' || code === 'prepayresourceexhausted') return true
