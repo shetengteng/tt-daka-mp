@@ -1,48 +1,13 @@
 <template>
   <view class="page" :class="{ 'theme-dark': themeStore.mode === 'dark' }" :style="themeStore.themeStyle">
-    <!-- 顶部区域 -->
-    <view class="header px-xl pt-lg" :style="{ paddingTop: `${themeStore.statusBarHeight + 2}px` }">
-      <view class="header__top flex-between items-start" :style="capsuleStyle">
-        <view>
-          <text class="app-title text-foreground">DaKa</text>
-          <view class="header__greeting">
-            <text class="text-xs text-muted">{{ greeting }}</text>
-          </view>
-        </view>
-        <view class="header__date-badge flex-center-v" @click="goCalendar">
-          <text class="header__date-day">{{ todayDay }}</text>
-          <view class="header__date-info">
-            <text class="header__date-month">{{ todayMonth }}</text>
-            <text class="header__date-weekday">{{ todayWeekday }}</text>
-          </view>
-        </view>
-      </view>
-      
-      <!-- 今日进度 -->
-      <view v-if="activeProjects.length > 0" class="progress-section card p-lg mt-lg mb-lg">
-        <view class="flex-between mb-sm">
-          <text class="text-sm text-muted">今日进度</text>
-          <text class="text-sm font-semibold text-foreground">
-            {{ todayProgress.done }}/{{ todayProgress.total }}
-          </text>
-        </view>
-        <view class="progress-bar rounded-full">
-          <view 
-            class="progress-fill rounded-full" 
-            :style="{ width: `${todayProgress.percent}%` }"
-          ></view>
-        </view>
-      </view>
-    </view>
+    <DakaHeader
+      :statusBarHeight="themeStore.statusBarHeight"
+      :capsuleStyle="capsuleStyle"
+      :showProgress="activeProjects.length > 0"
+      :progress="todayProgress"
+    />
     
-    <!-- 离线状态条 -->
-    <view v-if="recordStore.pendingCount > 0" class="offline-bar mx-xl mt-sm mb-sm px-lg py-sm rounded-lg flex-between items-center">
-      <view class="flex-center-v gap-xs">
-        <TtSvg name="ri-cloud-off-line" :size="16" color="#F59E0B" />
-        <text class="text-xs" style="color: #F59E0B">{{ recordStore.pendingCount }} 条记录待同步</text>
-      </view>
-      <text class="text-xs font-medium" style="color: #F59E0B" @click="manualSync">立即同步</text>
-    </view>
+    <OfflineBar :count="recordStore.pendingCount" />
 
     <!-- 打卡列表 -->
     <view class="list-section px-xl mt-md">
@@ -122,8 +87,9 @@ import { checkDataVersion, updateLocalVersion } from '@/utils/version-check'
 import { archiveProject } from '@/pages/project/api/archiveProject'
 import { deleteProject } from '@/pages/project/sub/add/api/deleteProject'
 import { goToProjectAdd, goToProjectDetail, goToProjectEdit } from '@/route/index'
-import { dayjs, formatDate } from '@/utils/date'
 import DakaCard from './components/DakaCard.vue'
+import DakaHeader from './components/DakaHeader.vue'
+import OfflineBar from './components/OfflineBar.vue'
 
 const themeStore = useThemeStore()
 const projectStore = useProjectStore()
@@ -145,19 +111,6 @@ const showDeleteDialog = ref(false)
 const currentActionId = ref('')
 const streakMap = ref({})
 const totalDaysMap = ref({})
-
-const todayDay = computed(() => dayjs().format('D'))
-const todayMonth = computed(() => dayjs().format('MMM').toUpperCase())
-const todayWeekday = computed(() => dayjs().format('ddd'))
-
-const greeting = computed(() => {
-  const hour = dayjs().hour()
-  if (hour < 6) return '夜深了，早点休息'
-  if (hour < 12) return '早上好，新的一天开始了'
-  if (hour < 14) return '中午好，记得休息'
-  if (hour < 18) return '下午好，继续加油'
-  return '晚上好，今天辛苦了'
-})
 
 const activeProjects = computed(() => projectStore.activeList)
 const todayProgress = computed(() => recordStore.todayProgress)
@@ -281,55 +234,9 @@ function goAdd() {
   goToProjectAdd()
 }
 
-async function manualSync() {
-  const accountId = getAccountId()
-  if (accountId) {
-    await syncPendingOps(accountId)
-    recordStore.pendingCount = 0
-  }
-}
-
-function goCalendar() {
-  uni.switchTab({ url: '/pages/calendar/index' })
-}
 </script>
 
 <style lang="scss" scoped>
-.header__date-badge {
-  padding: 12rpx 20rpx;
-  flex-shrink: 0;
-  gap: 12rpx;
-  background-color: var(--tt-card);
-  border-radius: 16rpx;
-}
-
-.header__date-day {
-  font-size: 48rpx;
-  font-weight: 700;
-  line-height: 1;
-  color: var(--tt-foreground);
-}
-
-.header__date-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.header__date-month {
-  font-size: 20rpx;
-  font-weight: 600;
-  letter-spacing: 2rpx;
-  color: var(--tt-muted-foreground);
-  line-height: 1.3;
-}
-
-.header__date-weekday {
-  font-size: 20rpx;
-  font-weight: 500;
-  color: var(--tt-muted-foreground);
-  line-height: 1.3;
-}
-
 .empty-state {
   min-height: 60vh;
 }
@@ -340,39 +247,8 @@ function goCalendar() {
   background-color: var(--tt-card, #F4F4F5);
 }
 
-.offline-bar {
-  background: rgba(245, 158, 11, 0.1);
-  border: 1px solid rgba(245, 158, 11, 0.2);
-}
-
-.progress-bar {
-  height: 16rpx;
-  background-color: var(--tt-border, #E4E4E7);
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background-color: var(--tt-success, #22C55E);
-  transition: width 0.3s ease;
-  min-width: 0;
-}
-
-.app-title {
-  font-size: 40rpx;
-  font-weight: 700;
-  letter-spacing: 1rpx;
-  line-height: 1;
-  font-family: 'Pacifico', 'PingFang SC', cursive;
-}
-
-.header__greeting {
-  margin-top: -2rpx;
-}
-
 .add-btn {
   border: 3rpx dashed var(--tt-border, #E4E4E7);
   padding: 32rpx;
 }
-
 </style>

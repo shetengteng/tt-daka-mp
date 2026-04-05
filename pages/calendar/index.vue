@@ -192,7 +192,4 @@ onShow(() => {
   margin-right: 20rpx;
 }
 
-.block {
-  display: block;
-}
 </style>

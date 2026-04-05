@@ -77,6 +77,12 @@ page,
 .min-w-0 { min-width: 0; }
 .nowrap { white-space: nowrap; }
 
+/* Gap */
+.gap-xs { gap: $tt-spacing-xs; }
+.gap-sm { gap: $tt-spacing-sm; }
+.gap-md { gap: $tt-spacing-md; }
+.gap-lg { gap: $tt-spacing-lg; }
+
 /* Text */
 .text-center { text-align: center; }
 .text-left { text-align: left; }
@@ -151,6 +157,7 @@ page,
 .mr-sm { margin-right: $tt-spacing-sm; }
 .mx-md { margin-left: $tt-spacing-md; margin-right: $tt-spacing-md; }
 .mx-lg { margin-left: $tt-spacing-lg; margin-right: $tt-spacing-lg; }
+.mx-xl { margin-left: 40rpx; margin-right: 40rpx; }
 
 /* Spacing - Padding */
 .p-0 { padding: 0; }
@@ -163,6 +170,7 @@ page,
 .pb-sm { padding-bottom: $tt-spacing-sm; }
 .pb-md { padding-bottom: $tt-spacing-md; }
 .pb-lg { padding-bottom: $tt-spacing-lg; }
+.px-xs { padding-left: $tt-spacing-xs; padding-right: $tt-spacing-xs; }
 .px-sm { padding-left: $tt-spacing-sm; padding-right: $tt-spacing-sm; }
 .px-md { padding-left: $tt-spacing-md; padding-right: $tt-spacing-md; }
 .px-lg { padding-left: $tt-spacing-lg; padding-right: $tt-spacing-lg; }
