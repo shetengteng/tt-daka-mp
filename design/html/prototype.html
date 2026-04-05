@@ -522,6 +522,102 @@
   </div>
 </div>
 
+<!-- ========== PAGE 4b: 我的 - 编辑个人信息弹窗 ========== -->
+<div style="position:relative">
+  <div class="page-label">4b. 我的（编辑个人信息）</div>
+  <div class="phone">
+    <div class="wx-capsule">
+      <div class="wx-capsule-dots"><div class="wx-capsule-dot"></div><div class="wx-capsule-dot"></div><div class="wx-capsule-dot"></div></div>
+      <div style="width:16px;height:16px;border-radius:50%;border:1.5px solid #333"></div>
+    </div>
+    <div class="phone-inner">
+      <div class="statusbar">9:41</div>
+      <div class="px-5 pb-4">
+        <div class="text-xl font-bold text-fg mb-4">我的</div>
+        <!-- 用户卡片 - 带可点击箭头 -->
+        <div class="bg-card rounded-xl p-5 mb-5 flex items-center gap-4 cursor-pointer" style="outline:2px solid #3B82F6;outline-offset:-2px">
+          <div class="w-14 h-14 rounded-full overflow-hidden flex-shrink-0">
+            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=daka" class="w-full h-full object-cover" />
+          </div>
+          <div class="flex-1">
+            <div class="font-semibold text-fg text-lg">小明</div>
+            <div class="text-sm text-muted">已坚持打卡 45 天</div>
+          </div>
+          <i data-lucide="chevron-right" class="w-5 h-5 text-muted"></i>
+        </div>
+
+        <div class="text-xs text-muted mb-2 px-1">打卡管理</div>
+        <div class="bg-card rounded-xl overflow-hidden mb-5">
+          <div class="flex items-center justify-between p-4 border-b border-border">
+            <span class="text-sm text-fg">打卡项目管理</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-muted"></i>
+          </div>
+          <div class="flex items-center justify-between p-4">
+            <span class="text-sm text-fg">已归档项目</span>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-muted">2</span>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-muted"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-xs text-muted mb-2 px-1">设置</div>
+        <div class="bg-card rounded-xl overflow-hidden mb-5">
+          <div class="flex items-center justify-between p-4">
+            <span class="text-sm text-fg">深色模式</span>
+            <div class="w-11 h-6 bg-disabled rounded-full relative cursor-pointer">
+              <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 shadow-sm"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 遮罩 + 弹窗 -->
+    <div style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:20;display:flex;align-items:center;justify-content:center;border-radius:40px">
+      <div style="width:280px;background:#fff;border-radius:16px;overflow:hidden">
+        <!-- 标题 -->
+        <div style="padding:20px 20px 0;text-align:center">
+          <div class="text-lg font-semibold text-fg">修改个人信息</div>
+        </div>
+        <!-- 内容 -->
+        <div style="padding:16px 20px 20px">
+          <!-- 头像区域 -->
+          <div class="flex flex-col items-center" style="margin-bottom:20px">
+            <div style="width:64px;height:64px;border-radius:50%;overflow:hidden;margin-bottom:8px">
+              <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=daka" style="width:100%;height:100%;object-fit:cover" />
+            </div>
+            <div class="text-sm cursor-pointer" style="color:#3B82F6">更换头像</div>
+          </div>
+          <!-- 昵称 -->
+          <div>
+            <div class="text-sm text-muted" style="margin-bottom:6px">昵称</div>
+            <div style="background:#F4F4F5;border-radius:12px;padding:10px 14px">
+              <div class="text-sm text-fg">小明</div>
+            </div>
+          </div>
+        </div>
+        <!-- 底部按钮 -->
+        <div style="display:flex;gap:12px;padding:0 20px 20px">
+          <div style="flex:1;height:40px;border-radius:10px;background:#F4F4F5;display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <span class="text-sm text-muted">取消</span>
+          </div>
+          <div style="flex:1;height:40px;border-radius:10px;background:#09090B;display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <span class="text-sm text-white font-medium">保存</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabbar">
+      <div class="tabbar-item"><i data-lucide="check-circle" class="w-5 h-5"></i><span>打卡</span></div>
+      <div class="tabbar-item"><i data-lucide="calendar" class="w-5 h-5"></i><span>日历</span></div>
+      <div class="tabbar-item"><i data-lucide="bar-chart-3" class="w-5 h-5"></i><span>统计</span></div>
+      <div class="tabbar-item active"><i data-lucide="user" class="w-5 h-5"></i><span>我的</span></div>
+    </div>
+  </div>
+</div>
+
 <!-- ========== PAGE 5: 创建打卡 ========== -->
 <div style="position:relative">
   <div class="page-label">5. 创建打卡项目</div>

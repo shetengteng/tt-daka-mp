@@ -29,6 +29,9 @@ npm-debug.log*
 # OS
 Thumbs.db
 
+# Sensitive config
+config/env.config.json
+
 # User input (dev tool)
 prompts.txt
 userinput.py
