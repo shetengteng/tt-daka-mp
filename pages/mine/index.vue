@@ -170,6 +170,7 @@ import { resetAuthState } from '@/cloud-emas/database/api/anonymousAuth'
 import { getMineStats } from './api/getMineStats'
 import { getUser } from './api/getUser'
 import { updateUserProfile } from './api/updateUserProfile'
+import { fileToBase64, isLocalFile } from '@/utils/file'
 
 const themeStore = useThemeStore()
 const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
@@ -249,10 +250,16 @@ async function onSaveProfile() {
 
   saving.value = true
   try {
-    const res = await updateUserProfile({ nickname, avatar: editAvatar.value })
+    let avatarData = editAvatar.value
+
+    if (isLocalFile(avatarData)) {
+      avatarData = await fileToBase64(avatarData)
+    }
+
+    const res = await updateUserProfile({ nickname, avatar: avatarData })
     if (res.success) {
       userNickname.value = nickname
-      userAvatar.value = editAvatar.value
+      userAvatar.value = avatarData
       showEditProfile.value = false
       uni.showToast({ title: '保存成功', icon: 'success' })
     } else {
