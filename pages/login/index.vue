@@ -43,9 +43,10 @@ import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { DEV_MODE, TEST_ACCOUNT_ID } from '@/config/index'
-import { isLoggedIn, getAccountId, setAccountId, setLoginType } from '@/utils/auth'
+import { isLoggedIn, setAccountId, setLoginType } from '@/utils/auth'
 import { initEmas } from '@/cloud-emas/database/index'
 import { anonymousAuth } from '@/cloud-emas/database/api/anonymousAuth'
+import { wechatAuth } from '@/cloud-emas/database/api/wechatAuth'
 import { ensureUser } from '@/pages/mine/api/ensureUser'
 
 const agreed = ref(false)
@@ -80,17 +81,37 @@ async function handleWechatLogin() {
 
   try {
     await initEmas()
-    await anonymousAuth()
-    const stored = getAccountId()
-    if (!stored) {
-      setAccountId(`wx_${Date.now()}`)
+    const authResult = await wechatAuth()
+
+    if (!authResult.success) {
+      throw new Error(authResult.error || '微信授权失败')
     }
+
+    const userInfo = authResult.userInfo || {}
+    const openid = userInfo.openid || userInfo.oAuthUserId || userInfo.userId
+
+    if (!openid) {
+      console.error('[Login] 无 openid, userInfo:', userInfo)
+      throw new Error('微信授权未返回用户标识')
+    }
+
+    const accountId = `wx_${openid}`
+    setAccountId(accountId)
     setLoginType('wechat')
-    await ensureUser({ loginType: 'wechat' })
+
+    const result = await ensureUser({ loginType: 'wechat', openid })
+    if (result.success && result.user) {
+      setAccountId(result.user.accountId || accountId)
+    }
+
     goHome()
   } catch (error) {
-    console.error('[Login] 微信登录失败:', error)
-    uni.showToast({ title: '登录失败，请重试', icon: 'none' })
+    if (error.message?.includes('cancel') || error.code === 'auth/operation-cancelled') {
+      uni.showToast({ title: '已取消登录', icon: 'none' })
+    } else {
+      console.error('[Login] 微信登录失败:', error)
+      uni.showToast({ title: '登录失败，请重试', icon: 'none' })
+    }
   } finally {
     loading.value = false
   }

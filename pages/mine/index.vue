@@ -12,7 +12,7 @@
           <text class="text-lg font-semibold text-foreground">{{ userNickname }}</text>
           <text class="text-sm text-muted block">已坚持打卡 {{ totalDays }} 天</text>
         </view>
-        <TtSvg v-if="isWechatMode" name="ri-arrow-right-s-line" :size="32" color="#71717A" />
+        <TtSvg v-if="isEditableMode" name="ri-arrow-right-s-line" :size="32" color="#71717A" />
       </view>
     </view>
     
@@ -116,7 +116,7 @@
         <view class="edit-panel__body">
           <!-- 头像区域 -->
           <view class="edit-avatar-section flex-col flex-center">
-            <view class="edit-avatar flex-center rounded-full">
+            <view class="edit-avatar flex-center rounded-full" @click="onChooseAvatarFallback">
               <image v-if="editAvatar" class="edit-avatar-img rounded-full" :src="editAvatar" mode="aspectFill" />
               <TtSvg v-else name="ri-user-fill" :size="48" color="#ffffff" />
             </view>
@@ -126,7 +126,7 @@
             </button>
             <!-- #endif -->
             <!-- #ifndef MP-WEIXIN -->
-            <view class="choose-avatar-btn" @click="onChooseAvatarH5">
+            <view class="choose-avatar-btn" @click="onChooseAvatarFallback">
               <text class="text-sm" style="color: var(--tt-primary)">更换头像</text>
             </view>
             <!-- #endif -->
@@ -151,7 +151,7 @@
             <text class="text-sm text-muted">取消</text>
           </view>
           <view class="edit-btn edit-btn--save" @click="onSaveProfile">
-            <text class="text-sm text-white font-medium">保存</text>
+            <text class="text-sm font-medium" style="color: var(--tt-background)">保存</text>
           </view>
         </view>
       </view>
@@ -164,7 +164,9 @@ import { ref, computed } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { goToProjectManage, goToProjectArchived, goToPrivacy } from '@/route/index'
 import { useThemeStore } from '@/stores/theme'
-import { clearAccountId, getLoginType } from '@/utils/auth'
+import { clearAccountId, getLoginType, clearLoginType } from '@/utils/auth'
+import { resetWechatAuthState } from '@/cloud-emas/database/api/wechatAuth'
+import { resetAuthState } from '@/cloud-emas/database/api/anonymousAuth'
 import { getMineStats } from './api/getMineStats'
 import { getUser } from './api/getUser'
 import { updateUserProfile } from './api/updateUserProfile'
@@ -177,7 +179,10 @@ const activeCount = ref(0)
 const archivedCount = ref(0)
 const userNickname = ref('微信用户')
 const userAvatar = ref('')
-const isWechatMode = computed(() => getLoginType() === 'wechat')
+const isEditableMode = computed(() => {
+  const type = getLoginType()
+  return type === 'wechat' || type === 'anonymous'
+})
 
 const darkMode = computed({
   get: () => themeStore.mode === 'dark',
@@ -210,7 +215,7 @@ onShow(() => {
 })
 
 function onUserCardClick() {
-  if (!isWechatMode.value) return
+  if (!isEditableMode.value) return
   editNickname.value = userNickname.value
   editAvatar.value = userAvatar.value
   showEditProfile.value = true
@@ -221,7 +226,7 @@ function onChooseAvatar(e) {
   if (avatarUrl) editAvatar.value = avatarUrl
 }
 
-function onChooseAvatarH5() {
+function onChooseAvatarFallback() {
   uni.chooseImage({
     count: 1,
     sizeType: ['compressed'],
@@ -286,6 +291,9 @@ function onClearCacheConfirm() {
 
 function onLogoutConfirm() {
   clearAccountId()
+  clearLoginType()
+  resetAuthState()
+  resetWechatAuthState()
   uni.reLaunch({ url: '/pages/login/index' })
 }
 </script>

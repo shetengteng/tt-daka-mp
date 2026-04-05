@@ -13,8 +13,10 @@ export const COLLECTIONS = {
  * @typedef {Object} DakaUser
  * @property {string} _id
  * @property {string} accountId
+ * @property {string} [openid] - 微信 openid，用于重新登录时匹配账号
  * @property {string} nickname
  * @property {string} avatar
+ * @property {string} loginType - wechat / anonymous
  * @property {string} createTime
  * @property {string} updateTime
  */

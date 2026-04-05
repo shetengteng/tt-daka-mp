@@ -78,3 +78,9 @@ export function clearAccountId() {
     uni.removeStorageSync(LOGIN_TYPE_KEY)
   } catch (e) {}
 }
+
+export function clearLoginType() {
+  try {
+    uni.removeStorageSync(LOGIN_TYPE_KEY)
+  } catch (e) {}
+}
