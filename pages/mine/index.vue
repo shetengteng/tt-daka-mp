@@ -167,10 +167,14 @@ import { useThemeStore } from '@/stores/theme'
 import { clearAccountId, getLoginType, clearLoginType } from '@/utils/auth'
 import { resetWechatAuthState } from '@/cloud-emas/database/api/wechatAuth'
 import { resetAuthState } from '@/cloud-emas/database/api/anonymousAuth'
+import { useDakaStore } from '@/stores/daka'
 import { getMineStats } from './api/getMineStats'
 import { getUser } from './api/getUser'
 import { updateUserProfile } from './api/updateUserProfile'
-import { fileToBase64, isLocalFile } from '@/utils/file'
+import { fileToBase64, isLocalFile, compressImage } from '@/utils/file'
+
+const dakaStore = useDakaStore()
+let _mineLoaded = false
 
 const themeStore = useThemeStore()
 const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
@@ -212,7 +216,10 @@ async function loadMineData() {
 
 onShow(() => {
   themeStore.applyTheme()
-  loadMineData()
+  if (!_mineLoaded || !dakaStore.isCacheValid()) {
+    loadMineData()
+    _mineLoaded = true
+  }
 })
 
 function onUserCardClick() {
@@ -253,6 +260,7 @@ async function onSaveProfile() {
     let avatarData = editAvatar.value
 
     if (isLocalFile(avatarData)) {
+      avatarData = await compressImage(avatarData)
       avatarData = await fileToBase64(avatarData)
     }
 

@@ -4,7 +4,6 @@
 	import { initEmas } from '@/cloud-emas/database/index'
 	import { anonymousAuth } from '@/cloud-emas/database/api/anonymousAuth'
 	import { wechatAuth } from '@/cloud-emas/database/api/wechatAuth'
-	import { ensureUser } from '@/pages/mine/api/ensureUser'
 	
 	export default {
 		onLaunch: function() {
@@ -17,7 +16,6 @@
 				
 				initEmas()
 					.then(() => authFn())
-					.then(() => ensureUser({ loginType }))
 					.catch((err) => {
 						console.error('[App] 启动授权恢复失败:', err)
 					})

@@ -56,9 +56,13 @@
 import { ref, computed } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
+import { useDakaStore } from '@/stores/daka'
 import { getRecordsByMonth } from './api/getRecordsByMonth'
 import { goToProjectDetail } from '@/route/index'
 import { dayjs, formatDate } from '@/utils/date'
+
+const dakaStore = useDakaStore()
+let _calendarLoaded = false
 
 const currentMonth = ref(dayjs().format('YYYY-MM'))
 const selectedDate = ref(formatDate(new Date()))
@@ -172,7 +176,10 @@ const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
 
 onShow(() => {
   themeStore.applyTheme()
-  loadMonthData()
+  if (!_calendarLoaded || dakaStore.isCacheValid() === false) {
+    loadMonthData()
+    _calendarLoaded = true
+  }
 })
 </script>
 

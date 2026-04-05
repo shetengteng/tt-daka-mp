@@ -173,10 +173,13 @@ const actionSheetItems = [
 
 onShow(() => {
   themeStore.applyTheme()
-  loadData()
+  if (!dakaStore.isCacheValid()) {
+    loadData()
+  }
 })
 
 onPullDownRefresh(async () => {
+  dakaStore.markDirty()
   await loadData()
   uni.stopPullDownRefresh()
 })
@@ -187,6 +190,7 @@ async function loadData() {
   if (res.success) {
     dakaStore.setProjects(res.list)
     dakaStore.setTodayRecords(res.todayRecords)
+    dakaStore.markFresh()
   }
   loading.value = false
 }

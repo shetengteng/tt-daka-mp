@@ -90,7 +90,11 @@
 import { ref, reactive, computed } from 'vue'
 import { onShow, onPullDownRefresh } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
+import { useDakaStore } from '@/stores/daka'
 import { getStats } from './api/getStats'
+
+const dakaStore = useDakaStore()
+let _statsLoaded = false
 
 const stats = reactive({
   totalDays: 0,
@@ -123,19 +127,24 @@ function barTextClass(percent) {
 const themeStore = useThemeStore()
 const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
 
-onShow(async () => {
-  themeStore.applyTheme()
+async function loadStats() {
   const res = await getStats()
   if (res.success) {
     Object.assign(stats, res.data)
+  }
+}
+
+onShow(async () => {
+  themeStore.applyTheme()
+  if (!_statsLoaded || !dakaStore.isCacheValid()) {
+    await loadStats()
+    _statsLoaded = true
   }
 })
 
 onPullDownRefresh(async () => {
-  const res = await getStats()
-  if (res.success) {
-    Object.assign(stats, res.data)
-  }
+  dakaStore.markDirty()
+  await loadStats()
   uni.stopPullDownRefresh()
 })
 </script>
