@@ -5,6 +5,7 @@
 import { DEV_MODE, TEST_ACCOUNT_ID } from '@/config/index'
 
 const STORAGE_KEY = 'dk-account-id'
+const LOGIN_TYPE_KEY = 'dk-login-type'
 
 let _accountId = ''
 
@@ -56,9 +57,24 @@ export function isLoggedIn() {
   return !!getAccountId()
 }
 
+export function getLoginType() {
+  try {
+    return uni.getStorageSync(LOGIN_TYPE_KEY) || 'anonymous'
+  } catch (e) {
+    return 'anonymous'
+  }
+}
+
+export function setLoginType(type) {
+  try {
+    uni.setStorageSync(LOGIN_TYPE_KEY, type)
+  } catch (e) {}
+}
+
 export function clearAccountId() {
   _accountId = ''
   try {
     uni.removeStorageSync(STORAGE_KEY)
+    uni.removeStorageSync(LOGIN_TYPE_KEY)
   } catch (e) {}
 }

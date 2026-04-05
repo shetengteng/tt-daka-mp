@@ -5,10 +5,11 @@
       <!-- 用户信息卡片 -->
       <view class="user-card card flex-center-v mt-lg">
         <view class="avatar flex-center rounded-full">
-          <TtSvg name="ri-user-fill" :size="56" color="#ffffff" />
+          <image v-if="userAvatar" class="avatar-img rounded-full" :src="userAvatar" mode="aspectFill" />
+          <TtSvg v-else name="ri-user-fill" :size="56" color="#ffffff" />
         </view>
         <view class="user-info">
-          <text class="text-lg font-semibold text-foreground">微信用户</text>
+          <text class="text-lg font-semibold text-foreground">{{ userNickname }}</text>
           <text class="text-sm text-muted block">已坚持打卡 {{ totalDays }} 天</text>
         </view>
       </view>
@@ -65,7 +66,14 @@
       </view>
     </view>
     
-    <view class="text-center mt-xl mb-lg">
+    <!-- 退出登录 -->
+    <view class="px-xl mt-xl">
+      <view class="logout-btn flex-center rounded-xl" @click="showLogoutDialog = true">
+        <text class="text-sm text-error">退出登录</text>
+      </view>
+    </view>
+    
+    <view class="text-center mt-lg mb-lg">
       <text class="text-xs" style="color: #D4D4D8">v1.0.0</text>
     </view>
     
@@ -88,6 +96,14 @@
       message="确定清除本地缓存数据吗？"
       @confirm="onClearCacheConfirm"
     />
+    
+    <!-- 退出登录确认 -->
+    <TtDialog
+      v-model:visible="showLogoutDialog"
+      title="退出登录"
+      message="退出后需要重新登录，确定退出吗？"
+      @confirm="onLogoutConfirm"
+    />
   </view>
 </template>
 
@@ -96,7 +112,9 @@ import { ref, computed } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { goToProjectManage, goToProjectArchived, goToPrivacy } from '@/route/index'
 import { useThemeStore } from '@/stores/theme'
+import { clearAccountId } from '@/utils/auth'
 import { getMineStats } from './api/getMineStats'
+import { getUser } from './api/getUser'
 
 const themeStore = useThemeStore()
 const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
@@ -104,6 +122,8 @@ const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
 const totalDays = ref(0)
 const activeCount = ref(0)
 const archivedCount = ref(0)
+const userNickname = ref('微信用户')
+const userAvatar = ref('')
 const darkMode = computed({
   get: () => themeStore.mode === 'dark',
   set: (val) => themeStore.setMode(val ? 'dark' : 'light'),
@@ -112,11 +132,15 @@ const showAbout = ref(false)
 const aboutMessage = 'DaKa 是一款简洁高效的打卡习惯养成工具。\n\n支持自定义打卡项目、多种频率设置、补打卡、日历视图和统计分析，帮助你坚持每一天的好习惯。\n\n版本: v1.0.0'
 
 async function loadMineData() {
-  const res = await getMineStats()
-  if (res.success) {
-    totalDays.value = res.totalDays
-    activeCount.value = res.activeCount
-    archivedCount.value = res.archivedCount
+  const [statsRes, userRes] = await Promise.all([getMineStats(), getUser()])
+  if (statsRes.success) {
+    totalDays.value = statsRes.totalDays
+    activeCount.value = statsRes.activeCount
+    archivedCount.value = statsRes.archivedCount
+  }
+  if (userRes.success && userRes.user) {
+    userNickname.value = userRes.user.nickname || '微信用户'
+    userAvatar.value = userRes.user.avatar || ''
   }
 }
 
@@ -139,6 +163,7 @@ function goPrivacy() {
 
 
 const showClearCache = ref(false)
+const showLogoutDialog = ref(false)
 
 function clearCache() {
   showClearCache.value = true
@@ -147,6 +172,11 @@ function clearCache() {
 function onClearCacheConfirm() {
   uni.clearStorageSync()
   uni.showToast({ title: '缓存已清除', icon: 'success' })
+}
+
+function onLogoutConfirm() {
+  clearAccountId()
+  uni.reLaunch({ url: '/pages/login/index' })
 }
 </script>
 
@@ -161,6 +191,11 @@ function onClearCacheConfirm() {
   height: 112rpx;
   flex-shrink: 0;
   background-color: #171717;
+}
+
+.avatar-img {
+  width: 112rpx;
+  height: 112rpx;
 }
 
 .user-info {
@@ -180,5 +215,9 @@ function onClearCacheConfirm() {
 
 .gap-sm {
   gap: 16rpx;
+}
+
+.logout-btn {
+  height: 88rpx;
 }
 </style>

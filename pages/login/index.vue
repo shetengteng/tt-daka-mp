@@ -43,9 +43,10 @@ import { ref } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { DEV_MODE, TEST_ACCOUNT_ID } from '@/config/index'
-import { isLoggedIn, getAccountId, setAccountId } from '@/utils/auth'
+import { isLoggedIn, getAccountId, setAccountId, setLoginType } from '@/utils/auth'
 import { initEmas } from '@/cloud-emas/database/index'
 import { anonymousAuth } from '@/cloud-emas/database/api/anonymousAuth'
+import { ensureUser } from '@/pages/mine/api/ensureUser'
 
 const agreed = ref(false)
 const loading = ref(false)
@@ -84,6 +85,8 @@ async function handleWechatLogin() {
     if (!stored) {
       setAccountId(`wx_${Date.now()}`)
     }
+    setLoginType('wechat')
+    await ensureUser({ loginType: 'wechat' })
     goHome()
   } catch (error) {
     console.error('[Login] 微信登录失败:', error)
@@ -105,6 +108,8 @@ async function handleDevLogin() {
     setAccountId(TEST_ACCOUNT_ID)
     await initEmas()
     await anonymousAuth()
+    setLoginType('anonymous')
+    await ensureUser({ loginType: 'anonymous' })
     goHome()
   } catch (error) {
     console.error('[Login] 开发登录失败:', error)

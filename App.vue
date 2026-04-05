@@ -1,8 +1,9 @@
 <script>
 	import { useThemeStore } from '@/stores/theme'
-	import { isLoggedIn } from '@/utils/auth'
+	import { isLoggedIn, getLoginType } from '@/utils/auth'
 	import { initEmas } from '@/cloud-emas/database/index'
 	import { anonymousAuth } from '@/cloud-emas/database/api/anonymousAuth'
+	import { ensureUser } from '@/pages/mine/api/ensureUser'
 	
 	export default {
 		onLaunch: function() {
@@ -10,7 +11,10 @@
 			themeStore.applyTheme()
 			
 			if (isLoggedIn()) {
-				initEmas().then(() => anonymousAuth()).catch(() => {})
+				initEmas()
+					.then(() => anonymousAuth())
+					.then(() => ensureUser({ loginType: getLoginType() }))
+					.catch(() => {})
 			}
 		},
 		onShow: function() {},

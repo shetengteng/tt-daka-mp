@@ -104,14 +104,14 @@
       </view>
     </view>
     
-    <!-- 删除按钮（编辑模式） -->
-    <view v-if="isEdit" class="mt-xl mb-xl">
-      <TtButton text="删除此打卡项目" type="danger-text" @click="onDelete" />
+    <!-- 底部保存 -->
+    <view class="save-section mt-lg" :class="{ 'mb-xl': !isEdit }">
+      <TtButton :text="saving ? '保存中...' : (isEdit ? '保存修改' : '创建项目')" type="primary" block @click="onSave" />
     </view>
     
-    <!-- 底部保存 -->
-    <view class="save-section mt-lg mb-xl">
-      <TtButton :text="saving ? '保存中...' : (isEdit ? '保存修改' : '创建项目')" type="primary" block @click="onSave" />
+    <!-- 删除按钮（编辑模式） -->
+    <view v-if="isEdit" class="mt-md mb-xl">
+      <TtButton text="删除此打卡项目" type="danger-text" @click="onDelete" />
     </view>
     
     <TtDialog
