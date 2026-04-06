@@ -81,15 +81,15 @@ import { ref, computed, nextTick } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { useProjectStore } from '@/stores/project'
-import { getAccountId } from '@/utils/auth'
-import { checkDataVersion, updateLocalVersion } from '@/utils/version-check'
 import { archiveProject } from '@/api/project/archiveProject'
 import { deleteProject } from '@/api/project/deleteProject'
 import { batchUpdateSort } from '@/api/project/batchUpdateSort'
 import { getActiveProjects } from '@/api/project/getActiveProjects'
 import { goToProjectEdit } from '@/route/index'
 
-const projects = ref([])
+const projectStore = useProjectStore()
+const projects = computed(() => projectStore.activeList)
+
 const dragIdx = ref(-1)
 const insertIdx = ref(-1)
 const startY = ref(0)
@@ -100,10 +100,11 @@ let longPressTimer = null
 let itemRects = []
 const LONG_PRESS_MS = 200
 
-async function loadProjects() {
+async function fetchProjects() {
   const res = await getActiveProjects()
   if (res.success) {
-    projects.value = res.list
+    projectStore.setList(res.list)
+    projectStore.markFresh()
   }
 }
 
@@ -198,7 +199,7 @@ async function onDragEnd() {
   const [moved] = list.splice(from, 1)
   list.splice(to, 0, moved)
   
-  projects.value = list
+  projectStore.setList(list)
   
   const updates = list.map((item, idx) => ({
     _id: item._id,
@@ -227,7 +228,7 @@ async function onArchiveConfirm() {
   const res = await archiveProject(archiveTargetId.value, true)
   if (res.success) {
     uni.showToast({ title: '已归档', icon: 'success' })
-    await loadProjects()
+    await fetchProjects()
   }
 }
 
@@ -241,7 +242,7 @@ async function onDeleteConfirm() {
   const res = await deleteProject(deleteTargetId.value)
   if (res.success) {
     uni.showToast({ title: '已删除', icon: 'success' })
-    await loadProjects()
+    await fetchProjects()
   } else {
     uni.showToast({ title: res.error || '删除失败', icon: 'none' })
   }
@@ -250,30 +251,9 @@ async function onDeleteConfirm() {
 const themeStore = useThemeStore()
 const navTitle = computed(() => `打卡项目管理 (${projects.value.length})`)
 
-const projectStore = useProjectStore()
-let _loaded = false
-
 onShow(async () => {
   themeStore.applyTheme()
-
-  if (!_loaded) {
-    await loadProjects()
-    _loaded = true
-    return
-  }
-
-  if (projectStore.isCacheValid()) return
-
-  const accountId = getAccountId()
-  if (!accountId) { await loadProjects(); return }
-
-  const { needRefresh, version } = await checkDataVersion(accountId)
-  if (needRefresh) {
-    await loadProjects()
-    updateLocalVersion(accountId, version)
-  } else {
-    projectStore.markFresh()
-  }
+  await projectStore.ensureFresh(fetchProjects)
 })
 </script>
 

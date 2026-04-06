@@ -51,7 +51,6 @@ import { useUserStore } from '@/stores/user'
 import { useStatsStore } from '@/stores/stats'
 import { useProjectStore } from '@/stores/project'
 import { clearAccountId, clearLoginType, getAccountId } from '@/utils/auth'
-import { checkDataVersion, updateLocalVersion } from '@/utils/version-check'
 import { resetWechatAuthState } from '@/cloud-emas/database/api/wechatAuth'
 import { resetAuthState } from '@/cloud-emas/database/api/anonymousAuth'
 import { getPendingCount, clearPendingOps } from '@/utils/pending-ops'
@@ -77,7 +76,7 @@ const darkMode = computed({
 
 const showLogoutDialog = ref(false)
 
-async function loadMineData() {
+async function fetchMineData() {
   const [statsRes, userRes] = await Promise.all([getMineStats(), getUser()])
   if (statsRes.success) {
     statsStore.setMineCounts({
@@ -93,44 +92,22 @@ async function loadMineData() {
       avatar: userRes.user.avatar || '',
     })
   }
+  projectStore.markFresh()
 }
 
 onShow(async () => {
   themeStore.applyTheme()
-
   if (!_mineLoaded) {
-    await loadMineData()
+    await fetchMineData()
     _mineLoaded = true
-    return
-  }
-
-  if (projectStore.isCacheValid()) return
-
-  const accountId = getAccountId()
-  if (!accountId) { await loadMineData(); return }
-
-  const { needRefresh, version } = await checkDataVersion(accountId)
-  if (needRefresh) {
-    await loadMineData()
-    updateLocalVersion(accountId, version)
   } else {
-    projectStore.markFresh()
+    await projectStore.ensureFresh(fetchMineData)
   }
 })
 
 async function onRefresh() {
-  const accountId = getAccountId()
-  if (accountId) {
-    const { needRefresh, version } = await checkDataVersion(accountId)
-    if (needRefresh) {
-      await loadMineData()
-      updateLocalVersion(accountId, version)
-    } else {
-      uni.showToast({ title: '已是最新', icon: 'none', duration: 1500 })
-    }
-  } else {
-    await loadMineData()
-  }
+  projectStore.markDirty()
+  await projectStore.ensureFresh(fetchMineData)
 }
 
 function onLogoutConfirm() {

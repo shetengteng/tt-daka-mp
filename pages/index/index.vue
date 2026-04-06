@@ -140,25 +140,7 @@ const actionSheetItems = [
 
 onShow(async () => {
   themeStore.applyTheme()
-
-  if (projectStore.list.length === 0) {
-    await loadData()
-    return
-  }
-
-  if (projectStore.isCacheValid()) return
-
-  const accountId = getAccountId()
-  if (!accountId) { await loadData(); return }
-
-  const { needRefresh, version } = await checkDataVersion(accountId)
-  if (needRefresh) {
-    await loadData()
-    updateLocalVersion(accountId, version)
-  } else {
-    projectStore.markFresh()
-    recordStore.markFresh()
-  }
+  await projectStore.ensureFresh(loadData)
 })
 
 onPullDownRefresh(async () => {

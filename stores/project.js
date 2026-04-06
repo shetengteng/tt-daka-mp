@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { getAccountId } from '@/utils/auth'
 import { setLocal, getLocal, getStoreKey } from '@/utils/local-store'
+import { checkDataVersion, updateLocalVersion } from '@/utils/version-check'
 
 const CACHE_TTL = 5 * 60 * 1000
 const CACHE_KEY = 'cache_projects'
@@ -56,9 +57,28 @@ export const useProjectStore = defineStore('project', () => {
     _dirty.value = true
   }
 
+  async function ensureFresh(fetchFn) {
+    if (list.value.length === 0) {
+      await fetchFn()
+      return
+    }
+    if (isCacheValid()) return
+
+    const accountId = getAccountId()
+    if (!accountId) { await fetchFn(); return }
+
+    const { needRefresh, version } = await checkDataVersion(accountId)
+    if (needRefresh) {
+      await fetchFn()
+      updateLocalVersion(accountId, version)
+    } else {
+      markFresh()
+    }
+  }
+
   return {
     list, loading, activeList,
     restore, persist, isCacheValid, markDirty, markFresh,
-    setList, clear,
+    setList, clear, ensureFresh,
   }
 })
