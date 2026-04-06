@@ -165,12 +165,6 @@ async function onDragEnd() {
     }
   })
 
-  changed.forEach(u => {
-    const p = projectStore.list.find(p => p._id === u._id)
-    if (p) p.sortOrder = u.sortOrder
-  })
-  projectStore.persist()
-
   if (changed.length > 0) await projectStore.updateSort(changed)
 }
 
