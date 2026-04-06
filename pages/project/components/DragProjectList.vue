@@ -156,13 +156,22 @@ async function onDragEnd() {
   const active = [...projects.value]
   const [moved] = active.splice(from, 1)
   active.splice(to, 0, moved)
-  const updates = active.map((item, idx) => ({ _id: item._id, sortOrder: idx + 1 }))
-  updates.forEach(u => {
+
+  const changed = []
+  active.forEach((item, idx) => {
+    const newOrder = idx + 1
+    if (item.sortOrder !== newOrder) {
+      changed.push({ _id: item._id, sortOrder: newOrder })
+    }
+  })
+
+  changed.forEach(u => {
     const p = projectStore.list.find(p => p._id === u._id)
     if (p) p.sortOrder = u.sortOrder
   })
   projectStore.persist()
-  await projectStore.updateSort(updates)
+
+  if (changed.length > 0) await projectStore.updateSort(changed)
 }
 
 function onEdit(id) {
