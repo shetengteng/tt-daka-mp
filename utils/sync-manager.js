@@ -13,29 +13,15 @@ import { getAccountId } from '@/utils/auth'
 
 let _syncing = false
 let _syncTimeout = null
-let _pollTimer = null
-const SYNC_DELAY = 30 * 1000
+const SYNC_DELAY = 5 * 1000
 
 /**
- * 延迟同步：打卡后 30s 延迟触发，多次操作只保留最后一次计时
- * 设计意图：积攒一段时间的操作后批量同步，减少 API 调用
+ * 延迟同步：打卡后 5s 延迟触发，多次操作只保留最后一次计时
+ * 5s 窗口内的互逆操作（打卡+取消）会被 addPendingOp 即时抵消
  */
 export function debouncedSync() {
   if (_syncTimeout) clearTimeout(_syncTimeout)
   _syncTimeout = setTimeout(() => syncPendingOps(), SYNC_DELAY)
-}
-
-export function startSyncPoll() {
-  stopSyncPoll()
-  const accountId = getAccountId()
-  if (!accountId) return
-  _pollTimer = setInterval(() => {
-    if (getPendingCount(accountId) > 0) syncPendingOps()
-  }, SYNC_DELAY)
-}
-
-export function stopSyncPoll() {
-  if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null }
 }
 
 export async function syncPendingOps() {

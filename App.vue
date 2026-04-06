@@ -6,7 +6,7 @@
 	import { initEmas } from '@/cloud-emas/database/index'
 	import { anonymousAuth } from '@/cloud-emas/database/api/anonymousAuth'
 	import { wechatAuth } from '@/cloud-emas/database/api/wechatAuth'
-	import { syncPendingOps, startSyncPoll, stopSyncPoll } from '@/utils/sync-manager'
+	import { syncPendingOps } from '@/utils/sync-manager'
 	
 	export default {
 		onLaunch: function() {
@@ -31,11 +31,7 @@
 		},
 		onShow: function() {
 			syncPendingOps()
-			startSyncPoll()
 		},
-		onHide: function() {
-			stopSyncPoll()
-		}
 	}
 </script>
 
