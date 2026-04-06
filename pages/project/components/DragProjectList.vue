@@ -72,7 +72,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, getCurrentInstance } from 'vue'
 import { useProjectStore } from '@/stores/project'
 import { goToProjectEdit } from '@/route/index'
 
@@ -93,9 +93,11 @@ let longPressTimer = null
 let itemRects = []
 const LONG_PRESS_MS = 200
 
+const instance = getCurrentInstance()
+
 function measureItems() {
   return new Promise((resolve) => {
-    uni.createSelectorQuery().selectAll('.drag-item').boundingClientRect((rects) => {
+    uni.createSelectorQuery().in(instance).selectAll('.drag-item').boundingClientRect((rects) => {
       resolve(rects || [])
     }).exec()
   })
@@ -151,11 +153,15 @@ async function onDragEnd() {
   itemRects = []
   if (to > from) to -= 1
   if (from === to) return
-  const list = [...projects.value]
-  const [moved] = list.splice(from, 1)
-  list.splice(to, 0, moved)
-  projectStore.setList(list)
-  const updates = list.map((item, idx) => ({ _id: item._id, sortOrder: idx + 1 }))
+  const active = [...projects.value]
+  const [moved] = active.splice(from, 1)
+  active.splice(to, 0, moved)
+  const updates = active.map((item, idx) => ({ _id: item._id, sortOrder: idx + 1 }))
+  updates.forEach(u => {
+    const p = projectStore.list.find(p => p._id === u._id)
+    if (p) p.sortOrder = u.sortOrder
+  })
+  projectStore.persist()
   await projectStore.updateSort(updates)
 }
 
