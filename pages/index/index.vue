@@ -76,8 +76,8 @@ import { onShow, onPullDownRefresh } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { useProjectStore } from '@/stores/project'
 import { useRecordStore } from '@/stores/record'
+import { usePageFresh } from '@/composables/usePageFresh'
 import { syncPendingOps } from '@/utils/sync-manager'
-import { getAccountId } from '@/utils/auth'
 import { goToProjectAdd, goToProjectDetail, goToProjectEdit } from '@/route/index'
 import DakaCard from './components/DakaCard.vue'
 import DakaHeader from './components/DakaHeader.vue'
@@ -86,6 +86,7 @@ import OfflineBar from './components/OfflineBar.vue'
 const themeStore = useThemeStore()
 const projectStore = useProjectStore()
 const recordStore = useRecordStore()
+const { needRefresh, markLoaded } = usePageFresh('home')
 
 const capsuleStyle = computed(() => {
   if (themeStore.capsuleRight > 0) {
@@ -113,28 +114,20 @@ const actionSheetItems = [
 
 onShow(async () => {
   themeStore.applyTheme()
-  const need = await projectStore.checkFresh()
-  if (need) await loadData()
+  if (await needRefresh()) await loadData()
 })
 
 onPullDownRefresh(async () => {
-  const accountId = getAccountId()
-  if (accountId) await syncPendingOps(accountId)
+  await syncPendingOps()
   projectStore.markDirty()
-  const need = await projectStore.checkFresh()
-  if (need) {
-    recordStore.markDirty()
-    await loadData()
-  } else {
-    uni.showToast({ title: '已是最新', icon: 'none' })
-  }
+  await loadData()
   uni.stopPullDownRefresh()
 })
 
 async function loadData() {
   loading.value = true
   const res = await projectStore.fetchProjectList()
-  if (res.success) recordStore.markFresh()
+  if (res.success) markLoaded()
   loading.value = false
 }
 

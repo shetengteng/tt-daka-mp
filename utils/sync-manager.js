@@ -8,6 +8,7 @@ import { db, COLLECTIONS } from '@/cloud-emas/database/database'
 import { isQuotaError } from '@/cloud-emas/database/error'
 import { touchCloudVersion } from './version-check'
 import { useRecordStore } from '@/stores/record'
+import { getAccountId } from '@/utils/auth'
 
 let _syncing = false
 let _syncTimeout = null
@@ -18,16 +19,17 @@ const SYNC_DELAY = 30 * 1000
  * 延迟同步：打卡后 30s 延迟触发，多次操作只保留最后一次计时
  * 设计意图：积攒一段时间的操作后批量同步，减少 API 调用
  */
-export function debouncedSync(accountId) {
+export function debouncedSync() {
   if (_syncTimeout) clearTimeout(_syncTimeout)
-  _syncTimeout = setTimeout(() => syncPendingOps(accountId), SYNC_DELAY)
+  _syncTimeout = setTimeout(() => syncPendingOps(), SYNC_DELAY)
 }
 
-export function startSyncPoll(accountId) {
+export function startSyncPoll() {
   stopSyncPoll()
+  const accountId = getAccountId()
   if (!accountId) return
   _pollTimer = setInterval(() => {
-    if (getPendingCount(accountId) > 0) syncPendingOps(accountId)
+    if (getPendingCount(accountId) > 0) syncPendingOps()
   }, SYNC_DELAY)
 }
 
@@ -35,7 +37,8 @@ export function stopSyncPoll() {
   if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null }
 }
 
-export async function syncPendingOps(accountId) {
+export async function syncPendingOps() {
+  const accountId = getAccountId()
   if (_syncing || !accountId) return { synced: 0, remaining: 0 }
 
   let ops = getPendingOps(accountId)

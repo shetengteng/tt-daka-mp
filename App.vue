@@ -2,12 +2,11 @@
 	import { useThemeStore } from '@/stores/theme'
 	import { useProjectStore } from '@/stores/project'
 	import { useRecordStore } from '@/stores/record'
-	import { isLoggedIn, getLoginType, getAccountId } from '@/utils/auth'
+	import { isLoggedIn, getLoginType } from '@/utils/auth'
 	import { initEmas } from '@/cloud-emas/database/index'
 	import { anonymousAuth } from '@/cloud-emas/database/api/anonymousAuth'
 	import { wechatAuth } from '@/cloud-emas/database/api/wechatAuth'
 	import { syncPendingOps, startSyncPoll, stopSyncPoll } from '@/utils/sync-manager'
-	import { getPendingCount } from '@/utils/pending-ops'
 	
 	export default {
 		onLaunch: function() {
@@ -31,11 +30,8 @@
 			}
 		},
 		onShow: function() {
-			const accountId = getAccountId()
-			if (accountId) {
-				if (getPendingCount(accountId) > 0) syncPendingOps(accountId)
-				startSyncPoll(accountId)
-			}
+			syncPendingOps()
+			startSyncPoll()
 		},
 		onHide: function() {
 			stopSyncPoll()

@@ -7,6 +7,7 @@ import { requireAccountId } from '@/utils/auth'
 import { formatDate, dayjs } from '@/utils/date'
 import { addPendingOp } from '@/utils/pending-ops'
 import { useRecordStore } from '@/stores/record'
+import { useProjectStore } from '@/stores/project'
 import { debouncedSync } from '@/utils/sync-manager'
 
 /**
@@ -18,6 +19,7 @@ export async function toggleDaka(projectId, currentChecked) {
     const accountId = await requireAccountId()
     const today = formatDate(new Date())
     const recordStore = useRecordStore()
+    const projectStore = useProjectStore()
 
     if (currentChecked) {
       recordStore.removeTodayRecord(projectId)
@@ -29,7 +31,8 @@ export async function toggleDaka(projectId, currentChecked) {
         data: { projectId, date: today },
       })
 
-      debouncedSync(accountId)
+      projectStore.markDirty()
+      debouncedSync()
       return { success: true, action: 'cancel' }
     }
 
@@ -52,7 +55,8 @@ export async function toggleDaka(projectId, currentChecked) {
       data: record,
     })
 
-    debouncedSync(accountId)
+    projectStore.markDirty()
+    debouncedSync()
     return { success: true, action: 'check', record }
   } catch (error) {
     console.error('[API] toggleDaka 失败:', error)

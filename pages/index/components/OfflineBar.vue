@@ -10,15 +10,11 @@
 
 <script setup>
 import { syncPendingOps } from '@/utils/sync-manager'
-import { getAccountId } from '@/utils/auth'
 
 defineProps({ count: { type: Number, default: 0 } })
 
 async function onSync() {
-  const accountId = getAccountId()
-  if (accountId) {
-    await syncPendingOps(accountId)
-  }
+  await syncPendingOps()
 }
 </script>
 

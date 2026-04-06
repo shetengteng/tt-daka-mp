@@ -27,6 +27,7 @@ import { useThemeStore } from '@/stores/theme'
 import { useProjectStore } from '@/stores/project'
 import { useRecordStore } from '@/stores/record'
 import { useCalendarStore } from '@/stores/calendar'
+import { usePageFresh } from '@/composables/usePageFresh'
 import { dayjs, formatDate } from '@/utils/date'
 import DayDetail from './components/DayDetail.vue'
 import MonthStats from './components/MonthStats.vue'
@@ -35,7 +36,7 @@ const themeStore = useThemeStore()
 const projectStore = useProjectStore()
 const recordStore = useRecordStore()
 const calendarStore = useCalendarStore()
-let _calendarLoaded = false
+const { needRefresh, markLoaded } = usePageFresh('calendar')
 
 const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
 
@@ -66,17 +67,11 @@ async function loadMonthData(monthDate) {
   const res = await recordStore.fetchMonthRecords(monthDate || dayjs().format('YYYY-MM-DD'))
   if (!res.success) return
   calendarStore.setMonthData(res.list, res.projects)
-  projectStore.markFresh()
+  markLoaded()
 }
 
 onShow(async () => {
   themeStore.applyTheme()
-  if (!_calendarLoaded) {
-    await loadMonthData()
-    _calendarLoaded = true
-  } else {
-    const need = await projectStore.checkFresh()
-    if (need) await loadMonthData()
-  }
+  if (await needRefresh()) await loadMonthData()
 })
 </script>

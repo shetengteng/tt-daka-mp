@@ -12,8 +12,8 @@ import { archiveProject as archiveProjectApi } from '@/api/project/archiveProjec
 import { batchUpdateSort as batchUpdateSortApi } from '@/api/project/batchUpdateSort'
 
 /**
- * 缓存 TTL：5 分钟内视为有效，不检查云端版本号
- * 超过 TTL 后会查询 dataVersion 决定是否需要重新拉取
+ * TTL：5 分钟内不查云端版本号，仅通过本地 dataTs 判断是否有变更
+ * 超过 TTL 后额外查询云端 dataVersion（防止其他设备修改了数据）
  */
 const CACHE_TTL = 5 * 60 * 1000
 const CACHE_KEY = 'cache_projects'
@@ -22,10 +22,14 @@ export const useProjectStore = defineStore('project', () => {
   const list = ref([])
   const loading = ref(false)
 
-  /** 最后一次从 API 获取数据的时间戳，用于 TTL 判断（不持久化，重启后为 0） */
+  /**
+   * 全局数据时间戳：每次数据变更（打卡/增删项目/拉取新数据）时更新
+   * 各页面对比自己记录的时间戳与此值，不同则需要重新加载
+   */
+  const dataTs = ref(0)
+
+  /** 最后一次从 API 获取数据的时间戳，用于 TTL 判断 */
   let _lastFetchTime = 0
-  /** 标记数据已过期，强制跳过 TTL 检查 */
-  const _dirty = ref(false)
 
   /** 未归档项目列表，按 sortOrder 排序 */
   const activeList = computed(() =>
@@ -51,18 +55,21 @@ export const useProjectStore = defineStore('project', () => {
     setLocal(getStoreKey(accountId, CACHE_KEY), list.value)
   }
 
-  /** 判断内存缓存是否有效：未被标记过期 + 有数据 + 在 TTL 内 */
-  function isCacheValid() {
-    return !_dirty.value && list.value.length > 0 &&
-           Date.now() - _lastFetchTime < CACHE_TTL
+  /**
+   * 标记数据已变更：更新 dataTs 时间戳
+   * 调用场景：打卡、新增/编辑项目等本地操作后
+   * 其他页面 onShow 时发现 dataTs 变了就会重新加载
+   */
+  function markDirty() {
+    dataTs.value = Date.now()
   }
 
-  /** 标记缓存过期，下次 checkFresh 时会跳过 TTL 直接查云端版本号 */
-  function markDirty() { _dirty.value = true }
-
-  /** 标记缓存新鲜，重置 TTL 计时器并写入 localStorage */
+  /**
+   * 标记数据为最新：更新 dataTs + 刷新 TTL 计时器 + 持久化
+   * 调用场景：从 API 拉取数据成功后
+   */
   function markFresh() {
-    _dirty.value = false
+    dataTs.value = Date.now()
     _lastFetchTime = Date.now()
     persist()
   }
@@ -77,24 +84,26 @@ export const useProjectStore = defineStore('project', () => {
   function clear() {
     list.value = []
     _lastFetchTime = 0
-    _dirty.value = true
+    dataTs.value = 0
   }
 
   // ─── 版本检查 ───
 
   /**
-   * 检查是否需要从云端刷新数据，返回 true 表示需要拉取
-   * 判断顺序：无数据→TTL→云端版本号
-   *
-   * 1. list 为空 → 返回 true（首次加载，必须拉取）
-   * 2. TTL 内且未标记 dirty → 返回 false（直接用内存缓存）
-   * 3. TTL 过期 → 查询云端 dataVersion:
-   *    - 版本变化 → 更新本地版本号，返回 true
-   *    - 版本一致 → markFresh() 延长 TTL，返回 false
+   * 页面判断是否需要重新加载数据
+   * @param {number} pageTs - 页面上次加载时记录的 dataTs
+   * @returns {boolean} true = 数据有变更，需要重新加载
    */
-  async function checkFresh() {
-    if (list.value.length === 0) return true
-    if (isCacheValid()) return false
+  function isStale(pageTs) {
+    return pageTs !== dataTs.value
+  }
+
+  /**
+   * 检查云端版本号（TTL 过期后调用，防止其他设备修改了数据）
+   * @returns {boolean} true = 云端有更新，需要拉取
+   */
+  async function checkCloudVersion() {
+    if (Date.now() - _lastFetchTime < CACHE_TTL) return false
     const accountId = getAccountId()
     if (!accountId) return true
     const { needRefresh: need, version } = await checkDataVersion(accountId)
@@ -102,17 +111,8 @@ export const useProjectStore = defineStore('project', () => {
       updateLocalVersion(accountId, version)
       return true
     }
-    markFresh()
+    _lastFetchTime = Date.now()
     return false
-  }
-
-  /**
-   * 自动检查 + 拉取：checkFresh() 若为 true 则调 fetchActiveProjects()
-   * 适用于只关心 project 数据的页面（如项目管理页）
-   */
-  async function ensureFresh() {
-    const need = await checkFresh()
-    if (need) await fetchActiveProjects()
   }
 
   // ─── API 封装 ───
@@ -183,9 +183,9 @@ export const useProjectStore = defineStore('project', () => {
   }
 
   return {
-    list, loading, activeList,
-    restore, persist, isCacheValid, markDirty, markFresh,
-    setList, clear, checkFresh, ensureFresh,
+    list, loading, activeList, dataTs,
+    restore, persist, markDirty, markFresh,
+    setList, clear, isStale, checkCloudVersion,
     fetchActiveProjects, fetchProjectList,
     addProject, editProject, removeProject, archive, updateSort,
   }

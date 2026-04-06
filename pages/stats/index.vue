@@ -30,6 +30,7 @@ import { onShow, onPullDownRefresh } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { useProjectStore } from '@/stores/project'
 import { useStatsStore } from '@/stores/stats'
+import { usePageFresh } from '@/composables/usePageFresh'
 import { getStats } from '@/api/stats/getStats'
 import StatsOverview from './components/StatsOverview.vue'
 import WeekBarChart from './components/WeekBarChart.vue'
@@ -37,6 +38,7 @@ import ProjectStatCard from './components/ProjectStatCard.vue'
 
 const projectStore = useProjectStore()
 const statsStore = useStatsStore()
+const { needRefresh, markLoaded } = usePageFresh('stats')
 
 const themeStore = useThemeStore()
 const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
@@ -45,24 +47,18 @@ async function fetchStats() {
   const res = await getStats()
   if (res.success) {
     statsStore.setStats(res.data)
-    projectStore.markFresh()
+    markLoaded()
   }
 }
 
 onShow(async () => {
   themeStore.applyTheme()
-  const need = await projectStore.checkFresh()
-  if (need) await fetchStats()
+  if (await needRefresh()) await fetchStats()
 })
 
 onPullDownRefresh(async () => {
   projectStore.markDirty()
-  const need = await projectStore.checkFresh()
-  if (need) {
-    await fetchStats()
-  } else {
-    uni.showToast({ title: '已是最新', icon: 'none' })
-  }
+  await fetchStats()
   uni.stopPullDownRefresh()
 })
 </script>

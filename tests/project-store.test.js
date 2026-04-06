@@ -34,41 +34,41 @@ describe('projectStore basic operations', () => {
     expect(store.activeList[1]._id).toBe('p1')
   })
 
-  it('clear resets list and marks dirty', () => {
+  it('clear resets list and dataTs', () => {
     const store = useProjectStore()
     store.setList([{ _id: 'p1' }])
     store.markFresh()
     store.clear()
     expect(store.list).toEqual([])
-    expect(store.isCacheValid()).toBe(false)
+    expect(store.dataTs).toBe(0)
   })
 })
 
-describe('projectStore cache validity', () => {
-  it('isCacheValid returns false initially', () => {
+describe('projectStore version tracking', () => {
+  it('dataTs is 0 initially', () => {
     const store = useProjectStore()
-    expect(store.isCacheValid()).toBe(false)
+    expect(store.dataTs).toBe(0)
   })
 
-  it('isCacheValid returns true after markFresh with data', () => {
+  it('isStale returns true when pageTs differs from dataTs', () => {
     const store = useProjectStore()
-    store.setList([{ _id: 'p1' }])
     store.markFresh()
-    expect(store.isCacheValid()).toBe(true)
+    expect(store.isStale(0)).toBe(true)
   })
 
-  it('markDirty invalidates cache', () => {
+  it('isStale returns false when pageTs matches dataTs', () => {
     const store = useProjectStore()
-    store.setList([{ _id: 'p1' }])
     store.markFresh()
+    expect(store.isStale(store.dataTs)).toBe(false)
+  })
+
+  it('markDirty updates dataTs so pages become stale', async () => {
+    const store = useProjectStore()
+    store.markFresh()
+    const ts = store.dataTs
+    await new Promise(r => setTimeout(r, 2))
     store.markDirty()
-    expect(store.isCacheValid()).toBe(false)
-  })
-
-  it('isCacheValid returns false when list is empty', () => {
-    const store = useProjectStore()
-    store.markFresh()
-    expect(store.isCacheValid()).toBe(false)
+    expect(store.isStale(ts)).toBe(true)
   })
 })
 

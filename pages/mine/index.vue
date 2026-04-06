@@ -50,6 +50,7 @@ import { useThemeStore } from '@/stores/theme'
 import { useUserStore } from '@/stores/user'
 import { useStatsStore } from '@/stores/stats'
 import { useProjectStore } from '@/stores/project'
+import { usePageFresh } from '@/composables/usePageFresh'
 import { clearAccountId, clearLoginType, getAccountId } from '@/utils/auth'
 import { resetWechatAuthState } from '@/cloud-emas/database/api/wechatAuth'
 import { resetAuthState } from '@/cloud-emas/database/api/anonymousAuth'
@@ -62,7 +63,7 @@ import OtherSection from './components/OtherSection.vue'
 const projectStore = useProjectStore()
 const userStore = useUserStore()
 const statsStore = useStatsStore()
-let _mineLoaded = false
+const { needRefresh, markLoaded } = usePageFresh('mine')
 
 const themeStore = useThemeStore()
 const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
@@ -86,18 +87,12 @@ async function fetchMineData() {
       totalDays: statsRes.totalDays,
     })
   }
-  projectStore.markFresh()
+  markLoaded()
 }
 
 onShow(async () => {
   themeStore.applyTheme()
-  if (!_mineLoaded) {
-    await fetchMineData()
-    _mineLoaded = true
-  } else {
-    const need = await projectStore.checkFresh()
-    if (need) await fetchMineData()
-  }
+  if (await needRefresh()) await fetchMineData()
 })
 
 async function onRefresh() {
