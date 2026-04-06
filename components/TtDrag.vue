@@ -1,5 +1,5 @@
 <template>
-	<view class="zero-drag">
+	<view class="tt-drag">
 		<movable-area
 			class="drag-area"
 			:style="{ height: areaHeight }">
@@ -51,12 +51,7 @@
 					@touchend="handleDragHandleTouchEnd(item)">
 					<!-- 手柄插槽，允许用户自定义手柄内容 -->
 					<slot name="dragHandle" :item="item" :index="index">
-						<!-- 默认手柄图标 -->
-						<uni-icons 
-							:type="mergedHandleStyles.icon" 
-							:size="mergedHandleStyles.iconSize" 
-							:color="mergedHandleStyles.iconColor">
-						</uni-icons>
+						<text style="font-size: 28rpx; color: #666;">☰</text>
 					</slot>
 				</view>					<!-- 内容区域 -->
 					<view
@@ -96,7 +91,7 @@
 							:style="{
 								borderRadius: '0 ' + borderRadius + 'rpx 0 12rpx'
 							}">
-							<uni-icons type="close" size="16" color="#ffffff"></uni-icons>
+							<text style="font-size: 24rpx; color: #ffffff;">✕</text>
 						</view>
 					</view>
 				</view>
@@ -108,7 +103,7 @@
 
 <script>
 export default {
-	name: 'zero-drag',
+	name: 'TtDrag',
 	emits: ['input', 'update:modelValue', 'change', 'delete'],
 	props: {
 		// Vue2 双向绑定
@@ -409,9 +404,9 @@ export default {
 		// 初始化拖拽
 		initDrag() {
 			const query = uni.createSelectorQuery().in(this)
-			query.select('.zero-drag').boundingClientRect(data => {
-				if (!data) {
-					console.error('zero-drag: 组件未正确渲染，将在下一帧重试')
+		query.select('.tt-drag').boundingClientRect(data => {
+			if (!data) {
+					console.error('TtDrag: 组件未正确渲染，将在下一帧重试')
 					// 如果首次查询失败，延迟重试
 					this.$nextTick(() => {
 						setTimeout(() => {
@@ -789,7 +784,6 @@ export default {
 					})
 				}, delay)
 			} else if (isSwipe) {
-				console.log('[zero-drag] ❌ 检测到滑动，不触发预览')
 			}
 		},
 		// 鼠标进入（H5）
@@ -909,7 +903,6 @@ export default {
 			this.$nextTick(() => {
 				setTimeout(() => {
 					this.changeStatus = true
-					console.log('[zero-drag] changeStatus 已恢复，允许 watch 触发')
 				}, 200)
 			})
 		},
@@ -1004,7 +997,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.zero-drag {
+.tt-drag {
 	width: 100%;
 	
 	.drag-area {

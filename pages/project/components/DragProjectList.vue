@@ -1,5 +1,5 @@
 <template>
-  <zero-drag
+  <TtDrag
     v-if="dragList.length > 0"
     v-model="dragList"
     mode="single"
@@ -39,7 +39,7 @@
         </view>
       </view>
     </template>
-  </zero-drag>
+  </TtDrag>
   
   <view v-if="dragList.length === 0" class="text-center py-xl">
     <TtEmpty description="暂无打卡项目" />
@@ -68,7 +68,7 @@
 import { ref, watch } from 'vue'
 import { useProjectStore } from '@/stores/project'
 import { goToProjectEdit } from '@/route/index'
-import zeroDrag from '@/uni_modules/zero-drag/components/zero-drag/zero-drag.vue'
+import TtDrag from '@/components/TtDrag.vue'
 
 const projectStore = useProjectStore()
 
@@ -127,6 +127,7 @@ async function onDeleteConfirm() {
   width: 100%;
   background: var(--tt-card, #ffffff);
   border-radius: 16rpx;
+  box-sizing: border-box;
 }
 
 .drag-handle { width: 40rpx; height: 48rpx; flex-shrink: 0; }
