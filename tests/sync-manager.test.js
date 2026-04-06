@@ -13,6 +13,15 @@ describe('mergeOps', () => {
     expect(result).toHaveLength(0)
   })
 
+  it('cancels remove + add for same projectId + date (reverse order)', () => {
+    const ops = [
+      { op: 'remove', collection: RECORDS, where: { projectId: 'p1', date: '2026-04-05' } },
+      { op: 'add', collection: RECORDS, data: { projectId: 'p1', date: '2026-04-05' } },
+    ]
+    const result = mergeOps(ops)
+    expect(result).toHaveLength(0)
+  })
+
   it('keeps non-cancelling operations', () => {
     const ops = [
       { op: 'add', collection: RECORDS, data: { projectId: 'p1', date: '2026-04-05' } },

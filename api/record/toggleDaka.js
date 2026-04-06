@@ -24,15 +24,16 @@ export async function toggleDaka(projectId, currentChecked) {
     if (currentChecked) {
       recordStore.removeTodayRecord(projectId)
 
-      addPendingOp(accountId, {
+      const remaining = addPendingOp(accountId, {
         op: 'remove',
         collection: COLLECTIONS.RECORDS,
         where: { accountId, projectId, date: today },
         data: { projectId, date: today },
       })
+      recordStore.pendingCount = remaining
 
       projectStore.markDirty()
-      debouncedSync()
+      if (remaining > 0) debouncedSync()
       return { success: true, action: 'cancel' }
     }
 
@@ -49,14 +50,15 @@ export async function toggleDaka(projectId, currentChecked) {
 
     recordStore.addTodayRecord(record)
 
-    addPendingOp(accountId, {
+    const remaining = addPendingOp(accountId, {
       op: 'add',
       collection: COLLECTIONS.RECORDS,
       data: record,
     })
+    recordStore.pendingCount = remaining
 
     projectStore.markDirty()
-    debouncedSync()
+    if (remaining > 0) debouncedSync()
     return { success: true, action: 'check', record }
   } catch (error) {
     console.error('[API] toggleDaka 失败:', error)

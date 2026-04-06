@@ -126,23 +126,37 @@ export async function syncPendingOps() {
   return { synced: syncedCount, remaining }
 }
 
+/**
+ * 同步前的兜底合并：将互逆操作(add/remove)标记为 merged 后过滤掉
+ *
+ * 正常情况下 addPendingOp 已在入队时做了即时抵消，
+ * 这里是防御性措施，处理极端时序（如并发写入）导致遗漏的情况。
+ *
+ * 算法：正向遍历，用 Map 记录未配对的操作。
+ * 遇到同 key(collection+projectId+date) 的相反操作时，标记两者 merged。
+ * 支持 add→remove 和 remove→add 两种顺序。
+ */
 export function mergeOps(ops) {
-  const cancelMap = new Map()
-
-  for (let i = ops.length - 1; i >= 0; i--) {
-    const op = ops[i]
-    if (op.collection !== COLLECTIONS.RECORDS) continue
-
+  const opKey = (op) => {
+    if (op.collection !== COLLECTIONS.RECORDS) return null
     const projectId = op.data?.projectId || op.where?.projectId
     const date = op.data?.date || op.where?.date || ''
-    const key = `${op.collection}_${projectId}_${date}`
+    return `${op.collection}_${projectId}_${date}`
+  }
 
-    if (op.op === 'remove') {
-      cancelMap.set(key, i)
-    } else if (op.op === 'add' && cancelMap.has(key)) {
+  const pending = new Map()
+
+  for (let i = 0; i < ops.length; i++) {
+    const key = opKey(ops[i])
+    if (!key) continue
+
+    const opposite = ops[i].op === 'add' ? 'remove' : 'add'
+    if (pending.has(key) && ops[pending.get(key)].op === opposite) {
+      ops[pending.get(key)].merged = true
       ops[i].merged = true
-      ops[cancelMap.get(key)].merged = true
-      cancelMap.delete(key)
+      pending.delete(key)
+    } else {
+      pending.set(key, i)
     }
   }
 
