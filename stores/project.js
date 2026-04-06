@@ -145,17 +145,9 @@ export const useProjectStore = defineStore('project', () => {
     return res
   }
 
-  /** 批量更新排序，成功后同步本地 sortOrder */
+  /** 批量更新排序到云端（本地状态已由调用方乐观更新） */
   async function updateSort(items) {
-    const res = await batchUpdateSortApi(items)
-    if (res.success) {
-      items.forEach(item => {
-        const p = list.value.find(p => p._id === item._id)
-        if (p) p.sortOrder = item.sortOrder
-      })
-      persist()
-    }
-    return res
+    return await batchUpdateSortApi(items)
   }
 
   return {
