@@ -145,10 +145,12 @@ async function onToggle(projectId) {
   
   uni.vibrateShort()
   await recordStore.toggle(projectId, false)
+  markLoaded()
 }
 
 async function confirmCancelDaka() {
   await recordStore.toggle(currentActionId.value, true)
+  markLoaded()
   showCancelDialog.value = false
 }
 

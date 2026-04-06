@@ -51,6 +51,7 @@ import { useUserStore } from '@/stores/user'
 import { useStatsStore } from '@/stores/stats'
 import { useProjectStore } from '@/stores/project'
 import { usePageFresh } from '@/composables/usePageFresh'
+import { syncPendingOps } from '@/utils/sync-manager'
 import { clearAccountId, clearLoginType, getAccountId } from '@/utils/auth'
 import { resetWechatAuthState } from '@/cloud-emas/database/api/wechatAuth'
 import { resetAuthState } from '@/cloud-emas/database/api/anonymousAuth'
@@ -96,6 +97,7 @@ onShow(async () => {
 })
 
 onPullDownRefresh(async () => {
+  await syncPendingOps()
   if (await forceCheck()) {
     await fetchMineData()
   } else {

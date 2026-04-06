@@ -60,9 +60,11 @@ export function usePageFresh(pageKey) {
 
   /**
    * onShow 用：先对比本地 dataTs，再走 TTL 云端版本检查
+   * pageTs === 0 表示首次加载，直接返回 true
    */
   async function needRefresh() {
     const pageTs = _getPageTs(pageKey)
+    if (pageTs === 0) return true
     if (projectStore.isStale(pageTs)) return true
     return await _checkCloud()
   }
@@ -72,6 +74,7 @@ export function usePageFresh(pageKey) {
    */
   async function forceCheck() {
     const pageTs = _getPageTs(pageKey)
+    if (pageTs === 0) return true
     if (projectStore.isStale(pageTs)) return true
     return await _checkCloud(true)
   }

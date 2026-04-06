@@ -30,6 +30,7 @@ import { onShow, onPullDownRefresh } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { useStatsStore } from '@/stores/stats'
 import { usePageFresh } from '@/composables/usePageFresh'
+import { syncPendingOps } from '@/utils/sync-manager'
 import { getStats } from '@/api/stats/getStats'
 import StatsOverview from './components/StatsOverview.vue'
 import WeekBarChart from './components/WeekBarChart.vue'
@@ -55,6 +56,7 @@ onShow(async () => {
 })
 
 onPullDownRefresh(async () => {
+  await syncPendingOps()
   if (await forceCheck()) {
     await fetchStats()
   } else {

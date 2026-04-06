@@ -27,6 +27,7 @@ import { useThemeStore } from '@/stores/theme'
 import { useRecordStore } from '@/stores/record'
 import { useCalendarStore } from '@/stores/calendar'
 import { usePageFresh } from '@/composables/usePageFresh'
+import { syncPendingOps } from '@/utils/sync-manager'
 import { dayjs, formatDate } from '@/utils/date'
 import DayDetail from './components/DayDetail.vue'
 import MonthStats from './components/MonthStats.vue'
@@ -74,6 +75,7 @@ onShow(async () => {
 })
 
 onPullDownRefresh(async () => {
+  await syncPendingOps()
   if (await forceCheck()) {
     await loadMonthData()
   } else {

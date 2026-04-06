@@ -8,6 +8,7 @@ import { db, COLLECTIONS } from '@/cloud-emas/database/database'
 import { isQuotaError } from '@/cloud-emas/database/error'
 import { touchCloudVersion } from './version-check'
 import { useRecordStore } from '@/stores/record'
+import { useProjectStore } from '@/stores/project'
 import { getAccountId } from '@/utils/auth'
 
 let _syncing = false
@@ -110,6 +111,7 @@ export async function syncPendingOps() {
 
   if (syncedCount > 0) {
     await touchCloudVersion(accountId)
+    try { useProjectStore().markDirty() } catch (_) {}
     uni.showToast({ title: `已同步 ${syncedCount} 条记录`, icon: 'none', duration: 2000 })
   }
 
