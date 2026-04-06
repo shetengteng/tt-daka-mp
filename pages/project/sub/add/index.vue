@@ -127,13 +127,12 @@
 import { ref, reactive, computed } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
-import { createProject } from '@/api/project/createProject'
-import { updateProject } from '@/api/project/updateProject'
-import { deleteProject } from '@/api/project/deleteProject'
+import { useProjectStore } from '@/stores/project'
 import { goBack } from '@/route/index'
 import { getProjectById } from '@/api/project/getProjectById'
 
 const themeStore = useThemeStore()
+const projectStore = useProjectStore()
 const { isDark, c } = themeStore
 const isEdit = ref(false)
 const editId = ref('')
@@ -211,9 +210,9 @@ async function onSave() {
   saving.value = true
   let res
   if (isEdit.value) {
-    res = await updateProject(editId.value, form)
+    res = await projectStore.editProject(editId.value, form)
   } else {
-    res = await createProject(form)
+    res = await projectStore.addProject(form)
   }
   saving.value = false
   
@@ -230,7 +229,7 @@ function onDelete() {
 }
 
 async function confirmDelete() {
-  const res = await deleteProject(editId.value)
+  const res = await projectStore.removeProject(editId.value)
   if (res.success) {
     uni.showToast({ title: '已删除', icon: 'success' })
     setTimeout(() => goBack(), 500)

@@ -39,12 +39,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { archiveProject } from '@/api/project/archiveProject'
 import { getArchivedProjects } from '@/api/project/getArchivedProjects'
-import { deleteProject } from '@/api/project/deleteProject'
 import { useThemeStore } from '@/stores/theme'
+import { useProjectStore } from '@/stores/project'
 
 const themeStore = useThemeStore()
+const projectStore = useProjectStore()
 
 const archivedProjects = ref([])
 const showDeleteDialog = ref(false)
@@ -58,10 +58,10 @@ async function loadArchived() {
 }
 
 async function onRestore(id) {
-  const res = await archiveProject(id, false)
+  const res = await projectStore.archive(id, false)
   if (res.success) {
     uni.showToast({ title: '已恢复', icon: 'success' })
-    await loadArchived()
+    archivedProjects.value = archivedProjects.value.filter(p => p._id !== id)
   }
 }
 
@@ -71,11 +71,11 @@ function onDelete(id) {
 }
 
 async function confirmDelete() {
-  const res = await deleteProject(deleteTargetId.value)
+  const res = await projectStore.removeProject(deleteTargetId.value)
   if (res.success) {
     uni.showToast({ title: '已删除', icon: 'success' })
     showDeleteDialog.value = false
-    await loadArchived()
+    archivedProjects.value = archivedProjects.value.filter(p => p._id !== deleteTargetId.value)
   }
 }
 

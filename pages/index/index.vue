@@ -79,13 +79,9 @@ import { onShow, onPullDownRefresh } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { useProjectStore } from '@/stores/project'
 import { useRecordStore } from '@/stores/record'
-import { getProjectList } from '@/api/project/getProjectList'
 import { toggleDaka } from '@/api/record/toggleDaka'
 import { syncPendingOps } from '@/utils/sync-manager'
 import { getAccountId } from '@/utils/auth'
-import { checkDataVersion, updateLocalVersion } from '@/utils/version-check'
-import { archiveProject } from '@/api/project/archiveProject'
-import { deleteProject } from '@/api/project/deleteProject'
 import { goToProjectAdd, goToProjectDetail, goToProjectEdit } from '@/route/index'
 import DakaCard from './components/DakaCard.vue'
 import DakaHeader from './components/DakaHeader.vue'
@@ -145,30 +141,17 @@ onShow(async () => {
 
 onPullDownRefresh(async () => {
   const accountId = getAccountId()
-  if (accountId) {
-    await syncPendingOps(accountId)
-    const { needRefresh, version } = await checkDataVersion(accountId)
-    if (needRefresh) {
-      projectStore.markDirty()
-      recordStore.markDirty()
-      await loadData()
-      updateLocalVersion(accountId, version)
-    } else {
-      uni.showToast({ title: '已是最新', icon: 'none', duration: 1500 })
-    }
-  } else {
-    await loadData()
-  }
+  if (accountId) await syncPendingOps(accountId)
+  projectStore.markDirty()
+  recordStore.markDirty()
+  await loadData()
   uni.stopPullDownRefresh()
 })
 
 async function loadData() {
   loading.value = true
-  const res = await getProjectList()
-  if (res.success) {
-    projectStore.markFresh()
-    recordStore.markFresh()
-  }
+  const res = await projectStore.fetchProjectList()
+  if (res.success) recordStore.markFresh()
   loading.value = false
 }
 
@@ -206,10 +189,9 @@ async function onActionSelect(item) {
   if (item.value === 'edit') {
     goToProjectEdit(currentActionId.value)
   } else if (item.value === 'archive') {
-    const res = await archiveProject(currentActionId.value, true)
+    const res = await projectStore.archive(currentActionId.value, true)
     if (res.success) {
       uni.showToast({ title: '已归档', icon: 'success' })
-      loadData()
     } else {
       uni.showToast({ title: res.error || '归档失败', icon: 'none' })
     }
@@ -219,10 +201,9 @@ async function onActionSelect(item) {
 }
 
 async function confirmDeleteProject() {
-  const res = await deleteProject(currentActionId.value)
+  const res = await projectStore.removeProject(currentActionId.value)
   if (res.success) {
     uni.showToast({ title: '已删除', icon: 'success' })
-    loadData()
   } else {
     uni.showToast({ title: res.error || '删除失败', icon: 'none' })
   }

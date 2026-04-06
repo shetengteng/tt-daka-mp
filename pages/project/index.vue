@@ -81,10 +81,6 @@ import { ref, computed, nextTick } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { useProjectStore } from '@/stores/project'
-import { archiveProject } from '@/api/project/archiveProject'
-import { deleteProject } from '@/api/project/deleteProject'
-import { batchUpdateSort } from '@/api/project/batchUpdateSort'
-import { getActiveProjects } from '@/api/project/getActiveProjects'
 import { goToProjectEdit } from '@/route/index'
 
 const projectStore = useProjectStore()
@@ -99,14 +95,6 @@ let isDragging = false
 let longPressTimer = null
 let itemRects = []
 const LONG_PRESS_MS = 200
-
-async function fetchProjects() {
-  const res = await getActiveProjects()
-  if (res.success) {
-    projectStore.setList(res.list)
-    projectStore.markFresh()
-  }
-}
 
 function measureItems() {
   return new Promise((resolve) => {
@@ -205,7 +193,7 @@ async function onDragEnd() {
     _id: item._id,
     sortOrder: idx + 1,
   }))
-  await batchUpdateSort(updates)
+  await projectStore.updateSort(updates)
 }
 
 function onEdit(id) {
@@ -225,10 +213,9 @@ function onArchive(id) {
 }
 
 async function onArchiveConfirm() {
-  const res = await archiveProject(archiveTargetId.value, true)
+  const res = await projectStore.archive(archiveTargetId.value, true)
   if (res.success) {
     uni.showToast({ title: '已归档', icon: 'success' })
-    await fetchProjects()
   }
 }
 
@@ -239,10 +226,9 @@ function onDelete(id) {
 }
 
 async function onDeleteConfirm() {
-  const res = await deleteProject(deleteTargetId.value)
+  const res = await projectStore.removeProject(deleteTargetId.value)
   if (res.success) {
     uni.showToast({ title: '已删除', icon: 'success' })
-    await fetchProjects()
   } else {
     uni.showToast({ title: res.error || '删除失败', icon: 'none' })
   }
@@ -253,7 +239,7 @@ const navTitle = computed(() => `打卡项目管理 (${projects.value.length})`)
 
 onShow(async () => {
   themeStore.applyTheme()
-  await projectStore.ensureFresh(fetchProjects)
+  await projectStore.ensureFresh(() => projectStore.fetchActiveProjects())
 })
 </script>
 
