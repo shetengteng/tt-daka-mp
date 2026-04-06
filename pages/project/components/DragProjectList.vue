@@ -9,31 +9,31 @@
     :long-press-duration="300"
     @change="onSortChange"
   >
-    <template #default="{ item }">
-      <view class="project-item flex-between px-md py-md">
+    <template #default="slotProps">
+      <view v-if="slotProps && slotProps.item" class="project-item flex-between px-md py-md">
         <view class="flex-center-v flex-1 min-w-0">
           <view class="drag-handle flex-center mr-sm">
             <TtSvg name="ri-more-2-fill" :size="28" color="#D4D4D8" />
           </view>
           <view class="flex-center-v flex-1 min-w-0">
-            <view class="item-icon flex-center rounded-sm" :style="{ backgroundColor: `${item.color}15` }">
-              <TtSvg :name="item.icon || 'ri-checkbox-circle-line'" :size="32" :color="item.color" />
+            <view class="item-icon flex-center rounded-sm" :style="{ backgroundColor: `${slotProps.item.color}15` }">
+              <TtSvg :name="slotProps.item.icon || 'ri-checkbox-circle-line'" :size="32" :color="slotProps.item.color" />
             </view>
             <view class="flex-col ml-sm flex-1 min-w-0">
-              <text class="text-base font-medium truncate text-foreground">{{ item.name }}</text>
-              <text class="text-xs text-muted">已打卡 {{ item.totalDays || 0 }} 天</text>
+              <text class="text-base font-medium truncate text-foreground">{{ slotProps.item.name }}</text>
+              <text class="text-xs text-muted">已打卡 {{ slotProps.item.totalDays || 0 }} 天</text>
             </view>
           </view>
         </view>
         
         <view class="flex-center-v">
-          <view class="action-btn flex-center rounded-md" @click.stop="onEdit(item._id)">
+          <view class="action-btn flex-center rounded-md" @click.stop="onEdit(slotProps.item._id)">
             <TtSvg name="ri-edit-line" :size="28" color="#737373" />
           </view>
-          <view class="action-btn flex-center rounded-md ml-xs" @click.stop="onArchive(item._id)">
+          <view class="action-btn flex-center rounded-md ml-xs" @click.stop="onArchive(slotProps.item._id)">
             <TtSvg name="ri-archive-line" :size="28" color="#737373" />
           </view>
-          <view class="action-btn flex-center rounded-md ml-xs" @click.stop="onDelete(item._id)">
+          <view class="action-btn flex-center rounded-md ml-xs" @click.stop="onDelete(slotProps.item._id)">
             <TtSvg name="ri-delete-bin-line" :size="28" color="#EF4444" />
           </view>
         </view>
@@ -68,6 +68,7 @@
 import { ref, watch } from 'vue'
 import { useProjectStore } from '@/stores/project'
 import { goToProjectEdit } from '@/route/index'
+import zeroDrag from '@/uni_modules/zero-drag/components/zero-drag/zero-drag.vue'
 
 const projectStore = useProjectStore()
 

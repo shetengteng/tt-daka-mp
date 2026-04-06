@@ -68,7 +68,7 @@ onLoad(() => {
 })
 
 async function autoLogin() {
-  setAccountId('mock_user')
+  setAccountId(TEST_ACCOUNT_ID)
   goHome()
 }
 

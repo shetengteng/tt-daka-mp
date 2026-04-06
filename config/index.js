@@ -3,7 +3,7 @@
  */
 
 // true = mock 数据, false = EMAS 真实数据库
-export const DEV_MODE = false
+export const DEV_MODE = true
 
 // 环境切换：'dev' | 'prod'
 export const ENV = 'dev'

@@ -45,7 +45,7 @@ export async function requireAccountId() {
   }
 
   if (DEV_MODE) {
-    setAccountId('mock_user')
+    setAccountId(TEST_ACCOUNT_ID)
     return _accountId
   }
 

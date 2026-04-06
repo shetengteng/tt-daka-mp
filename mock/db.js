@@ -74,6 +74,10 @@ function createChain(collectionName) {
       return chain
     },
 
+    field() {
+      return chain
+    },
+
     async get() {
       if (_docId) {
         const item = data.find(doc => doc._id === _docId)
