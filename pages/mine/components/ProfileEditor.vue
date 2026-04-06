@@ -50,8 +50,10 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import { updateUserProfile } from '@/api/user/updateUserProfile'
+import { useUserStore } from '@/stores/user'
 import { fileToBase64, isLocalFile, compressImage } from '@/utils/file'
+
+const userStore = useUserStore()
 
 const props = defineProps({
   visible: { type: Boolean, default: false },
@@ -111,7 +113,7 @@ async function onSave() {
       avatarData = await fileToBase64(avatarData)
     }
 
-    const res = await updateUserProfile({ nickname, avatar: avatarData })
+    const res = await userStore.updateProfile({ nickname, avatar: avatarData })
     if (res.success) {
       emit('saved', { nickname, avatar: avatarData })
       close()

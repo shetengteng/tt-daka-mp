@@ -47,11 +47,12 @@ import { isLoggedIn, setAccountId, setLoginType } from '@/utils/auth'
 import { initEmas } from '@/cloud-emas/database/index'
 import { anonymousAuth } from '@/cloud-emas/database/api/anonymousAuth'
 import { wechatAuth } from '@/cloud-emas/database/api/wechatAuth'
-import { ensureUser } from '@/api/user/ensureUser'
+import { useUserStore } from '@/stores/user'
 
 const agreed = ref(false)
 const loading = ref(false)
 const themeStore = useThemeStore()
+const userStore = useUserStore()
 
 onLoad(() => {
   themeStore.applyTheme()
@@ -99,7 +100,7 @@ async function handleWechatLogin() {
     setAccountId(accountId)
     setLoginType('wechat')
 
-    const result = await ensureUser({ loginType: 'wechat', openid })
+    const result = await userStore.ensure({ loginType: 'wechat', openid })
     if (result.success && result.user) {
       setAccountId(result.user.accountId || accountId)
     }
@@ -130,7 +131,7 @@ async function handleDevLogin() {
     await initEmas()
     await anonymousAuth()
     setLoginType('anonymous')
-    await ensureUser({ loginType: 'anonymous' })
+    await userStore.ensure({ loginType: 'anonymous' })
     goHome()
   } catch (error) {
     console.error('[Login] 开发登录失败:', error)

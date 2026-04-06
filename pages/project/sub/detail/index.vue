@@ -80,8 +80,8 @@
 import { ref, computed } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
+import { useRecordStore } from '@/stores/record'
 import { getProjectDetail } from '@/api/project/getProjectDetail'
-import { retroactiveDaka } from '@/api/record/retroactiveDaka'
 import { goToProjectEdit } from '@/route/index'
 import { dayjs, formatDate } from '@/utils/date'
 
@@ -140,8 +140,10 @@ async function onDateSelect(date) {
   showRetroDialog.value = true
 }
 
+const recordStore = useRecordStore()
+
 async function onRetroConfirm() {
-  const res = await retroactiveDaka(projectId.value, retroDate.value)
+  const res = await recordStore.retroactive(projectId.value, retroDate.value)
   if (res.success) {
     records.value.unshift(res.record)
     records.value.sort((a, b) => b.date.localeCompare(a.date))

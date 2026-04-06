@@ -2,18 +2,18 @@
   <view 
     class="daka-card" 
     :style="cardBgStyle"
-    @click="$emit('card-tap', project._id)"
-    @longpress="$emit('card-longpress', project._id)"
+    @click="$emit('card-tap', props.projectId)"
+    @longpress="$emit('card-longpress', props.projectId)"
   >
     <view class="daka-card__bar" :style="barStyle"></view>
     <view class="daka-card__body">
       <view class="daka-card__info">
         <view class="daka-card__header flex-center-v">
           <view class="daka-card__icon flex-center rounded-xl" :style="iconBgStyle">
-            <TtSvg :name="project.icon || 'ri-checkbox-circle-line'" :size="36" :color="iconColor" />
+            <TtSvg :name="project?.icon || 'ri-checkbox-circle-line'" :size="36" :color="iconColor" />
           </view>
           <view class="ml-md">
-            <text class="daka-card__name font-semibold text-base" :style="{ color: nameColor }">{{ project.name }}</text>
+            <text class="daka-card__name font-semibold text-base" :style="{ color: nameColor }">{{ project?.name }}</text>
             <view class="mt-xs">
               <text class="text-xs" :style="{ color: subColor }">连续{{ streak }}天 · 总计{{ totalDays }}天</text>
             </view>
@@ -37,40 +37,52 @@
 <script setup>
 import { computed } from 'vue'
 import { useThemeStore } from '@/stores/theme'
+import { useProjectStore } from '@/stores/project'
+import { useRecordStore } from '@/stores/record'
 
 const props = defineProps({
-  project: { type: Object, required: true },
-  checked: { type: Boolean, default: false },
-  streak: { type: Number, default: 0 },
-  totalDays: { type: Number, default: 0 },
+  projectId: { type: String, required: true },
 })
 
 const emit = defineEmits(['toggle', 'card-tap', 'card-longpress'])
 const { isDark, c } = useThemeStore()
+const projectStore = useProjectStore()
+const recordStore = useRecordStore()
+
+const project = computed(() =>
+  projectStore.list.find(p => p._id === props.projectId)
+)
+
+const checked = computed(() =>
+  recordStore.todayRecords.some(r => r.projectId === props.projectId)
+)
+
+const totalDays = computed(() => project.value?.totalDays || 0)
+const streak = computed(() => project.value?.streak || 0)
 
 const cardBgStyle = computed(() => {
-  if (!props.checked) return { backgroundColor: c.card }
+  if (!checked.value) return { backgroundColor: c.card }
   return { backgroundColor: isDark ? 'rgba(34,197,94,0.12)' : '#DCFCE7' }
 })
 
 const barStyle = computed(() => ({
-  backgroundColor: props.checked ? '#22C55E' : '#F97316'
+  backgroundColor: checked.value ? '#22C55E' : '#F97316'
 }))
 
-const nameColor = computed(() => props.checked && !isDark ? '#0a0a0a' : c.fg)
-const subColor = computed(() => props.checked && !isDark ? '#737373' : c.muted)
+const nameColor = computed(() => checked.value && !isDark ? '#0a0a0a' : c.fg)
+const subColor = computed(() => checked.value && !isDark ? '#737373' : c.muted)
 
 const iconColor = computed(() => {
-  return props.checked ? '#22C55E' : (props.project.color || '#3B82F6')
+  return checked.value ? '#22C55E' : (project.value?.color || '#3B82F6')
 })
 
 const iconBgStyle = computed(() => {
-  const color = props.checked ? '#22C55E' : (props.project.color || '#3B82F6')
+  const color = checked.value ? '#22C55E' : (project.value?.color || '#3B82F6')
   return { backgroundColor: `${color}20` }
 })
 
 function onToggle() {
-  emit('toggle', props.project._id)
+  emit('toggle', props.projectId)
 }
 </script>
 

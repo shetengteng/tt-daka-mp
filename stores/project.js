@@ -64,23 +64,23 @@ export const useProjectStore = defineStore('project', () => {
     _dirty.value = true
   }
 
-  async function ensureFresh(fetchFn) {
-    if (list.value.length === 0) {
-      await fetchFn()
-      return
-    }
-    if (isCacheValid()) return
-
+  async function checkFresh() {
+    if (list.value.length === 0) return true
+    if (isCacheValid()) return false
     const accountId = getAccountId()
-    if (!accountId) { await fetchFn(); return }
-
-    const { needRefresh, version } = await checkDataVersion(accountId)
-    if (needRefresh) {
-      await fetchFn()
+    if (!accountId) return true
+    const { needRefresh: need, version } = await checkDataVersion(accountId)
+    if (need) {
       updateLocalVersion(accountId, version)
-    } else {
-      markFresh()
+      return true
     }
+    markFresh()
+    return false
+  }
+
+  async function ensureFresh() {
+    const need = await checkFresh()
+    if (need) await fetchActiveProjects()
   }
 
   async function fetchActiveProjects() {
@@ -144,7 +144,7 @@ export const useProjectStore = defineStore('project', () => {
   return {
     list, loading, activeList,
     restore, persist, isCacheValid, markDirty, markFresh,
-    setList, clear, ensureFresh,
+    setList, clear, checkFresh, ensureFresh,
     fetchActiveProjects, fetchProjectList,
     addProject, editProject, removeProject, archive, updateSort,
   }

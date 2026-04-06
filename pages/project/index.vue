@@ -19,6 +19,6 @@ const navTitle = computed(() => `打卡项目管理 (${projectStore.activeList.l
 
 onShow(async () => {
   themeStore.applyTheme()
-  await projectStore.ensureFresh(() => projectStore.fetchActiveProjects())
+  await projectStore.ensureFresh()
 })
 </script>

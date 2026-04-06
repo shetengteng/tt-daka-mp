@@ -4,6 +4,9 @@ import { getAccountId } from '@/utils/auth'
 import { formatDate } from '@/utils/date'
 import { setLocal, getLocal, getStoreKey } from '@/utils/local-store'
 import { useProjectStore } from './project'
+import { toggleDaka as toggleDakaApi } from '@/api/record/toggleDaka'
+import { getRecordsByMonth as getRecordsByMonthApi } from '@/api/record/getRecordsByMonth'
+import { retroactiveDaka as retroactiveDakaApi } from '@/api/record/retroactiveDaka'
 
 const CACHE_TTL = 5 * 60 * 1000
 
@@ -84,9 +87,22 @@ export const useRecordStore = defineStore('record', () => {
     pendingCount.value = 0
   }
 
+  async function toggle(projectId, currentChecked) {
+    return await toggleDakaApi(projectId, currentChecked)
+  }
+
+  async function fetchMonthRecords(monthDate) {
+    return await getRecordsByMonthApi(monthDate)
+  }
+
+  async function retroactive(projectId, date) {
+    return await retroactiveDakaApi(projectId, date)
+  }
+
   return {
     todayRecords, pendingCount, isOffline, todayProgress,
     restore, persist, isCacheValid, markDirty, markFresh,
     setTodayRecords, addTodayRecord, removeTodayRecord, clear,
+    toggle, fetchMonthRecords, retroactive,
   }
 })

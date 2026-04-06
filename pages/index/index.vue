@@ -12,12 +12,9 @@
     <!-- 打卡列表 -->
     <view class="list-section px-xl mt-md">
       <DakaCard
-        v-for="item in cardList"
-        :key="item.project._id"
-        :project="item.project"
-        :checked="item.checked"
-        :streak="item.streak"
-        :totalDays="item.totalDays"
+        v-for="p in activeProjects"
+        :key="p._id"
+        :projectId="p._id"
         @toggle="onToggle"
         @card-tap="onCardTap"
         @card-longpress="onCardLongpress"
@@ -79,7 +76,6 @@ import { onShow, onPullDownRefresh } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { useProjectStore } from '@/stores/project'
 import { useRecordStore } from '@/stores/record'
-import { toggleDaka } from '@/api/record/toggleDaka'
 import { syncPendingOps } from '@/utils/sync-manager'
 import { getAccountId } from '@/utils/auth'
 import { goToProjectAdd, goToProjectDetail, goToProjectEdit } from '@/route/index'
@@ -105,28 +101,9 @@ const showActionSheet = ref(false)
 const showCancelDialog = ref(false)
 const showDeleteDialog = ref(false)
 const currentActionId = ref('')
-const streakMap = ref({})
-const totalDaysMap = ref({})
 
 const activeProjects = computed(() => projectStore.activeList)
 const todayProgress = computed(() => recordStore.todayProgress)
-
-const todayRecordMap = computed(() => {
-  const map = {}
-  recordStore.todayRecords.forEach(r => {
-    map[r.projectId] = r
-  })
-  return map
-})
-
-const cardList = computed(() => {
-  return activeProjects.value.map(p => ({
-    project: p,
-    checked: !!todayRecordMap.value[p._id],
-    streak: streakMap.value[p._id] || 0,
-    totalDays: totalDaysMap.value[p._id] || 0,
-  }))
-})
 
 const actionSheetItems = [
   { label: '编辑', value: 'edit' },
@@ -136,7 +113,8 @@ const actionSheetItems = [
 
 onShow(async () => {
   themeStore.applyTheme()
-  await projectStore.ensureFresh(loadData)
+  const need = await projectStore.checkFresh()
+  if (need) await loadData()
 })
 
 onPullDownRefresh(async () => {
@@ -156,7 +134,7 @@ async function loadData() {
 }
 
 async function onToggle(projectId) {
-  const isChecked = !!todayRecordMap.value[projectId]
+  const isChecked = recordStore.todayRecords.some(r => r.projectId === projectId)
   
   if (isChecked) {
     currentActionId.value = projectId
@@ -165,11 +143,11 @@ async function onToggle(projectId) {
   }
   
   uni.vibrateShort()
-  await toggleDaka(projectId, false)
+  await recordStore.toggle(projectId, false)
 }
 
 async function confirmCancelDaka() {
-  await toggleDaka(currentActionId.value, true)
+  await recordStore.toggle(currentActionId.value, true)
   showCancelDialog.value = false
 }
 

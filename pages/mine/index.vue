@@ -58,8 +58,6 @@ import { clearUserCache } from '@/utils/local-store'
 import UserCard from './components/UserCard.vue'
 import ManageSection from './components/ManageSection.vue'
 import OtherSection from './components/OtherSection.vue'
-import { getMineStats } from '@/api/user/getMineStats'
-import { getUser } from '@/api/user/getUser'
 
 const projectStore = useProjectStore()
 const userStore = useUserStore()
@@ -77,19 +75,15 @@ const darkMode = computed({
 const showLogoutDialog = ref(false)
 
 async function fetchMineData() {
-  const [statsRes, userRes] = await Promise.all([getMineStats(), getUser()])
+  const [statsRes, userRes] = await Promise.all([
+    userStore.fetchMineStats(),
+    userStore.fetchUser(),
+  ])
   if (statsRes.success) {
     statsStore.setMineCounts({
       active: statsRes.activeCount,
       archived: statsRes.archivedCount,
       totalDays: statsRes.totalDays,
-    })
-    userStore.setUser({ totalDays: statsRes.totalDays })
-  }
-  if (userRes.success && userRes.user) {
-    userStore.setUser({
-      nickname: userRes.user.nickname || '微信用户',
-      avatar: userRes.user.avatar || '',
     })
   }
   projectStore.markFresh()
@@ -101,13 +95,14 @@ onShow(async () => {
     await fetchMineData()
     _mineLoaded = true
   } else {
-    await projectStore.ensureFresh(fetchMineData)
+    const need = await projectStore.checkFresh()
+    if (need) await fetchMineData()
   }
 })
 
 async function onRefresh() {
   projectStore.markDirty()
-  await projectStore.ensureFresh(fetchMineData)
+  await fetchMineData()
 }
 
 function onLogoutConfirm() {

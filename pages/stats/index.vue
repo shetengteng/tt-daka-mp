@@ -51,12 +51,13 @@ async function fetchStats() {
 
 onShow(async () => {
   themeStore.applyTheme()
-  await projectStore.ensureFresh(fetchStats)
+  const need = await projectStore.checkFresh()
+  if (need) await fetchStats()
 })
 
 onPullDownRefresh(async () => {
   projectStore.markDirty()
-  await projectStore.ensureFresh(fetchStats)
+  await fetchStats()
   uni.stopPullDownRefresh()
 })
 </script>
