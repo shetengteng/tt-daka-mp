@@ -6,16 +6,21 @@
  * 超过 TTL 还会额外查询云端版本号（防止其他设备修改数据）。
  *
  * 用法：
- *   const { needRefresh, markLoaded } = usePageFresh('home')
+ *   const { needRefresh, forceCheck, markLoaded } = usePageFresh('home')
  *   onShow(async () => {
- *     if (await needRefresh()) {
- *       await loadData()
- *       markLoaded()
- *     }
+ *     if (await needRefresh()) { await loadData(); markLoaded() }
+ *   })
+ *   onPullDownRefresh(async () => {
+ *     if (await forceCheck()) { await loadData(); markLoaded() }
+ *     else { uni.showToast({ title: '已是最新', icon: 'none' }) }
+ *     uni.stopPullDownRefresh()
  *   })
  */
 import { useProjectStore } from '@/stores/project'
+import { getAccountId } from '@/utils/auth'
+import { checkDataVersion, updateLocalVersion } from '@/utils/version-check'
 
+const CACHE_TTL = 5 * 60 * 1000
 const TS_PREFIX = 'dk_pageTs_'
 
 function _getPageTs(key) {
@@ -32,18 +37,43 @@ function _setPageTs(key, ts) {
   } catch (_) {}
 }
 
+/**
+ * 查云端 dataVersion 判断是否有更新
+ * @param {boolean} force - true 时跳过 TTL 限制（下拉刷新用）
+ */
+async function _checkCloud(force = false) {
+  const projectStore = useProjectStore()
+  if (!force && Date.now() - projectStore.lastFetchTime < CACHE_TTL) return false
+  const accountId = getAccountId()
+  if (!accountId) return true
+  const { needRefresh: need, version } = await checkDataVersion(accountId)
+  if (need) {
+    updateLocalVersion(accountId, version)
+    return true
+  }
+  projectStore.lastFetchTime = Date.now()
+  return false
+}
+
 export function usePageFresh(pageKey) {
   const projectStore = useProjectStore()
 
   /**
-   * 是否需要重新加载数据
-   * 1. 页面时间戳与全局 dataTs 不同 → true（本地有变更）
-   * 2. 时间戳相同但 TTL 过期 → 查云端版本号
+   * onShow 用：先对比本地 dataTs，再走 TTL 云端版本检查
    */
   async function needRefresh() {
     const pageTs = _getPageTs(pageKey)
     if (projectStore.isStale(pageTs)) return true
-    return await projectStore.checkCloudVersion()
+    return await _checkCloud()
+  }
+
+  /**
+   * 下拉刷新用：先对比本地 dataTs，再强制查云端版本（跳过 TTL）
+   */
+  async function forceCheck() {
+    const pageTs = _getPageTs(pageKey)
+    if (projectStore.isStale(pageTs)) return true
+    return await _checkCloud(true)
   }
 
   /** 加载数据成功后调用，将当前 dataTs 写入 localStorage */
@@ -51,5 +81,5 @@ export function usePageFresh(pageKey) {
     _setPageTs(pageKey, projectStore.dataTs)
   }
 
-  return { needRefresh, markLoaded }
+  return { needRefresh, forceCheck, markLoaded }
 }

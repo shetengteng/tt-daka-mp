@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { getAccountId } from '@/utils/auth'
 import { setLocal, getLocal, getStoreKey } from '@/utils/local-store'
-import { checkDataVersion, updateLocalVersion } from '@/utils/version-check'
 import { getActiveProjects } from '@/api/project/getActiveProjects'
 import { getProjectList as fetchProjectListApi } from '@/api/project/getProjectList'
 import { createProject as createProjectApi } from '@/api/project/createProject'
@@ -11,16 +10,10 @@ import { deleteProject as deleteProjectApi } from '@/api/project/deleteProject'
 import { archiveProject as archiveProjectApi } from '@/api/project/archiveProject'
 import { batchUpdateSort as batchUpdateSortApi } from '@/api/project/batchUpdateSort'
 
-/**
- * TTL：5 分钟内不查云端版本号，仅通过本地 dataTs 判断是否有变更
- * 超过 TTL 后额外查询云端 dataVersion（防止其他设备修改了数据）
- */
-const CACHE_TTL = 5 * 60 * 1000
 const CACHE_KEY = 'cache_projects'
 
 export const useProjectStore = defineStore('project', () => {
   const list = ref([])
-  const loading = ref(false)
 
   /**
    * 全局数据时间戳：每次数据变更（打卡/增删项目/拉取新数据）时更新
@@ -28,8 +21,8 @@ export const useProjectStore = defineStore('project', () => {
    */
   const dataTs = ref(0)
 
-  /** 最后一次从 API 获取数据的时间戳，用于 TTL 判断 */
-  let _lastFetchTime = 0
+  /** 最后一次从 API 获取数据的时间戳，供 usePageFresh 做 TTL 判断 */
+  const lastFetchTime = ref(0)
 
   /** 未归档项目列表，按 sortOrder 排序 */
   const activeList = computed(() =>
@@ -70,7 +63,7 @@ export const useProjectStore = defineStore('project', () => {
    */
   function markFresh() {
     dataTs.value = Date.now()
-    _lastFetchTime = Date.now()
+    lastFetchTime.value = Date.now()
     persist()
   }
 
@@ -83,7 +76,7 @@ export const useProjectStore = defineStore('project', () => {
   /** 清空所有状态（退出登录时调用） */
   function clear() {
     list.value = []
-    _lastFetchTime = 0
+    lastFetchTime.value = 0
     dataTs.value = 0
   }
 
@@ -96,23 +89,6 @@ export const useProjectStore = defineStore('project', () => {
    */
   function isStale(pageTs) {
     return pageTs !== dataTs.value
-  }
-
-  /**
-   * 检查云端版本号（TTL 过期后调用，防止其他设备修改了数据）
-   * @returns {boolean} true = 云端有更新，需要拉取
-   */
-  async function checkCloudVersion() {
-    if (Date.now() - _lastFetchTime < CACHE_TTL) return false
-    const accountId = getAccountId()
-    if (!accountId) return true
-    const { needRefresh: need, version } = await checkDataVersion(accountId)
-    if (need) {
-      updateLocalVersion(accountId, version)
-      return true
-    }
-    _lastFetchTime = Date.now()
-    return false
   }
 
   // ─── API 封装 ───
@@ -183,9 +159,9 @@ export const useProjectStore = defineStore('project', () => {
   }
 
   return {
-    list, loading, activeList, dataTs,
+    list, activeList, dataTs,
     restore, persist, markDirty, markFresh,
-    setList, clear, isStale, checkCloudVersion,
+    setList, clear, isStale, lastFetchTime,
     fetchActiveProjects, fetchProjectList,
     addProject, editProject, removeProject, archive, updateSort,
   }

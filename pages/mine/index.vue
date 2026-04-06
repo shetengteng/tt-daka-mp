@@ -45,7 +45,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { onShow } from '@dcloudio/uni-app'
+import { onShow, onPullDownRefresh } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { useUserStore } from '@/stores/user'
 import { useStatsStore } from '@/stores/stats'
@@ -63,7 +63,7 @@ import OtherSection from './components/OtherSection.vue'
 const projectStore = useProjectStore()
 const userStore = useUserStore()
 const statsStore = useStatsStore()
-const { needRefresh, markLoaded } = usePageFresh('mine')
+const { needRefresh, forceCheck, markLoaded } = usePageFresh('mine')
 
 const themeStore = useThemeStore()
 const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
@@ -93,6 +93,15 @@ async function fetchMineData() {
 onShow(async () => {
   themeStore.applyTheme()
   if (await needRefresh()) await fetchMineData()
+})
+
+onPullDownRefresh(async () => {
+  if (await forceCheck()) {
+    await fetchMineData()
+  } else {
+    uni.showToast({ title: '已是最新', icon: 'none' })
+  }
+  uni.stopPullDownRefresh()
 })
 
 async function onRefresh() {

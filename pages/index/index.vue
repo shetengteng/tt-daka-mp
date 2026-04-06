@@ -86,7 +86,7 @@ import OfflineBar from './components/OfflineBar.vue'
 const themeStore = useThemeStore()
 const projectStore = useProjectStore()
 const recordStore = useRecordStore()
-const { needRefresh, markLoaded } = usePageFresh('home')
+const { needRefresh, forceCheck, markLoaded } = usePageFresh('home')
 
 const capsuleStyle = computed(() => {
   if (themeStore.capsuleRight > 0) {
@@ -119,8 +119,11 @@ onShow(async () => {
 
 onPullDownRefresh(async () => {
   await syncPendingOps()
-  projectStore.markDirty()
-  await loadData()
+  if (await forceCheck()) {
+    await loadData()
+  } else {
+    uni.showToast({ title: '已是最新', icon: 'none' })
+  }
   uni.stopPullDownRefresh()
 })
 

@@ -118,16 +118,18 @@ export const useThemeStore = defineStore('theme', () => {
         frontColor: isDark ? '#ffffff' : '#000000',
         backgroundColor: isDark ? '#09090B' : '#ffffff',
         animation: { duration: 0, timingFunc: 'easeIn' },
+        fail() {},
       })
-    } catch (e) {}
+    } catch (_) {}
 
     try {
       uni.setBackgroundColor({
         backgroundColor: isDark ? '#09090B' : '#ffffff',
         backgroundColorTop: isDark ? '#09090B' : '#ffffff',
         backgroundColorBottom: isDark ? '#09090B' : '#ffffff',
+        fail() {},
       })
-    } catch (e) {}
+    } catch (_) {}
   }
 
   watch(mode, () => applyTheme(), { immediate: false })

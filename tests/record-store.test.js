@@ -51,7 +51,6 @@ describe('recordStore basic operations', () => {
     store.clear()
     expect(store.todayRecords).toEqual([])
     expect(store.pendingCount).toBe(0)
-    expect(store.isCacheValid()).toBe(false)
   })
 })
 
@@ -92,25 +91,6 @@ describe('recordStore todayProgress', () => {
   })
 })
 
-describe('recordStore cache validity', () => {
-  it('isCacheValid false initially', () => {
-    const store = useRecordStore()
-    expect(store.isCacheValid()).toBe(false)
-  })
-
-  it('markFresh makes cache valid', () => {
-    const store = useRecordStore()
-    store.markFresh()
-    expect(store.isCacheValid()).toBe(true)
-  })
-
-  it('markDirty invalidates cache', () => {
-    const store = useRecordStore()
-    store.markFresh()
-    store.markDirty()
-    expect(store.isCacheValid()).toBe(false)
-  })
-})
 
 describe('recordStore persist / restore', () => {
   it('round-trip with accountId', () => {

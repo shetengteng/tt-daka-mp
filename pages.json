@@ -24,7 +24,7 @@
 			"path": "pages/calendar/index",
 			"style": {
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -38,7 +38,7 @@
 			"path": "pages/mine/index",
 			"style": {
 				"navigationStyle": "custom",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
 		},
 		{

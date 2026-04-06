@@ -8,17 +8,11 @@ import { toggleDaka as toggleDakaApi } from '@/api/record/toggleDaka'
 import { getRecordsByMonth as getRecordsByMonthApi } from '@/api/record/getRecordsByMonth'
 import { retroactiveDaka as retroactiveDakaApi } from '@/api/record/retroactiveDaka'
 
-const CACHE_TTL = 5 * 60 * 1000
-
 export const useRecordStore = defineStore('record', () => {
   /** 今日打卡记录列表，Local-First 架构下由 toggleDaka 直接写入 */
   const todayRecords = ref([])
   /** 待同步操作计数，由 sync-manager 在同步完成后更新 */
   const pendingCount = ref(0)
-  const isOffline = ref(false)
-
-  let _lastFetchTime = 0
-  const _dirty = ref(false)
 
   /** 今日打卡进度：已完成数 / 活跃项目总数 */
   const todayProgress = computed(() => {
@@ -60,18 +54,6 @@ export const useRecordStore = defineStore('record', () => {
     setLocal(key, todayRecords.value)
   }
 
-  function isCacheValid() {
-    return !_dirty.value && Date.now() - _lastFetchTime < CACHE_TTL
-  }
-
-  function markDirty() { _dirty.value = true }
-
-  function markFresh() {
-    _dirty.value = false
-    _lastFetchTime = Date.now()
-    persist()
-  }
-
   // ─── 本地操作（由 toggleDaka API 内部调用） ───
 
   function setTodayRecords(list) {
@@ -91,8 +73,6 @@ export const useRecordStore = defineStore('record', () => {
 
   function clear() {
     todayRecords.value = []
-    _lastFetchTime = 0
-    _dirty.value = true
     pendingCount.value = 0
   }
 
@@ -118,9 +98,8 @@ export const useRecordStore = defineStore('record', () => {
   }
 
   return {
-    todayRecords, pendingCount, isOffline, todayProgress,
-    restore, persist, isCacheValid, markDirty, markFresh,
-    setTodayRecords, addTodayRecord, removeTodayRecord, clear,
+    todayRecords, pendingCount, todayProgress,
+    restore, setTodayRecords, addTodayRecord, removeTodayRecord, clear,
     toggle, fetchMonthRecords, retroactive,
   }
 })

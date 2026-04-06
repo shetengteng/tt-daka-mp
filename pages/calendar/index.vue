@@ -22,9 +22,8 @@
 
 <script setup>
 import { computed } from 'vue'
-import { onShow } from '@dcloudio/uni-app'
+import { onShow, onPullDownRefresh } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
-import { useProjectStore } from '@/stores/project'
 import { useRecordStore } from '@/stores/record'
 import { useCalendarStore } from '@/stores/calendar'
 import { usePageFresh } from '@/composables/usePageFresh'
@@ -33,10 +32,9 @@ import DayDetail from './components/DayDetail.vue'
 import MonthStats from './components/MonthStats.vue'
 
 const themeStore = useThemeStore()
-const projectStore = useProjectStore()
 const recordStore = useRecordStore()
 const calendarStore = useCalendarStore()
-const { needRefresh, markLoaded } = usePageFresh('calendar')
+const { needRefresh, forceCheck, markLoaded } = usePageFresh('calendar')
 
 const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
 
@@ -73,5 +71,14 @@ async function loadMonthData(monthDate) {
 onShow(async () => {
   themeStore.applyTheme()
   if (await needRefresh()) await loadMonthData()
+})
+
+onPullDownRefresh(async () => {
+  if (await forceCheck()) {
+    await loadMonthData()
+  } else {
+    uni.showToast({ title: '已是最新', icon: 'none' })
+  }
+  uni.stopPullDownRefresh()
 })
 </script>
