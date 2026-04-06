@@ -6,7 +6,8 @@
     "dependencies": {
         "@alicloud/mpserverless-sdk": "^3.1.5",
         "dayjs": "^1.11.14",
-        "pinia": "^2.1.7"
+        "pinia": "^2.1.7",
+        "snap-ui": "^0.0.4"
     },
     "devDependencies": {
         "vitest": "^4.1.2"
