@@ -80,8 +80,8 @@
 import { ref, computed } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
+import { useProjectStore } from '@/stores/project'
 import { useRecordStore } from '@/stores/record'
-import { getProjectDetail } from '@/api/project/getProjectDetail'
 import { goToProjectEdit } from '@/route/index'
 import { dayjs, formatDate } from '@/utils/date'
 
@@ -157,8 +157,10 @@ function showMore() {
   showCount.value += 10
 }
 
+const projectStore = useProjectStore()
+
 async function loadDetail() {
-  const res = await getProjectDetail(projectId.value)
+  const res = await projectStore.fetchProjectDetail(projectId.value)
   if (res.success) {
     project.value = res.data.project
     records.value = res.data.records

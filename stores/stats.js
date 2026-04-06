@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, reactive } from 'vue'
+import { getStats } from '@/api/stats/getStats'
 
 export const useStatsStore = defineStore('stats', () => {
   const data = reactive({
@@ -13,6 +14,16 @@ export const useStatsStore = defineStore('stats', () => {
   const activeCount = ref(0)
   const archivedCount = ref(0)
   let _loaded = false
+
+  /** 从云端拉取统计数据并写入 store */
+  async function fetchStats() {
+    const res = await getStats()
+    if (res.success) {
+      Object.assign(data, res.data)
+      _loaded = true
+    }
+    return res
+  }
 
   function setStats(statsData) {
     Object.assign(data, statsData)
@@ -34,5 +45,5 @@ export const useStatsStore = defineStore('stats', () => {
     _loaded = false
   }
 
-  return { data, activeCount, archivedCount, setStats, setMineCounts, isLoaded, clear }
+  return { data, activeCount, archivedCount, fetchStats, setStats, setMineCounts, isLoaded, clear }
 })

@@ -9,6 +9,9 @@ import { updateProject as updateProjectApi } from '@/api/project/updateProject'
 import { deleteProject as deleteProjectApi } from '@/api/project/deleteProject'
 import { archiveProject as archiveProjectApi } from '@/api/project/archiveProject'
 import { batchUpdateSort as batchUpdateSortApi } from '@/api/project/batchUpdateSort'
+import { getArchivedProjects as getArchivedProjectsApi } from '@/api/project/getArchivedProjects'
+import { getProjectDetail as getProjectDetailApi } from '@/api/project/getProjectDetail'
+import { getProjectById as getProjectByIdApi } from '@/api/project/getProjectById'
 
 const CACHE_KEY = 'cache_projects'
 
@@ -155,11 +158,27 @@ export const useProjectStore = defineStore('project', () => {
     return await batchUpdateSortApi(items)
   }
 
+  /** 获取归档项目列表 */
+  async function fetchArchivedProjects() {
+    return await getArchivedProjectsApi()
+  }
+
+  /** 获取单个项目详情（含打卡记录和连续统计） */
+  async function fetchProjectDetail(id) {
+    return await getProjectDetailApi(id)
+  }
+
+  /** 获取单个项目基础信息（编辑页用） */
+  async function fetchProjectById(id) {
+    return await getProjectByIdApi(id)
+  }
+
   return {
     list, activeList, dataTs,
     restore, persist, markDirty, markFresh,
     setList, clear, isStale, lastFetchTime,
     fetchActiveProjects, fetchProjectList,
     addProject, editProject, removeProject, archive, updateSort,
+    fetchArchivedProjects, fetchProjectDetail, fetchProjectById,
   }
 })

@@ -129,7 +129,6 @@ import { onLoad } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { useProjectStore } from '@/stores/project'
 import { goBack } from '@/route/index'
-import { getProjectById } from '@/api/project/getProjectById'
 
 const themeStore = useThemeStore()
 const projectStore = useProjectStore()
@@ -242,7 +241,7 @@ onLoad(async (options) => {
     isEdit.value = true
     editId.value = options.id
     
-    const res = await getProjectById(options.id)
+    const res = await projectStore.fetchProjectById(options.id)
     if (res.success) {
       const p = res.data
       form.name = p.name

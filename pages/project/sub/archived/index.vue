@@ -39,7 +39,6 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getArchivedProjects } from '@/api/project/getArchivedProjects'
 import { useThemeStore } from '@/stores/theme'
 import { useProjectStore } from '@/stores/project'
 
@@ -51,7 +50,7 @@ const showDeleteDialog = ref(false)
 const deleteTargetId = ref('')
 
 async function loadArchived() {
-  const res = await getArchivedProjects()
+  const res = await projectStore.fetchArchivedProjects()
   if (res.success) {
     archivedProjects.value = res.list
   }

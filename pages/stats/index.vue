@@ -31,7 +31,6 @@ import { useThemeStore } from '@/stores/theme'
 import { useStatsStore } from '@/stores/stats'
 import { usePageFresh } from '@/composables/usePageFresh'
 import { syncPendingOps } from '@/utils/sync-manager'
-import { getStats } from '@/api/stats/getStats'
 import StatsOverview from './components/StatsOverview.vue'
 import WeekBarChart from './components/WeekBarChart.vue'
 import ProjectStatCard from './components/ProjectStatCard.vue'
@@ -43,11 +42,8 @@ const themeStore = useThemeStore()
 const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
 
 async function fetchStats() {
-  const res = await getStats()
-  if (res.success) {
-    statsStore.setStats(res.data)
-    markLoaded()
-  }
+  const res = await statsStore.fetchStats()
+  if (res.success) markLoaded()
 }
 
 onShow(async () => {
