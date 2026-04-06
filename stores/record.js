@@ -11,13 +11,16 @@ import { retroactiveDaka as retroactiveDakaApi } from '@/api/record/retroactiveD
 const CACHE_TTL = 5 * 60 * 1000
 
 export const useRecordStore = defineStore('record', () => {
+  /** 今日打卡记录列表，Local-First 架构下由 toggleDaka 直接写入 */
   const todayRecords = ref([])
+  /** 待同步操作计数，由 sync-manager 在同步完成后更新 */
   const pendingCount = ref(0)
   const isOffline = ref(false)
 
   let _lastFetchTime = 0
   const _dirty = ref(false)
 
+  /** 今日打卡进度：已完成数 / 活跃项目总数 */
   const todayProgress = computed(() => {
     const projectStore = useProjectStore()
     const total = projectStore.activeList.length
@@ -26,12 +29,16 @@ export const useRecordStore = defineStore('record', () => {
     return { done, total, percent: Math.round((done / total) * 100) }
   })
 
+  /** 生成今日打卡记录的 localStorage key（按日期区分） */
   function _todayCacheKey() {
     const accountId = getAccountId()
     const today = formatDate(new Date())
     return accountId ? getStoreKey(accountId, 'cache', `today_${today}`) : null
   }
 
+  // ─── 缓存管理 ───
+
+  /** 从 localStorage 恢复今日打卡记录和待同步计数（App 启动时调用） */
   function restore() {
     const key = _todayCacheKey()
     if (!key) return
@@ -65,6 +72,8 @@ export const useRecordStore = defineStore('record', () => {
     persist()
   }
 
+  // ─── 本地操作（由 toggleDaka API 内部调用） ───
+
   function setTodayRecords(list) {
     todayRecords.value = list
     persist()
@@ -87,14 +96,23 @@ export const useRecordStore = defineStore('record', () => {
     pendingCount.value = 0
   }
 
+  // ─── API 封装 ───
+
+  /**
+   * 打卡/取消打卡（Local-First）
+   * 先写入本地 Store + pending 队列，UI 立即响应，云端 30s 后异步同步
+   * @param {boolean} currentChecked - true=当前已打卡(执行取消), false=未打卡(执行打卡)
+   */
   async function toggle(projectId, currentChecked) {
     return await toggleDakaApi(projectId, currentChecked)
   }
 
+  /** 按月查询打卡记录 + 项目列表（日历页用） */
   async function fetchMonthRecords(monthDate) {
     return await getRecordsByMonthApi(monthDate)
   }
 
+  /** 补打卡（限最近 7 天，直接写入云端，非 Local-First） */
   async function retroactive(projectId, date) {
     return await retroactiveDakaApi(projectId, date)
   }

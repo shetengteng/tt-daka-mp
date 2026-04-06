@@ -121,8 +121,13 @@ onPullDownRefresh(async () => {
   const accountId = getAccountId()
   if (accountId) await syncPendingOps(accountId)
   projectStore.markDirty()
-  recordStore.markDirty()
-  await loadData()
+  const need = await projectStore.checkFresh()
+  if (need) {
+    recordStore.markDirty()
+    await loadData()
+  } else {
+    uni.showToast({ title: '已是最新', icon: 'none' })
+  }
   uni.stopPullDownRefresh()
 })
 

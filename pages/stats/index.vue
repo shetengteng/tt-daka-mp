@@ -57,7 +57,12 @@ onShow(async () => {
 
 onPullDownRefresh(async () => {
   projectStore.markDirty()
-  await fetchStats()
+  const need = await projectStore.checkFresh()
+  if (need) {
+    await fetchStats()
+  } else {
+    uni.showToast({ title: '已是最新', icon: 'none' })
+  }
   uni.stopPullDownRefresh()
 })
 </script>
