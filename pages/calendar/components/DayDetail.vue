@@ -26,13 +26,25 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useCalendarStore } from '@/stores/calendar'
 import { goToProjectDetail } from '@/route/index'
 import { dayjs } from '@/utils/date'
 
-const props = defineProps({
-  dateLabel: { type: String, default: '' },
-  detail: { type: Array, default: () => [] },
-})
+const calendarStore = useCalendarStore()
+
+const dateLabel = computed(() => dayjs(calendarStore.selectedDate).format('M月D日 ddd'))
+
+const selectedDayRecords = computed(() =>
+  calendarStore.records.filter(r => r.date === calendarStore.selectedDate)
+)
+
+const detail = computed(() =>
+  calendarStore.activeProjects.map(p => ({
+    project: p,
+    record: selectedDayRecords.value.find(r => r.projectId === p._id),
+  }))
+)
 
 function formatTime(dateTime) {
   if (!dateTime) return ''
