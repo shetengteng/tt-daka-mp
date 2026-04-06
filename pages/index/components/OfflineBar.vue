@@ -6,17 +6,40 @@
       </view>
       <text class="text-xs" style="color: #F59E0B">{{ count }} 条记录待同步</text>
     </view>
-    <text class="sync-btn text-xs font-medium" style="color: #F59E0B" @click="onSync">立即同步</text>
+    <text class="sync-btn text-xs font-medium" style="color: #F59E0B" @click="onSync">
+      {{ syncing ? '同步中...' : '立即同步' }}
+    </text>
   </view>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { syncPendingOps } from '@/utils/sync-manager'
+import { useRecordStore } from '@/stores/record'
+import { getPendingCount } from '@/utils/pending-ops'
+import { getAccountId } from '@/utils/auth'
 
 defineProps({ count: { type: Number, default: 0 } })
 
+const syncing = ref(false)
+
 async function onSync() {
-  await syncPendingOps()
+  if (syncing.value) return
+  syncing.value = true
+  const res = await syncPendingOps()
+  syncing.value = false
+
+  const accountId = getAccountId()
+  const recordStore = useRecordStore()
+  recordStore.pendingCount = accountId ? getPendingCount(accountId) : 0
+
+  if (res.synced > 0) {
+    uni.showToast({ title: `已同步 ${res.synced} 条`, icon: 'success' })
+  } else if (res.remaining === 0) {
+    uni.showToast({ title: '已全部同步', icon: 'success' })
+  } else {
+    uni.showToast({ title: '同步失败，稍后重试', icon: 'none' })
+  }
 }
 </script>
 

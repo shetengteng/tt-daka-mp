@@ -45,7 +45,11 @@ export async function syncPendingOps() {
   let ops = getPendingOps(accountId)
   if (ops.length === 0) return { synced: 0, remaining: 0 }
 
+  const before = ops.length
   ops = mergeOps(ops)
+  if (ops.length < before) savePendingOps(accountId, ops)
+  if (ops.length === 0) return { synced: 0, remaining: 0 }
+
   _syncing = true
   let syncedCount = 0
 
