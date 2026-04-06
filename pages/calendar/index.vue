@@ -27,6 +27,8 @@ import { useThemeStore } from '@/stores/theme'
 import { useProjectStore } from '@/stores/project'
 import { useCalendarStore } from '@/stores/calendar'
 import { getRecordsByMonth } from '@/api/record/getRecordsByMonth'
+import { getAccountId } from '@/utils/auth'
+import { checkDataVersion, updateLocalVersion } from '@/utils/version-check'
 import { dayjs, formatDate } from '@/utils/date'
 import DayDetail from './components/DayDetail.vue'
 import MonthStats from './components/MonthStats.vue'
@@ -67,11 +69,26 @@ async function loadMonthData(monthDate) {
   calendarStore.setMonthData(res.list, res.projects)
 }
 
-onShow(() => {
+onShow(async () => {
   themeStore.applyTheme()
-  if (!_calendarLoaded || !projectStore.isCacheValid()) {
-    loadMonthData()
+
+  if (!_calendarLoaded) {
+    await loadMonthData()
     _calendarLoaded = true
+    return
+  }
+
+  if (projectStore.isCacheValid()) return
+
+  const accountId = getAccountId()
+  if (!accountId) { await loadMonthData(); return }
+
+  const { needRefresh, version } = await checkDataVersion(accountId)
+  if (needRefresh) {
+    await loadMonthData()
+    updateLocalVersion(accountId, version)
+  } else {
+    projectStore.markFresh()
   }
 })
 </script>

@@ -80,6 +80,9 @@
 import { ref, computed, nextTick } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
+import { useProjectStore } from '@/stores/project'
+import { getAccountId } from '@/utils/auth'
+import { checkDataVersion, updateLocalVersion } from '@/utils/version-check'
 import { archiveProject } from '@/api/project/archiveProject'
 import { deleteProject } from '@/api/project/deleteProject'
 import { batchUpdateSort } from '@/api/project/batchUpdateSort'
@@ -247,9 +250,30 @@ async function onDeleteConfirm() {
 const themeStore = useThemeStore()
 const navTitle = computed(() => `打卡项目管理 (${projects.value.length})`)
 
-onShow(() => {
+const projectStore = useProjectStore()
+let _loaded = false
+
+onShow(async () => {
   themeStore.applyTheme()
-  loadProjects()
+
+  if (!_loaded) {
+    await loadProjects()
+    _loaded = true
+    return
+  }
+
+  if (projectStore.isCacheValid()) return
+
+  const accountId = getAccountId()
+  if (!accountId) { await loadProjects(); return }
+
+  const { needRefresh, version } = await checkDataVersion(accountId)
+  if (needRefresh) {
+    await loadProjects()
+    updateLocalVersion(accountId, version)
+  } else {
+    projectStore.markFresh()
+  }
 })
 </script>
 

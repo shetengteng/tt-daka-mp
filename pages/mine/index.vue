@@ -51,6 +51,7 @@ import { useUserStore } from '@/stores/user'
 import { useStatsStore } from '@/stores/stats'
 import { useProjectStore } from '@/stores/project'
 import { clearAccountId, clearLoginType, getAccountId } from '@/utils/auth'
+import { checkDataVersion, updateLocalVersion } from '@/utils/version-check'
 import { resetWechatAuthState } from '@/cloud-emas/database/api/wechatAuth'
 import { resetAuthState } from '@/cloud-emas/database/api/anonymousAuth'
 import { getPendingCount, clearPendingOps } from '@/utils/pending-ops'
@@ -94,17 +95,42 @@ async function loadMineData() {
   }
 }
 
-onShow(() => {
+onShow(async () => {
   themeStore.applyTheme()
-  if (!_mineLoaded || !projectStore.isCacheValid()) {
-    loadMineData()
+
+  if (!_mineLoaded) {
+    await loadMineData()
     _mineLoaded = true
+    return
+  }
+
+  if (projectStore.isCacheValid()) return
+
+  const accountId = getAccountId()
+  if (!accountId) { await loadMineData(); return }
+
+  const { needRefresh, version } = await checkDataVersion(accountId)
+  if (needRefresh) {
+    await loadMineData()
+    updateLocalVersion(accountId, version)
+  } else {
+    projectStore.markFresh()
   }
 })
 
 async function onRefresh() {
-  _mineLoaded = false
-  await loadMineData()
+  const accountId = getAccountId()
+  if (accountId) {
+    const { needRefresh, version } = await checkDataVersion(accountId)
+    if (needRefresh) {
+      await loadMineData()
+      updateLocalVersion(accountId, version)
+    } else {
+      uni.showToast({ title: '已是最新', icon: 'none', duration: 1500 })
+    }
+  } else {
+    await loadMineData()
+  }
 }
 
 function onLogoutConfirm() {

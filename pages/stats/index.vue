@@ -31,6 +31,8 @@ import { useThemeStore } from '@/stores/theme'
 import { useProjectStore } from '@/stores/project'
 import { useStatsStore } from '@/stores/stats'
 import { getStats } from '@/api/stats/getStats'
+import { getAccountId } from '@/utils/auth'
+import { checkDataVersion, updateLocalVersion } from '@/utils/version-check'
 import StatsOverview from './components/StatsOverview.vue'
 import WeekBarChart from './components/WeekBarChart.vue'
 import ProjectStatCard from './components/ProjectStatCard.vue'
@@ -45,19 +47,45 @@ async function loadStats() {
   const res = await getStats()
   if (res.success) {
     statsStore.setStats(res.data)
+    projectStore.markFresh()
   }
 }
 
 onShow(async () => {
   themeStore.applyTheme()
-  if (!statsStore.isLoaded() || !projectStore.isCacheValid()) {
+
+  if (!statsStore.isLoaded()) {
     await loadStats()
+    return
+  }
+
+  if (projectStore.isCacheValid()) return
+
+  const accountId = getAccountId()
+  if (!accountId) { await loadStats(); return }
+
+  const { needRefresh, version } = await checkDataVersion(accountId)
+  if (needRefresh) {
+    await loadStats()
+    updateLocalVersion(accountId, version)
+  } else {
+    projectStore.markFresh()
   }
 })
 
 onPullDownRefresh(async () => {
-  projectStore.markDirty()
-  await loadStats()
+  const accountId = getAccountId()
+  if (accountId) {
+    const { needRefresh, version } = await checkDataVersion(accountId)
+    if (needRefresh) {
+      await loadStats()
+      updateLocalVersion(accountId, version)
+    } else {
+      uni.showToast({ title: '已是最新', icon: 'none', duration: 1500 })
+    }
+  } else {
+    await loadStats()
+  }
   uni.stopPullDownRefresh()
 })
 </script>
