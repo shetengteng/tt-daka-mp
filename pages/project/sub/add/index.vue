@@ -127,11 +127,11 @@
 import { ref, reactive, computed } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
-import { createProject } from './api/createProject'
-import { updateProject } from './api/updateProject'
-import { deleteProject } from './api/deleteProject'
+import { createProject } from '@/api/project/createProject'
+import { updateProject } from '@/api/project/updateProject'
+import { deleteProject } from '@/api/project/deleteProject'
 import { goBack } from '@/route/index'
-import { getProjectById } from './api/getProjectById'
+import { getProjectById } from '@/api/project/getProjectById'
 
 const themeStore = useThemeStore()
 const { isDark, c } = themeStore

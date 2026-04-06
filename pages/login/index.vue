@@ -47,7 +47,7 @@ import { isLoggedIn, setAccountId, setLoginType } from '@/utils/auth'
 import { initEmas } from '@/cloud-emas/database/index'
 import { anonymousAuth } from '@/cloud-emas/database/api/anonymousAuth'
 import { wechatAuth } from '@/cloud-emas/database/api/wechatAuth'
-import { ensureUser } from '@/pages/mine/api/ensureUser'
+import { ensureUser } from '@/api/user/ensureUser'
 
 const agreed = ref(false)
 const loading = ref(false)

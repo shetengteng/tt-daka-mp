@@ -57,7 +57,7 @@ import { ref, computed } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { useProjectStore } from '@/stores/project'
-import { getRecordsByMonth } from './api/getRecordsByMonth'
+import { getRecordsByMonth } from '@/api/record/getRecordsByMonth'
 import { goToProjectDetail } from '@/route/index'
 import { dayjs, formatDate } from '@/utils/date'
 

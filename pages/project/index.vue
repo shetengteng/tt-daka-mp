@@ -80,10 +80,10 @@
 import { ref, computed, nextTick } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
-import { archiveProject } from './api/archiveProject'
-import { deleteProject } from '@/pages/project/sub/add/api/deleteProject'
-import { batchUpdateSort } from './api/batchUpdateSort'
-import { getActiveProjects } from './api/getActiveProjects'
+import { archiveProject } from '@/api/project/archiveProject'
+import { deleteProject } from '@/api/project/deleteProject'
+import { batchUpdateSort } from '@/api/project/batchUpdateSort'
+import { getActiveProjects } from '@/api/project/getActiveProjects'
 import { goToProjectEdit } from '@/route/index'
 
 const projects = ref([])

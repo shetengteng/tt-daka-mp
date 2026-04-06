@@ -5,7 +5,7 @@
 import { COLLECTIONS } from '@/cloud-emas/database/database'
 import { requireAccountId } from '@/utils/auth'
 import { formatDate, dayjs } from '@/utils/date'
-import { addPendingOp, getPendingCount } from '@/utils/pending-ops'
+import { addPendingOp } from '@/utils/pending-ops'
 import { useRecordStore } from '@/stores/record'
 import { debouncedSync } from '@/utils/sync-manager'
 
@@ -29,7 +29,6 @@ export async function toggleDaka(projectId, currentChecked) {
         data: { projectId, date: today },
       })
 
-      recordStore.pendingCount = getPendingCount(accountId)
       debouncedSync(accountId)
       return { success: true, action: 'cancel' }
     }
@@ -53,7 +52,6 @@ export async function toggleDaka(projectId, currentChecked) {
       data: record,
     })
 
-    recordStore.pendingCount = getPendingCount(accountId)
     debouncedSync(accountId)
     return { success: true, action: 'check', record }
   } catch (error) {

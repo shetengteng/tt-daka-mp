@@ -3,17 +3,36 @@
  * 负责将 PendingOps 队列批量同步到云端
  */
 
-import { getPendingOps, removePendingOp, savePendingOps } from './pending-ops'
+import { getPendingOps, removePendingOp, savePendingOps, getPendingCount } from './pending-ops'
 import { db, COLLECTIONS } from '@/cloud-emas/database/database'
 import { isQuotaError } from '@/cloud-emas/database/error'
 import { touchCloudVersion } from './version-check'
+import { useRecordStore } from '@/stores/record'
 
 let _syncing = false
 let _syncTimeout = null
+let _pollTimer = null
+const SYNC_DELAY = 30 * 1000
 
+/**
+ * 延迟同步：打卡后 30s 延迟触发，多次操作只保留最后一次计时
+ * 设计意图：积攒一段时间的操作后批量同步，减少 API 调用
+ */
 export function debouncedSync(accountId) {
   if (_syncTimeout) clearTimeout(_syncTimeout)
-  _syncTimeout = setTimeout(() => syncPendingOps(accountId), 300)
+  _syncTimeout = setTimeout(() => syncPendingOps(accountId), SYNC_DELAY)
+}
+
+export function startSyncPoll(accountId) {
+  stopSyncPoll()
+  if (!accountId) return
+  _pollTimer = setInterval(() => {
+    if (getPendingCount(accountId) > 0) syncPendingOps(accountId)
+  }, SYNC_DELAY)
+}
+
+export function stopSyncPoll() {
+  if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null }
 }
 
 export async function syncPendingOps(accountId) {
@@ -52,7 +71,9 @@ export async function syncPendingOps(accountId) {
     } catch (e) {
       if (isQuotaError(e)) {
         _syncing = false
-        return { synced: syncedCount, remaining: getPendingOps(accountId).length }
+        const r = getPendingCount(accountId)
+        try { useRecordStore().pendingCount = r } catch (_) {}
+        return { synced: syncedCount, remaining: r }
       }
       groupedOps.forEach(op => { op.retryCount++ })
       const remaining = groupedOps.filter(op => op.retryCount < 3)
@@ -90,7 +111,14 @@ export async function syncPendingOps(accountId) {
   }
 
   _syncing = false
-  return { synced: syncedCount, remaining: getPendingOps(accountId).length }
+
+  const remaining = getPendingCount(accountId)
+  try {
+    const recordStore = useRecordStore()
+    recordStore.pendingCount = remaining
+  } catch (e) {}
+
+  return { synced: syncedCount, remaining }
 }
 
 export function mergeOps(ops) {

@@ -58,8 +58,8 @@ import { clearUserCache } from '@/utils/local-store'
 import UserCard from './components/UserCard.vue'
 import ManageSection from './components/ManageSection.vue'
 import OtherSection from './components/OtherSection.vue'
-import { getMineStats } from './api/getMineStats'
-import { getUser } from './api/getUser'
+import { getMineStats } from '@/api/user/getMineStats'
+import { getUser } from '@/api/user/getUser'
 
 const projectStore = useProjectStore()
 const userStore = useUserStore()

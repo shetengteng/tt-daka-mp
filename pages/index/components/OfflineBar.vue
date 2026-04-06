@@ -11,7 +11,6 @@
 <script setup>
 import { syncPendingOps } from '@/utils/sync-manager'
 import { getAccountId } from '@/utils/auth'
-import { useRecordStore } from '@/stores/record'
 
 defineProps({ count: { type: Number, default: 0 } })
 
@@ -19,8 +18,6 @@ async function onSync() {
   const accountId = getAccountId()
   if (accountId) {
     await syncPendingOps(accountId)
-    const recordStore = useRecordStore()
-    recordStore.pendingCount = 0
   }
 }
 </script>

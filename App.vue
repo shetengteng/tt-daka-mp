@@ -6,7 +6,7 @@
 	import { initEmas } from '@/cloud-emas/database/index'
 	import { anonymousAuth } from '@/cloud-emas/database/api/anonymousAuth'
 	import { wechatAuth } from '@/cloud-emas/database/api/wechatAuth'
-	import { syncPendingOps } from '@/utils/sync-manager'
+	import { syncPendingOps, startSyncPoll, stopSyncPoll } from '@/utils/sync-manager'
 	import { getPendingCount } from '@/utils/pending-ops'
 	
 	export default {
@@ -32,11 +32,14 @@
 		},
 		onShow: function() {
 			const accountId = getAccountId()
-			if (accountId && getPendingCount(accountId) > 0) {
-				syncPendingOps(accountId)
+			if (accountId) {
+				if (getPendingCount(accountId) > 0) syncPendingOps(accountId)
+				startSyncPoll(accountId)
 			}
 		},
-		onHide: function() {}
+		onHide: function() {
+			stopSyncPoll()
+		}
 	}
 </script>
 

@@ -39,9 +39,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { archiveProject } from '../../api/archiveProject'
-import { getArchivedProjects } from './api/getArchivedProjects'
-import { deleteProject } from '../add/api/deleteProject'
+import { archiveProject } from '@/api/project/archiveProject'
+import { getArchivedProjects } from '@/api/project/getArchivedProjects'
+import { deleteProject } from '@/api/project/deleteProject'
 import { useThemeStore } from '@/stores/theme'
 
 const themeStore = useThemeStore()

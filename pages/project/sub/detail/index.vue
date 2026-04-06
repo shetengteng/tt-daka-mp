@@ -80,8 +80,8 @@
 import { ref, computed } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
-import { getProjectDetail } from './api/getProjectDetail'
-import { retroactiveDaka } from './api/retroactiveDaka'
+import { getProjectDetail } from '@/api/project/getProjectDetail'
+import { retroactiveDaka } from '@/api/record/retroactiveDaka'
 import { goToProjectEdit } from '@/route/index'
 import { dayjs, formatDate } from '@/utils/date'
 

@@ -50,7 +50,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import { updateUserProfile } from '../api/updateUserProfile'
+import { updateUserProfile } from '@/api/user/updateUserProfile'
 import { fileToBase64, isLocalFile, compressImage } from '@/utils/file'
 
 const props = defineProps({

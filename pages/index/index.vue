@@ -79,13 +79,13 @@ import { onShow, onPullDownRefresh } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { useProjectStore } from '@/stores/project'
 import { useRecordStore } from '@/stores/record'
-import { getProjectList } from './api/getProjectList'
-import { toggleDaka } from './api/toggleDaka'
+import { getProjectList } from '@/api/project/getProjectList'
+import { toggleDaka } from '@/api/record/toggleDaka'
 import { syncPendingOps } from '@/utils/sync-manager'
 import { getAccountId } from '@/utils/auth'
 import { checkDataVersion, updateLocalVersion } from '@/utils/version-check'
-import { archiveProject } from '@/pages/project/api/archiveProject'
-import { deleteProject } from '@/pages/project/sub/add/api/deleteProject'
+import { archiveProject } from '@/api/project/archiveProject'
+import { deleteProject } from '@/api/project/deleteProject'
 import { goToProjectAdd, goToProjectDetail, goToProjectEdit } from '@/route/index'
 import DakaCard from './components/DakaCard.vue'
 import DakaHeader from './components/DakaHeader.vue'
@@ -140,26 +140,43 @@ const actionSheetItems = [
 
 onShow(async () => {
   themeStore.applyTheme()
-  if (!projectStore.isCacheValid()) {
-    loadData()
+
+  if (projectStore.list.length === 0) {
+    await loadData()
+    return
+  }
+
+  if (projectStore.isCacheValid()) return
+
+  const accountId = getAccountId()
+  if (!accountId) { await loadData(); return }
+
+  const { needRefresh, version } = await checkDataVersion(accountId)
+  if (needRefresh) {
+    await loadData()
+    updateLocalVersion(accountId, version)
   } else {
-    const accountId = getAccountId()
-    if (accountId) {
-      const { needRefresh, version } = await checkDataVersion(accountId)
-      if (needRefresh) {
-        await loadData()
-        updateLocalVersion(accountId, version)
-      }
-    }
+    projectStore.markFresh()
+    recordStore.markFresh()
   }
 })
 
 onPullDownRefresh(async () => {
   const accountId = getAccountId()
-  if (accountId) await syncPendingOps(accountId)
-  projectStore.markDirty()
-  recordStore.markDirty()
-  await loadData()
+  if (accountId) {
+    await syncPendingOps(accountId)
+    const { needRefresh, version } = await checkDataVersion(accountId)
+    if (needRefresh) {
+      projectStore.markDirty()
+      recordStore.markDirty()
+      await loadData()
+      updateLocalVersion(accountId, version)
+    } else {
+      uni.showToast({ title: '已是最新', icon: 'none', duration: 1500 })
+    }
+  } else {
+    await loadData()
+  }
   uni.stopPullDownRefresh()
 })
 
