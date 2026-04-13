@@ -9,7 +9,7 @@
         <view class="edit-avatar-section flex-col flex-center">
           <view class="edit-avatar flex-center rounded-full" @click="onChooseAvatarFallback">
             <image v-if="localAvatar" class="edit-avatar-img rounded-full" :src="localAvatar" mode="aspectFill" />
-            <TtSvg v-else name="ri-user-fill" :size="48" color="#ffffff" />
+            <tt-icon v-else name="ri-user-fill" :size="48" color="#ffffff" />
           </view>
           <!-- #ifdef MP-WEIXIN -->
           <button class="choose-avatar-btn" open-type="chooseAvatar" @chooseavatar="onChooseAvatar">
@@ -31,7 +31,7 @@
           </view>
           <!-- #endif -->
           <!-- #ifndef MP-WEIXIN -->
-          <TtInput v-model="localNickname" placeholder="请输入昵称" :maxlength="20" />
+          <tt-input v-model="localNickname" placeholder="请输入昵称" :maxlength="20" clearable />
           <!-- #endif -->
         </view>
       </view>

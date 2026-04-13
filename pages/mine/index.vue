@@ -13,7 +13,7 @@
       <view class="card overflow-hidden">
         <view class="list-item flex-between p-lg">
           <text class="text-sm text-foreground">深色模式</text>
-          <TtSwitch v-model="darkMode" />
+          <tt-switch v-model="darkMode" />
         </view>
       </view>
     </view>
@@ -31,13 +31,14 @@
       <text class="text-xs" style="color: #D4D4D8">v1.0.0</text>
     </view>
     
-    <TtBottomPlaceholder />
     <TtTabbar current="mine" />
     
-    <TtDialog
-      v-model:visible="showLogoutDialog"
+    <tt-dialog
+      v-model:show="showLogoutDialog"
       title="退出登录"
       message="退出后需要重新登录，确定退出吗？"
+      confirm-text="确定"
+      cancel-text="取消"
       @confirm="onLogoutConfirm"
     />
   </view>

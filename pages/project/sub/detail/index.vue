@@ -4,7 +4,7 @@
     <!-- 项目信息 -->
     <view v-if="project" class="project-header flex-col flex-center mt-lg mb-xl">
       <view class="big-icon flex-center rounded-xl" :style="{ backgroundColor: `${project.color}20` }">
-        <TtSvg :name="project.icon || 'ri-checkbox-circle-line'" :size="64" :color="project.color" />
+        <tt-icon :name="project.icon || 'ri-checkbox-circle-line'" :size="64" :color="project.color" />
       </view>
       <view class="edit-btn mt-sm" @click="goToProjectEdit(projectId)">
         <text class="text-xs text-muted">编辑</text>
@@ -67,10 +67,12 @@
     
     <view class="pb-xl"></view>
     
-    <TtDialog
-      v-model:visible="showRetroDialog"
+    <tt-dialog
+      v-model:show="showRetroDialog"
       title="补打卡"
       :message="`确定补打卡 ${retroDate} 吗？`"
+      confirm-text="确定"
+      cancel-text="取消"
       @confirm="onRetroConfirm"
     />
   </view>

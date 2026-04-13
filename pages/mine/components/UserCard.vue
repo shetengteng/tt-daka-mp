@@ -2,13 +2,13 @@
   <view class="user-card card flex-center-v mt-lg" @click="onCardClick">
     <view class="avatar flex-center rounded-full">
       <image v-if="userStore.avatar" class="avatar-img rounded-full" :src="userStore.avatar" mode="aspectFill" />
-      <TtSvg v-else name="ri-user-fill" :size="56" color="#ffffff" />
+      <tt-icon v-else name="ri-user-fill" :size="56" color="#ffffff" />
     </view>
     <view class="user-info flex-1">
       <text class="text-lg font-semibold text-foreground">{{ userStore.nickname }}</text>
       <text class="text-sm text-muted block">已坚持打卡 {{ userStore.totalDays }} 天</text>
     </view>
-    <TtSvg v-if="editable" name="ri-arrow-right-s-line" :size="32" color="#71717A" />
+    <tt-icon v-if="editable" name="ri-arrow-right-s-line" :size="32" color="#71717A" />
   </view>
 
   <ProfileEditor

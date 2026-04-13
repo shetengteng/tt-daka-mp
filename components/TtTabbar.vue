@@ -1,46 +1,24 @@
 <template>
-  <view class="tt-tabbar" :style="{ paddingBottom: safeBottom + 'px' }">
-    <view 
-      v-for="item in tabList" 
-      :key="item.name"
-      class="tt-tabbar__item"
-      :class="{ 'tt-tabbar__item--active': current === item.name }"
-      @click="onChange(item.name)"
-    >
-      <TtSvg 
-        :name="current === item.name ? item.selectedIcon : item.icon" 
-        :size="40" 
-        :color="current === item.name ? activeColor : inactiveColor"
-      />
-      <text class="tt-tabbar__text">{{ item.text }}</text>
-    </view>
-  </view>
+  <tt-tabbar
+    :model-value="current"
+    :items="tabList"
+    :active-color="activeColor"
+    :inactive-color="inactiveColor"
+    @change="onChange"
+  />
 </template>
 
-<script>
-export default {
-  options: { virtualHost: true, styleIsolation: 'shared' }
-}
-</script>
-
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useThemeStore } from '@/stores/theme'
 
-const props = defineProps({
+defineProps({
   current: { type: String, default: 'home' }
 })
 
 const themeStore = useThemeStore()
-const safeBottom = ref(0)
-
 const activeColor = computed(() => themeStore.mode === 'dark' ? '#FAFAFA' : '#09090B')
 const inactiveColor = computed(() => themeStore.mode === 'dark' ? '#A1A1AA' : '#71717A')
-
-onMounted(() => {
-  const info = uni.getSystemInfoSync()
-  safeBottom.value = info.safeAreaInsets?.bottom || 0
-})
 
 const tabList = [
   { name: 'home', text: '打卡', icon: 'ri-checkbox-circle-line', selectedIcon: 'ri-checkbox-circle-fill', path: '/pages/index/index' },
@@ -49,43 +27,7 @@ const tabList = [
   { name: 'mine', text: '我的', icon: 'ri-user-line', selectedIcon: 'ri-user-fill', path: '/pages/mine/index' },
 ]
 
-const onChange = (name) => {
-  if (name !== props.current) {
-    const tab = tabList.find(item => item.name === name)
-    if (tab) uni.redirectTo({ url: tab.path })
-  }
+function onChange(item) {
+  if (item.path) uni.redirectTo({ url: item.path })
 }
 </script>
-
-<style lang="scss" scoped>
-.tt-tabbar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100rpx;
-  background: var(--tt-background, #ffffff);
-  border-top: 1rpx solid var(--tt-border, #E4E4E7);
-  display: flex;
-  align-items: flex-start;
-  padding-top: 12rpx;
-  z-index: 999;
-
-  &__item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4rpx;
-    color: var(--tt-muted-foreground, #71717A);
-
-    &--active {
-      color: var(--tt-foreground, #09090B);
-    }
-  }
-
-  &__text {
-    font-size: 20rpx;
-  }
-}
-</style>

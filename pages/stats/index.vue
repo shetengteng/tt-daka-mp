@@ -19,7 +19,6 @@
       </view>
     </view>
     
-    <TtBottomPlaceholder />
     <TtTabbar current="stats" />
   </view>
 </template>

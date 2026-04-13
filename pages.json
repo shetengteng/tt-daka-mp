@@ -2,6 +2,7 @@
 	"easycom": {
 		"autoscan": true,
 		"custom": {
+			"^tt-(.*)": "@/uni_modules/tt-shaduni/components/tt-$1/tt-$1.vue",
 			"^Tt(.*)": "@/components/Tt$1.vue"
 		}
 	},

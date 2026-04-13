@@ -10,7 +10,7 @@
       <view class="daka-card__info">
         <view class="daka-card__header flex-center-v">
           <view class="daka-card__icon flex-center rounded-xl" :style="iconBgStyle">
-            <TtSvg :name="project?.icon || 'ri-checkbox-circle-line'" :size="36" :color="iconColor" />
+            <tt-icon :name="project?.icon || 'ri-checkbox-circle-line'" :size="36" :color="iconColor" />
           </view>
           <view class="ml-md">
             <text class="daka-card__name font-semibold text-base" :style="{ color: nameColor }">{{ project?.name }}</text>
@@ -22,11 +22,11 @@
       </view>
       <view class="daka-card__action" @click.stop="onToggle">
         <view v-if="checked" class="daka-btn daka-btn--checked flex-center rounded-lg">
-          <TtSvg name="ri-check-line" :size="28" color="#ffffff" />
+          <tt-icon name="ri-check-line" :size="28" color="#ffffff" />
           <text class="text-xs text-white ml-xs font-medium">已打卡</text>
         </view>
         <view v-else class="daka-btn daka-btn--unchecked flex-center rounded-lg">
-          <TtSvg name="ri-checkbox-blank-circle-line" :size="28" :color="c.fg" />
+          <tt-icon name="ri-checkbox-blank-circle-line" :size="28" :color="c.fg" />
           <text class="text-xs ml-xs font-medium text-foreground">打卡</text>
         </view>
       </view>

@@ -11,7 +11,7 @@
         @click="goToProjectDetail(item.project._id)"
       >
         <view class="detail-bar" :style="{ backgroundColor: item.record ? '#22C55E' : 'transparent' }"></view>
-        <TtSvg :name="item.project.icon || 'ri-checkbox-circle-line'" :size="32" :color="item.project.color" class="ml-sm" />
+        <tt-icon :name="item.project.icon || 'ri-checkbox-circle-line'" :size="32" :color="item.project.color" class="ml-sm" />
         <text class="text-sm font-medium text-foreground flex-1 ml-md">{{ item.project.name }}</text>
         <text class="text-xs" :style="{ color: item.record ? '#71717A' : '#D4D4D8' }">
           {{ item.record ? formatTime(item.record.completedAt) + ' 打卡' : '未打卡' }}

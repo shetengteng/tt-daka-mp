@@ -23,10 +23,10 @@
       <!-- 空状态 -->
       <view v-if="!loading && activeProjects.length === 0" class="empty-state flex-col flex-center">
         <view class="empty-state__icon flex-center rounded-xl">
-          <TtSvg name="ri-checkbox-circle-line" :size="48" color="#D4D4D8" />
+          <tt-icon name="ri-checkbox-circle-line" :size="48" color="#D4D4D8" />
         </view>
         <text class="text-sm text-muted mt-md">还没有打卡项目</text>
-        <TtButton text="+ 创建打卡项目" type="primary" class="mt-lg" @click="goAdd" />
+        <tt-button variant="default" class="mt-lg" @click="goAdd">+ 创建打卡项目</tt-button>
       </view>
       
       <!-- 新建按钮 -->
@@ -35,36 +35,40 @@
         class="add-btn flex-center rounded-xl mt-md"
         @click="goAdd"
       >
-        <TtSvg name="ri-add-line" :size="28" color="#71717A" />
+        <tt-icon name="ri-add-line" :size="28" color="#71717A" />
         <text class="text-sm text-muted ml-xs">新建打卡项目</text>
       </view>
       
       <text v-if="activeProjects.length > 0" class="text-xs text-muted block text-center mt-sm mb-lg" style="opacity:0.6">长按卡片可编辑、归档或删除</text>
     </view>
     
-    <TtBottomPlaceholder />
     <TtTabbar current="home" />
     
     <!-- 操作菜单 -->
-    <TtActionSheet
-      v-model:visible="showActionSheet"
-      :items="actionSheetItems"
+    <tt-action-sheet
+      v-model:show="showActionSheet"
+      :actions="actionSheetActions"
+      cancel-text="取消"
       @select="onActionSelect"
     />
     
     <!-- 确认取消打卡 -->
-    <TtDialog
-      v-model:visible="showCancelDialog"
+    <tt-dialog
+      v-model:show="showCancelDialog"
       title="取消打卡"
       message="确定取消今天的打卡记录吗？"
+      confirm-text="确定"
+      cancel-text="取消"
       @confirm="confirmCancelDaka"
     />
     
     <!-- 确认删除项目 -->
-    <TtDialog
-      v-model:visible="showDeleteDialog"
+    <tt-dialog
+      v-model:show="showDeleteDialog"
       title="删除项目"
       message="删除后所有打卡记录将一并删除，且不可恢复。"
+      confirm-text="确定"
+      cancel-text="取消"
       @confirm="confirmDeleteProject"
     />
   </view>
@@ -106,10 +110,10 @@ const currentActionId = ref('')
 const activeProjects = computed(() => projectStore.activeList)
 const todayProgress = computed(() => recordStore.todayProgress)
 
-const actionSheetItems = [
-  { label: '编辑', value: 'edit' },
-  { label: '归档', value: 'archive' },
-  { label: '删除', value: 'delete', color: '#EF4444' },
+const actionSheetActions = [
+  { name: '编辑', value: 'edit' },
+  { name: '归档', value: 'archive' },
+  { name: '删除', value: 'delete', color: '#EF4444' },
 ]
 
 onShow(async () => {

@@ -2,7 +2,7 @@
   <view v-if="count > 0" class="offline-bar mx-xl mt-sm mb-sm px-lg py-sm rounded-lg flex-between">
     <view class="flex-center-v gap-xs">
       <view class="icon-wrap flex-center">
-        <TtSvg name="ri-cloud-off-line" :size="32" color="#F59E0B" />
+        <tt-icon name="ri-cloud-off-line" :size="32" color="#F59E0B" />
       </view>
       <text class="text-xs" style="color: #F59E0B">{{ count }} 条记录待同步</text>
     </view>

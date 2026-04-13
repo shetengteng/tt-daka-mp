@@ -15,7 +15,6 @@
     <DayDetail />
     <MonthStats />
     
-    <TtBottomPlaceholder />
     <TtTabbar current="calendar" />
   </view>
 </template>

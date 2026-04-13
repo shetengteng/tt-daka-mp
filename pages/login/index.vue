@@ -4,7 +4,7 @@
       <!-- 品牌区域 -->
       <view class="brand flex-col flex-center">
         <view class="brand__icon flex-center rounded-2xl">
-          <TtSvg name="ri-checkbox-circle-line" :size="80" color="#ffffff" />
+          <tt-icon name="ri-checkbox-circle-line" :size="80" color="#ffffff" />
         </view>
         <text class="brand__title">DaKa</text>
         <text class="text-sm text-muted mt-xs">坚持每一天的好习惯</text>
@@ -23,7 +23,7 @@
 
         <!-- #ifdef MP-WEIXIN -->
         <button class="wechat-btn flex-center" :disabled="loading" @click="handleWechatLogin">
-          <TtSvg name="ri-wechat-fill" :size="36" color="#ffffff" />
+          <tt-icon name="ri-wechat-fill" :size="36" color="#ffffff" />
           <text class="wechat-btn__text">{{ loading ? '登录中...' : '微信一键登录' }}</text>
         </button>
         <!-- #endif -->

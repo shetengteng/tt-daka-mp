@@ -4,7 +4,7 @@
     <!-- 项目名称 -->
     <view class="section">
       <text class="text-xs text-muted mb-sm block">项目名称</text>
-      <TtInput v-model="form.name" placeholder="请输入打卡名称" :maxlength="20" />
+      <tt-input v-model="form.name" placeholder="请输入打卡名称" :maxlength="20" clearable />
     </view>
     
     <!-- 选择图标 -->
@@ -22,7 +22,7 @@
             :class="{ 'icon-box--active': form.icon === item.icon }"
             :style="iconBoxStyle(item.icon)"
           >
-            <TtSvg :name="item.icon" :size="36" :color="iconSvgColor(item.icon)" />
+            <tt-icon :name="item.icon" :size="36" :color="iconSvgColor(item.icon)" />
           </view>
         </view>
       </view>
@@ -52,15 +52,15 @@
       <text class="text-xs text-muted mb-sm block">打卡频率</text>
       <view class="card overflow-hidden">
         <view class="freq-item border-b flex-center-v" @click="form.frequency = 'daily'">
-          <TtRadio :checked="form.frequency === 'daily'" />
+          <tt-radio :model-value="form.frequency === 'daily'" />
           <text class="text-sm ml-md text-foreground">每天</text>
         </view>
         <view class="freq-item border-b flex-center-v" @click="form.frequency = 'weekday'">
-          <TtRadio :checked="form.frequency === 'weekday'" />
+          <tt-radio :model-value="form.frequency === 'weekday'" />
           <text class="text-sm ml-md text-foreground">工作日（周一至周五）</text>
         </view>
         <view class="freq-item flex-center-v" @click="form.frequency = 'custom'">
-          <TtRadio :checked="form.frequency === 'custom'" />
+          <tt-radio :model-value="form.frequency === 'custom'" />
           <text class="text-sm ml-md text-foreground">自定义</text>
         </view>
       </view>
@@ -87,7 +87,7 @@
             <view class="preview-body flex-between flex-1 p-lg">
             <view class="flex-center-v">
               <view class="preview-icon flex-center rounded-xl" :style="{ backgroundColor: `${form.color}20` }">
-                <TtSvg :name="form.icon" :size="36" :color="form.color" />
+                <tt-icon :name="form.icon" :size="36" :color="form.color" />
               </view>
               <view class="ml-md">
                 <text class="text-base font-semibold text-foreground">{{ form.name || '打卡名称' }}</text>
@@ -106,18 +106,20 @@
     
     <!-- 底部保存 -->
     <view class="save-section mt-lg" :class="{ 'mb-xl': !isEdit }">
-      <TtButton :text="saving ? '保存中...' : (isEdit ? '保存修改' : '创建项目')" type="primary" block @click="onSave" />
+      <tt-button variant="default" block :loading="saving" @click="onSave">{{ saving ? '保存中...' : (isEdit ? '保存修改' : '创建项目') }}</tt-button>
     </view>
     
     <!-- 删除按钮（编辑模式） -->
     <view v-if="isEdit" class="mt-md mb-xl">
-      <TtButton text="删除此打卡项目" type="danger-text" @click="onDelete" />
+      <tt-button variant="ghost" @click="onDelete"><text style="color: var(--tt-destructive, #EF4444)">删除此打卡项目</text></tt-button>
     </view>
     
-    <TtDialog
-      v-model:visible="showDeleteDialog"
+    <tt-dialog
+      v-model:show="showDeleteDialog"
       title="删除项目"
       message="删除后所有打卡记录将一并删除，且不可恢复。"
+      confirm-text="确定"
+      cancel-text="取消"
       @confirm="confirmDelete"
     />
   </view>
@@ -164,9 +166,13 @@ const iconPresets = [
   { icon: 'ri-book-open-line', label: '阅读' },
   { icon: 'ri-sun-line', label: '早起' },
   { icon: 'ri-drop-line', label: '喝水' },
+  { icon: 'ri-cup-line', label: '饮品' },
   { icon: 'ri-graduation-cap-line', label: '学习' },
+  { icon: 'ri-translate-2', label: '英语' },
   { icon: 'ri-mental-health-line', label: '冥想' },
   { icon: 'ri-edit-line', label: '写作' },
+  { icon: 'ri-quill-pen-line', label: '日记' },
+  { icon: 'ri-music-2-line', label: '音乐' },
   { icon: 'ri-footprint-line', label: '跑步' },
   { icon: 'ri-heart-pulse-line', label: '健身' },
   { icon: 'ri-restaurant-line', label: '饮食' },

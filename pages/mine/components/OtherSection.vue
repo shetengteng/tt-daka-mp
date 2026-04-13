@@ -4,31 +4,33 @@
     <view class="card overflow-hidden">
       <view class="list-item flex-between p-lg" @click="onRefreshCache">
         <text class="text-sm text-foreground">刷新缓存</text>
-        <TtSvg name="ri-arrow-right-s-line" :size="32" color="#71717A" />
+        <tt-icon name="ri-arrow-right-s-line" :size="32" color="#71717A" />
       </view>
       <view class="list-item flex-between p-lg" @click="showAbout = true">
         <text class="text-sm text-foreground">关于 DaKa</text>
-        <TtSvg name="ri-arrow-right-s-line" :size="32" color="#71717A" />
+        <tt-icon name="ri-arrow-right-s-line" :size="32" color="#71717A" />
       </view>
       <view class="list-item flex-between p-lg" @click="goToPrivacy()">
         <text class="text-sm text-foreground">隐私政策</text>
-        <TtSvg name="ri-arrow-right-s-line" :size="32" color="#71717A" />
+        <tt-icon name="ri-arrow-right-s-line" :size="32" color="#71717A" />
       </view>
     </view>
   </view>
 
-  <TtDialog
-    v-model:visible="showAbout"
+  <tt-dialog
+    v-model:show="showAbout"
     title="关于 DaKa"
     :message="aboutMessage"
-    :showCancel="false"
-    confirmText="知道了"
+    :show-cancel-button="false"
+    confirm-text="知道了"
   />
 
-  <TtDialog
-    v-model:visible="showRefreshDialog"
+  <tt-dialog
+    v-model:show="showRefreshDialog"
     title="刷新缓存"
     message="将重新从云端拉取最新数据，确定刷新吗？"
+    confirm-text="确定"
+    cancel-text="取消"
     @confirm="onRefreshConfirm"
   />
 </template>

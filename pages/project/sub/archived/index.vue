@@ -5,7 +5,7 @@
       <view class="flex-between px-md py-md">
         <view class="flex-center-v flex-1 min-w-0">
           <view class="item-icon flex-center rounded-sm" :style="{ backgroundColor: `${item.color}15` }">
-            <TtSvg :name="item.icon || 'ri-checkbox-circle-line'" :size="32" :color="item.color" />
+            <tt-icon :name="item.icon || 'ri-checkbox-circle-line'" :size="32" :color="item.color" />
           </view>
           <view class="ml-sm flex-1 min-w-0">
             <text class="text-base font-medium truncate block text-foreground">{{ item.name }}</text>
@@ -25,13 +25,15 @@
     </view>
     
     <view v-if="archivedProjects.length === 0" class="text-center py-xl">
-      <TtEmpty description="没有归档的项目" />
+      <tt-empty description="没有归档的项目" />
     </view>
     
-    <TtDialog
-      v-model:visible="showDeleteDialog"
+    <tt-dialog
+      v-model:show="showDeleteDialog"
       title="永久删除"
       message="删除后所有打卡记录将一并删除，且不可恢复。"
+      confirm-text="确定"
+      cancel-text="取消"
       @confirm="confirmDelete"
     />
   </view>

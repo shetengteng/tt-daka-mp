@@ -3,11 +3,11 @@
     <!-- 月份导航 -->
     <view class="tt-cal__nav">
       <view class="tt-cal__arrow" @click="prevMonth">
-        <TtSvg name="ri-arrow-left-s-line" :size="36" color="#71717A" />
+        <tt-icon name="ri-arrow-left-s-line" :size="36" color="#71717A" />
       </view>
       <text class="tt-cal__month">{{ monthLabel }}</text>
       <view class="tt-cal__arrow" @click="nextMonth">
-        <TtSvg name="ri-arrow-right-s-line" :size="36" color="#71717A" />
+        <tt-icon name="ri-arrow-right-s-line" :size="36" color="#71717A" />
       </view>
     </view>
 

@@ -1,0 +1,57 @@
+{
+  "id": "tt-shaduni",
+  "displayName": "TT ShadUni",
+  "version": "1.0.0",
+  "description": "A shadcn-style UniApp component library",
+  "keywords": [
+    "uniapp",
+    "vue3",
+    "shadcn",
+    "component-library"
+  ],
+  "repository": "https://github.com/shetengteng/tt-shaduni",
+  "engines": {
+    "HBuilderX": "^3.6.0"
+  },
+  "dcloudext": {
+    "category": [
+      "前端组件-通用UI组件"
+    ],
+    "sale": {
+      "regular": {
+        "price": "0.00"
+      }
+    },
+    "contact": {
+      "qq": ""
+    }
+  },
+  "uni_modules": {
+    "dependencies": [],
+    "encrypt": [],
+    "platforms": {
+      "cloud": {
+        "tcb": "y",
+        "aliyun": "y"
+      },
+      "client": {
+        "Vue": {
+          "vue3": "y"
+        },
+        "App": {
+          "app-vue": "y"
+        },
+        "H5-mobile": {
+          "Safari": "y",
+          "Android": "y"
+        },
+        "MP-WEIXIN": {
+          "y": "y"
+        },
+        "MP-ALIPAY": {
+          "y": "y"
+        }
+      }
+    }
+  }
+}

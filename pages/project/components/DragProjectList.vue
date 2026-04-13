@@ -1,5 +1,5 @@
 <template>
-  <TtDrag
+  <tt-drag
     v-if="dragList.length > 0"
     v-model="dragList"
     mode="single"
@@ -13,11 +13,11 @@
       <view v-if="slotProps && slotProps.item" class="project-item flex-between px-md py-md">
         <view class="flex-center-v flex-1 min-w-0">
           <view class="drag-handle flex-center mr-sm">
-            <TtSvg name="ri-more-2-fill" :size="28" color="#D4D4D8" />
+            <tt-icon name="ri-more-2-fill" :size="28" color="#D4D4D8" />
           </view>
           <view class="flex-center-v flex-1 min-w-0">
             <view class="item-icon flex-center rounded-sm" :style="{ backgroundColor: `${slotProps.item.color}15` }">
-              <TtSvg :name="slotProps.item.icon || 'ri-checkbox-circle-line'" :size="32" :color="slotProps.item.color" />
+              <tt-icon :name="slotProps.item.icon || 'ri-checkbox-circle-line'" :size="32" :color="slotProps.item.color" />
             </view>
             <view class="flex-col ml-sm flex-1 min-w-0">
               <text class="text-base font-medium truncate text-foreground">{{ slotProps.item.name }}</text>
@@ -28,38 +28,42 @@
         
         <view class="flex-center-v">
           <view class="action-btn flex-center rounded-md" @click.stop="onEdit(slotProps.item._id)">
-            <TtSvg name="ri-edit-line" :size="28" color="#737373" />
+            <tt-icon name="ri-edit-line" :size="28" color="#737373" />
           </view>
           <view class="action-btn flex-center rounded-md ml-xs" @click.stop="onArchive(slotProps.item._id)">
-            <TtSvg name="ri-archive-line" :size="28" color="#737373" />
+            <tt-icon name="ri-archive-line" :size="28" color="#737373" />
           </view>
           <view class="action-btn flex-center rounded-md ml-xs" @click.stop="onDelete(slotProps.item._id)">
-            <TtSvg name="ri-delete-bin-line" :size="28" color="#EF4444" />
+            <tt-icon name="ri-delete-bin-line" :size="28" color="#EF4444" />
           </view>
         </view>
       </view>
     </template>
-  </TtDrag>
+  </tt-drag>
   
   <view v-if="dragList.length === 0" class="text-center py-xl">
-    <TtEmpty description="暂无打卡项目" />
+    <tt-empty description="暂无打卡项目" />
   </view>
   
   <view v-if="dragList.length > 1" class="text-center mt-md mb-lg">
     <text class="text-xs text-muted">长按拖拽调整顺序</text>
   </view>
   
-  <TtDialog
-    v-model:visible="showArchiveDialog"
+  <tt-dialog
+    v-model:show="showArchiveDialog"
     title="归档项目"
     message="归档后项目将不在首页显示，可在「已归档项目」中恢复。"
+    confirm-text="确定"
+    cancel-text="取消"
     @confirm="onArchiveConfirm"
   />
   
-  <TtDialog
-    v-model:visible="showDeleteDialog"
+  <tt-dialog
+    v-model:show="showDeleteDialog"
     title="删除项目"
     message="删除后所有打卡记录将一并删除，且不可恢复。"
+    confirm-text="确定"
+    cancel-text="取消"
     @confirm="onDeleteConfirm"
   />
 </template>
@@ -68,7 +72,6 @@
 import { ref, watch } from 'vue'
 import { useProjectStore } from '@/stores/project'
 import { goToProjectEdit } from '@/route/index'
-import TtDrag from '@/components/TtDrag.vue'
 
 const projectStore = useProjectStore()
 
