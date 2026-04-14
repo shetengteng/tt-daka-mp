@@ -126,6 +126,10 @@ function onToggle() {
   }
 }
 
+.daka-card__action :deep(.tt-button) {
+  border-radius: 16rpx;
+}
+
 .daka-btn--checked {
   background-color: #22C55E !important;
 }

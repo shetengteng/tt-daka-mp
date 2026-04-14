@@ -105,4 +105,7 @@ const greeting = computed(() => {
   margin-top: -2rpx;
 }
 
+.progress-section :deep(.tt-progress__bar) {
+  background: var(--tt-border, #E4E4E7);
+}
 </style>
