@@ -2,7 +2,7 @@
  * 获取"我的"页面统计数据
  * 2 次请求：records + projects（客户端分组计数）
  */
-import { db, COLLECTIONS } from '@/cloud-emas/database/database'
+import { db, COLLECTIONS } from '@/api/emas'
 import { requireAccountId } from '@/utils/auth'
 
 export async function getMineStats() {

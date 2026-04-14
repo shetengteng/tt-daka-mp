@@ -43,9 +43,7 @@ import { onLoad } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { DEV_MODE, TEST_ACCOUNT_ID } from '@/config/index'
 import { isLoggedIn, setAccountId, setLoginType } from '@/utils/auth'
-import { initEmas } from '@/cloud-emas/database/index'
-import { anonymousAuth } from '@/cloud-emas/database/api/anonymousAuth'
-import { wechatAuth } from '@/cloud-emas/database/api/wechatAuth'
+import { initEmas, anonymousAuth, wechatAuth } from '@/api/emas'
 import { useUserStore } from '@/stores/user'
 
 const agreed = ref(false)

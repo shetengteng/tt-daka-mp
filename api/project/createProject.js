@@ -1,7 +1,7 @@
 /**
  * 创建打卡项目
  */
-import { db, COLLECTIONS } from '@/cloud-emas/database/database'
+import { db, COLLECTIONS } from '@/api/emas'
 import { requireAccountId } from '@/utils/auth'
 import { dayjs } from '@/utils/date'
 

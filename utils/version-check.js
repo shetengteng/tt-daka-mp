@@ -3,7 +3,7 @@
  * 使用时间戳作为乐观锁，cloudVersion > localVersion 则需刷新
  */
 
-import { db, COLLECTIONS } from '@/cloud-emas/database/database'
+import { db, COLLECTIONS } from '@/api/emas'
 import { getLocal, setLocal, getStoreKey } from './local-store'
 
 export async function checkDataVersion(accountId) {

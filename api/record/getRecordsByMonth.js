@@ -1,7 +1,7 @@
 /**
  * 按月查询所有项目打卡记录
  */
-import { db, COLLECTIONS, dbCmd } from '@/cloud-emas/database/database'
+import { db, COLLECTIONS, dbCmd } from '@/api/emas'
 import { requireAccountId } from '@/utils/auth'
 import { getDateRange } from '@/utils/date'
 import { setLocal, getLocal, getStoreKey } from '@/utils/local-store'

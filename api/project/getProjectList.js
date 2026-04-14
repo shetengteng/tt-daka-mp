@@ -1,7 +1,7 @@
 /**
  * 获取用户所有活跃打卡项目 + 今日打卡状态
  */
-import { db, COLLECTIONS, dbCmd } from '@/cloud-emas/database/database'
+import { db, COLLECTIONS, dbCmd } from '@/api/emas'
 import { requireAccountId } from '@/utils/auth'
 import { formatDate } from '@/utils/date'
 import { useProjectStore } from '@/stores/project'

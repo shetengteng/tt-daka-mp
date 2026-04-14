@@ -20,7 +20,7 @@ const emit = defineEmits();
 </script>
 
 <style>
-.tt-cell { display: flex; align-items: center; justify-content: space-between; padding: 24rpx 32rpx; background: var(--tt-background, #ffffff); }
+.tt-cell { display: flex; align-items: center; justify-content: space-between; padding: 24rpx 32rpx; background: var(--tt-cell-bg, var(--tt-background, #ffffff)); }
 .tt-cell--border { border-bottom: 2rpx solid var(--tt-border, #e5e5e5); }
 .tt-cell--link { cursor: pointer; }
 .tt-cell__left { display: flex; align-items: center; gap: 20rpx; flex: 1; min-width: 0; }

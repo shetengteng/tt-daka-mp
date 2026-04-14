@@ -9,7 +9,7 @@
  * 匿名/开发模式：
  * 用 accountId 查找，无则创建
  */
-import { db, COLLECTIONS } from '@/cloud-emas/database/database'
+import { db, COLLECTIONS } from '@/api/emas'
 import { requireAccountId, setAccountId } from '@/utils/auth'
 
 export async function ensureUser(extra = {}) {

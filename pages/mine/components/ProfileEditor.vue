@@ -133,8 +133,10 @@ async function onSave() {
 
 <style lang="scss" scoped>
 .edit-panel {
-  width: 600rpx;
+  width: 80vw;
+  max-width: 600rpx;
   padding: 40rpx;
+  box-sizing: border-box;
 }
 
 .edit-panel__header {

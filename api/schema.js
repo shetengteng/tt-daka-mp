@@ -1,6 +1,5 @@
 /**
  * 数据库集合常量和类型定义
- * @module cloud-emas/database/schema
  */
 
 export const COLLECTIONS = {
@@ -13,11 +12,11 @@ export const COLLECTIONS = {
  * @typedef {Object} DakaUser
  * @property {string} _id
  * @property {string} accountId
- * @property {string} [openid] - 微信 openid，用于重新登录时匹配账号
+ * @property {string} [openid]
  * @property {string} nickname
  * @property {string} avatar
  * @property {string} loginType - wechat / anonymous
- * @property {number} [dataVersion] - 数据版本号（时间戳），每次写操作同步成功后更新
+ * @property {number} [dataVersion]
  * @property {string} createTime
  * @property {string} updateTime
  */

@@ -4,8 +4,7 @@
  */
 
 import { getPendingOps, removePendingOp, savePendingOps, getPendingCount } from './pending-ops'
-import { db, COLLECTIONS } from '@/cloud-emas/database/database'
-import { isQuotaError } from '@/cloud-emas/database/error'
+import { db, COLLECTIONS, isQuotaError } from '@/api/emas'
 import { touchCloudVersion } from './version-check'
 import { useRecordStore } from '@/stores/record'
 import { useProjectStore } from '@/stores/project'

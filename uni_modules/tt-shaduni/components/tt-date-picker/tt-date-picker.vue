@@ -30,7 +30,7 @@ const props = defineProps(datePickerProps);
 const emit = defineEmits(["update:modelValue", "update:show", "confirm"]);
 const L = {
   en: { cancel: "Cancel", confirm: "Confirm", title: "Select Date", yearFmt: (y) => `${y}`, monthFmt: (m) => pad(m), dayFmt: (d) => pad(d) },
-  zh: { cancel: "\u53D6\u6D88", confirm: "\u786E\u5B9A", title: "\u9009\u62E9\u65E5\u671F", yearFmt: (y) => `${y}\u5E74`, monthFmt: (m) => `${m}\u6708`, dayFmt: (d) => `${d}\u65E5` }
+  zh: { cancel: "取消", confirm: "确定", title: "选择日期", yearFmt: (y) => `${y}年`, monthFmt: (m) => `${m}月`, dayFmt: (d) => `${d}日` }
 };
 const loc = computed(() => L[props.locale] || L.en);
 const now = /* @__PURE__ */ new Date();

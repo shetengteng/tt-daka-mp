@@ -25,7 +25,7 @@
 
 				<view
 					class="drag-content"
-					:class="{ 'shake': shake && !item._disabled }"
+					:class="{ 'shake': shake && !item._disabled, 'drag-content--active': !item._disabled }"
 					:style="{
 						width: contentWidth,
 						height: contentHeight,
@@ -1015,13 +1015,18 @@ export default {
 			.drag-content {
 				position: relative;
 				overflow: hidden;
-				// background-color: #f5f5f5;
 				display: flex;
 				justify-content: center;
 				align-items: center;
 				box-sizing: border-box;
+				border: 2rpx solid transparent;
+				transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
-				// 抖动动画（无限循环，模仿 iOS 效果）
+				&--active {
+					border-color: var(--tt-primary, #171717);
+					box-shadow: 0 0 0 2rpx var(--tt-primary, #171717);
+				}
+
 				&.shake {
 					animation: shake 0.5s ease-in-out infinite;
 				}

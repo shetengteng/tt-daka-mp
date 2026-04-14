@@ -1,7 +1,7 @@
 /**
  * 获取已归档项目列表
  */
-import { db, COLLECTIONS } from '@/cloud-emas/database/database'
+import { db, COLLECTIONS } from '@/api/emas'
 import { requireAccountId } from '@/utils/auth'
 
 export async function getArchivedProjects() {

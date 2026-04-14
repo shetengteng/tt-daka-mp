@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { checkEmasError } from '@/cloud-emas/database/error'
+import { checkEmasError } from '@/api/emas'
 
 describe('checkEmasError', () => {
   it('does nothing for valid result', () => {

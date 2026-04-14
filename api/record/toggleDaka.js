@@ -2,7 +2,7 @@
  * 打卡/取消打卡（Local-First）
  * 先写 Store + pending 队列，UI 立即响应，云端异步同步
  */
-import { COLLECTIONS } from '@/cloud-emas/database/database'
+import { COLLECTIONS } from '@/api/emas'
 import { requireAccountId } from '@/utils/auth'
 import { formatDate, dayjs } from '@/utils/date'
 import { addPendingOp } from '@/utils/pending-ops'

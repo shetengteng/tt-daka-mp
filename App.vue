@@ -3,9 +3,7 @@
 	import { useProjectStore } from '@/stores/project'
 	import { useRecordStore } from '@/stores/record'
 	import { isLoggedIn, getLoginType } from '@/utils/auth'
-	import { initEmas } from '@/cloud-emas/database/index'
-	import { anonymousAuth } from '@/cloud-emas/database/api/anonymousAuth'
-	import { wechatAuth } from '@/cloud-emas/database/api/wechatAuth'
+	import { initEmas, anonymousAuth, wechatAuth } from '@/api/emas'
 	import { syncPendingOps } from '@/utils/sync-manager'
 	
 	export default {

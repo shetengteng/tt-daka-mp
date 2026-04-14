@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { isQuotaError, handleEmasError } from '@/cloud-emas/database/error'
+import { isQuotaError, handleEmasError } from '@/api/emas'
 
 describe('isQuotaError', () => {
   it('detects PrePayResourceExhausted code', () => {
