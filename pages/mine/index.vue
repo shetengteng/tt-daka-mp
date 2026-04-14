@@ -11,10 +11,9 @@
     <view class="section px-xl mt-xl">
       <text class="text-xs text-muted mb-sm block px-xs">设置</text>
       <view class="card overflow-hidden">
-        <view class="list-item flex-between p-lg">
-          <text class="text-sm text-foreground">深色模式</text>
+        <tt-cell title="深色模式" :border="false">
           <tt-switch v-model="darkMode" />
-        </view>
+        </tt-cell>
       </view>
     </view>
     
@@ -22,9 +21,9 @@
     
     <!-- 退出登录 -->
     <view class="px-xl mt-xl">
-      <view class="logout-btn flex-center rounded-xl" @click="showLogoutDialog = true">
-        <text class="text-sm text-error">退出登录</text>
-      </view>
+      <tt-button variant="outline" block size="lg" @click="showLogoutDialog = true">
+        <text style="color: var(--tt-destructive, #EF4444)">退出登录</text>
+      </tt-button>
     </view>
     
     <view class="text-center mt-lg mb-lg">
@@ -146,7 +145,4 @@ function doLogout(accountId) {
 </script>
 
 <style lang="scss" scoped>
-.logout-btn {
-  height: 88rpx;
-}
 </style>

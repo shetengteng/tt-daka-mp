@@ -39,6 +39,11 @@
             "subPackages" : true
         }
     },
+    "h5" : {
+        "devServer" : {
+            "port" : 5175
+        }
+    },
     "uniStatistics" : {
         "enable" : false
     },

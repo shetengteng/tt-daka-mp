@@ -23,9 +23,7 @@
           {{ progress.done }}/{{ progress.total }}
         </text>
       </view>
-      <view class="progress-bar rounded-full">
-        <view class="progress-fill rounded-full" :style="{ width: `${progress.percent}%` }"></view>
-      </view>
+      <tt-progress :percentage="progress.percent" color="#22C55E" :show-text="false" />
     </view>
   </view>
 </template>
@@ -107,16 +105,4 @@ const greeting = computed(() => {
   margin-top: -2rpx;
 }
 
-.progress-bar {
-  height: 16rpx;
-  background-color: var(--tt-border, #E4E4E7);
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background-color: var(--tt-success, #22C55E);
-  transition: width 0.3s ease;
-  min-width: 0;
-}
 </style>

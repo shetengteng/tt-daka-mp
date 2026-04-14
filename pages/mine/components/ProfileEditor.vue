@@ -1,6 +1,6 @@
 <template>
-  <view v-if="visible" class="edit-mask" @click="close">
-    <view class="edit-panel" @click.stop>
+  <tt-popup v-model:show="showPopup" position="center">
+    <view class="edit-panel">
       <view class="edit-panel__header">
         <text class="text-lg font-semibold text-foreground">修改个人信息</text>
       </view>
@@ -37,15 +37,11 @@
       </view>
       
       <view class="edit-panel__footer">
-        <view class="edit-btn edit-btn--cancel" @click="close">
-          <text class="text-sm text-muted">取消</text>
-        </view>
-        <view class="edit-btn edit-btn--save" @click="onSave">
-          <text class="text-sm font-medium" style="color: var(--tt-background)">保存</text>
-        </view>
+        <tt-button variant="secondary" class="flex-1" @click="close">取消</tt-button>
+        <tt-button variant="default" class="flex-1" :loading="saving" @click="onSave">保存</tt-button>
       </view>
     </view>
-  </view>
+  </tt-popup>
 </template>
 
 <script setup>
@@ -66,16 +62,22 @@ const emit = defineEmits(['update:visible', 'saved'])
 const localNickname = ref('')
 const localAvatar = ref('')
 const saving = ref(false)
+const showPopup = ref(false)
 
 watch(() => props.visible, (val) => {
+  showPopup.value = val
   if (val) {
     localNickname.value = props.nickname
     localAvatar.value = props.avatar
   }
 })
 
+watch(showPopup, (val) => {
+  if (!val) emit('update:visible', false)
+})
+
 function close() {
-  emit('update:visible', false)
+  showPopup.value = false
 }
 
 function onChooseAvatar(e) {
@@ -130,33 +132,18 @@ async function onSave() {
 </script>
 
 <style lang="scss" scoped>
-.edit-mask {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--tt-overlay, rgba(0, 0, 0, 0.4));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
 .edit-panel {
   width: 600rpx;
-  background: var(--tt-popover, #ffffff);
-  border-radius: 24rpx;
-  overflow: hidden;
+  padding: 40rpx;
 }
 
 .edit-panel__header {
-  padding: 40rpx 40rpx 0;
   text-align: center;
+  margin-bottom: 32rpx;
 }
 
 .edit-panel__body {
-  padding: 32rpx 40rpx 40rpx;
+  margin-bottom: 40rpx;
 }
 
 .edit-avatar-section {
@@ -187,10 +174,6 @@ async function onSave() {
   }
 }
 
-.edit-nickname-section .mb-sm {
-  margin-bottom: 12rpx;
-}
-
 .edit-input {
   display: flex;
   align-items: center;
@@ -207,27 +190,9 @@ async function onSave() {
 .edit-panel__footer {
   display: flex;
   gap: 24rpx;
-  padding: 0 40rpx 40rpx;
 }
 
-.edit-btn {
+.flex-1 {
   flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 80rpx;
-  border-radius: 16rpx;
-}
-
-.edit-btn--cancel {
-  background: var(--tt-card, #F4F4F5);
-}
-
-.edit-btn--save {
-  background: var(--tt-foreground, #09090B);
-}
-
-.edit-btn:active {
-  opacity: 0.8;
 }
 </style>

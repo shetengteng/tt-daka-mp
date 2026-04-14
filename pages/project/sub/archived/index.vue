@@ -13,13 +13,9 @@
           </view>
         </view>
         
-        <view class="flex-center-v">
-          <view class="action-btn action-btn--restore flex-center rounded-md" @click="onRestore(item._id)">
-            <text class="text-xs text-foreground">恢复</text>
-          </view>
-          <view class="action-btn action-btn--delete flex-center rounded-md ml-xs" @click="onDelete(item._id)">
-            <text class="text-xs text-error">删除</text>
-          </view>
+        <view class="flex-center-v gap-xs">
+          <tt-button variant="outline" size="sm" @click="onRestore(item._id)">恢复</tt-button>
+          <tt-button variant="ghost" size="sm" @click="onDelete(item._id)"><text style="color: var(--tt-destructive, #EF4444)">删除</text></tt-button>
         </view>
       </view>
     </view>
@@ -97,15 +93,4 @@ onMounted(() => {
   display: block;
 }
 
-.action-btn {
-  padding: 8rpx 20rpx;
-
-  &--restore {
-    border: 1rpx solid var(--tt-disabled, #D4D4D8);
-  }
-
-  &--delete {
-    background: transparent;
-  }
-}
 </style>

@@ -2,18 +2,9 @@
   <view class="section px-xl mt-xl">
     <text class="text-xs text-muted mb-sm block px-xs">其他</text>
     <view class="card overflow-hidden">
-      <view class="list-item flex-between p-lg" @click="onRefreshCache">
-        <text class="text-sm text-foreground">刷新缓存</text>
-        <tt-icon name="ri-arrow-right-s-line" :size="32" color="#71717A" />
-      </view>
-      <view class="list-item flex-between p-lg" @click="showAbout = true">
-        <text class="text-sm text-foreground">关于 DaKa</text>
-        <tt-icon name="ri-arrow-right-s-line" :size="32" color="#71717A" />
-      </view>
-      <view class="list-item flex-between p-lg" @click="goToPrivacy()">
-        <text class="text-sm text-foreground">隐私政策</text>
-        <tt-icon name="ri-arrow-right-s-line" :size="32" color="#71717A" />
-      </view>
+      <tt-cell title="刷新缓存" is-link @click="onRefreshCache" />
+      <tt-cell title="关于 DaKa" is-link @click="showAbout = true" />
+      <tt-cell title="隐私政策" is-link :border="false" @click="goToPrivacy()" />
     </view>
   </view>
 

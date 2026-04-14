@@ -6,9 +6,7 @@
       <view class="big-icon flex-center rounded-xl" :style="{ backgroundColor: `${project.color}20` }">
         <tt-icon :name="project.icon || 'ri-checkbox-circle-line'" :size="64" :color="project.color" />
       </view>
-      <view class="edit-btn mt-sm" @click="goToProjectEdit(projectId)">
-        <text class="text-xs text-muted">编辑</text>
-      </view>
+      <tt-button variant="secondary" size="sm" class="mt-sm" @click="goToProjectEdit(projectId)">编辑</tt-button>
       <text class="text-sm text-muted mt-xs">
         目标: {{ frequencyLabel }} · 创建于 {{ project.createTime?.slice(0, 10) }}
       </text>
@@ -190,12 +188,6 @@ onLoad((options) => {
 .big-icon {
   width: 128rpx;
   height: 128rpx;
-}
-
-.edit-btn {
-  padding: 8rpx 24rpx;
-  border-radius: 12rpx;
-  background-color: var(--tt-muted, #F4F4F5);
 }
 
 .stat-grid {
