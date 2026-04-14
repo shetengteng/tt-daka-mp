@@ -105,15 +105,17 @@
     </view>
     
     <!-- 底部保存 -->
-    <view class="save-section mt-lg" :class="{ 'mb-xl': !isEdit }">
+    <view class="save-section" :style="{ paddingTop: '40rpx', paddingBottom: isEdit ? '0' : '60rpx' }">
       <tt-button variant="default" block :loading="saving" @click="onSave">{{ saving ? '保存中...' : (isEdit ? '保存修改' : '创建项目') }}</tt-button>
     </view>
     
     <!-- 删除按钮（编辑模式） -->
-    <view v-if="isEdit" class="mt-md mb-xl">
+    <view v-if="isEdit" class="mt-md" style="padding-bottom: 60rpx;">
       <tt-button variant="ghost" @click="onDelete"><text style="color: var(--tt-destructive, #EF4444)">删除此打卡项目</text></tt-button>
     </view>
     
+    <tt-safe-area position="bottom" />
+
     <tt-dialog
       v-model:show="showDeleteDialog"
       title="删除项目"
