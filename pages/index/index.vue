@@ -25,8 +25,8 @@
         <view class="empty-state__icon flex-center rounded-xl">
           <tt-icon name="ri-checkbox-circle-line" :size="48" color="#D4D4D8" />
         </view>
-        <text class="text-sm text-muted mt-md">还没有打卡项目</text>
-        <tt-button variant="default" class="mt-lg" @click="goAdd">+ 创建打卡项目</tt-button>
+        <text class="text-sm text-muted mt-md mb-md">还没有打卡项目</text>
+        <tt-button variant="default" @click="goAdd">+ 创建打卡项目</tt-button>
       </view>
       
       <!-- 新建按钮 -->

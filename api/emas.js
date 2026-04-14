@@ -1,6 +1,7 @@
 /**
  * EMAS 统一入口
  */
+import MPServerless from '@alicloud/mpserverless-sdk'
 import { setupEmas, isQuotaError, handleEmasError, checkEmasError } from '@/uni_modules/tt-shaduni/cloud-emas/index'
 import { EMAS_CONFIG, WX_APPID, DEV_MODE } from '@/config/index'
 import { mockDb } from '@/mock/db'
@@ -12,6 +13,7 @@ const {
   anonymousAuth, isAuthorized, resetAuthState,
   wechatAuth, isWechatAuthorized, resetWechatAuthState,
 } = setupEmas({
+  sdk: MPServerless,
   config: { appId: WX_APPID, ...EMAS_CONFIG },
   mockDb: DEV_MODE ? mockDb : undefined,
 })

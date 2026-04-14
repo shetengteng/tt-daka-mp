@@ -1,15 +1,10 @@
 let _mpserverless = null;
 let _initialized = false;
-function loadSDK(sdkOverride) {
-  if (sdkOverride) return sdkOverride;
-  return require("@alicloud/mpserverless-sdk").default || require("@alicloud/mpserverless-sdk");
-}
-function createEmas(config, sdk) {
+function createEmas(SDK, config) {
   const init = async () => {
     if (_initialized && _mpserverless) return true;
     try {
-      const MPServerless = loadSDK(sdk);
-      _mpserverless = new MPServerless(uni, {
+      _mpserverless = new SDK(uni, {
         appId: config.appId,
         spaceId: config.spaceId,
         clientSecret: config.clientSecret,
