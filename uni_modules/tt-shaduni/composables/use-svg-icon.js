@@ -1,11 +1,15 @@
 import { ref, computed, watch, onMounted } from "vue";
-const svgCache = /* @__PURE__ */ new Map();
+import { builtinIcons } from "../icons/builtin";
+const svgCache = new Map(Object.entries(builtinIcons));
+function isCssVariable(color) {
+  return color.trim().startsWith("var(");
+}
 function useSvgIcon(getName, getSvg, getColor, dir = "/static/svg") {
   const svgRaw = ref("");
   const svgHtml = computed(() => {
     if (!svgRaw.value) return "";
     const color = getColor();
-    if (!color) return svgRaw.value;
+    if (!color || isCssVariable(color) || color === "currentColor") return svgRaw.value;
     return svgRaw.value.replace(/currentColor/g, color);
   });
   const svgDataUri = computed(() => {

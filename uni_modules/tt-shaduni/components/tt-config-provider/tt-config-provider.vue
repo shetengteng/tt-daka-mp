@@ -35,5 +35,6 @@ provide(TT_CONFIG_KEY, { theme: activeTheme });
 .tt-config-provider {
   width: 100%;
   min-height: 100%;
+  color: var(--tt-foreground, #0a0a0a);
 }
 </style>

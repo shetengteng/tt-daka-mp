@@ -38,6 +38,7 @@ import { TtNoticeBar, noticeBarProps } from "./components/tt-notice-bar";
 import { TtSheet, sheetProps } from "./components/tt-sheet";
 import { useTheme } from "./composables/use-theme";
 import { useSvgIcon, preloadSvgIcons, clearSvgIconCache } from "./composables/use-svg-icon";
+import { builtinIcons } from "./icons/builtin";
 import { lightTokens, darkTokens } from "./styles/tokens";
 import { tokenToVar, tokensToStyle, diffTokens } from "./utils/token-to-var";
 export {
@@ -82,6 +83,7 @@ export {
   actionSheetProps,
   avatarProps,
   badgeProps,
+  builtinIcons,
   buttonProps,
   cardProps,
   cellProps,

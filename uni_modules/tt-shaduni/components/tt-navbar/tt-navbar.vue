@@ -5,7 +5,7 @@
   >
     <view class="tt-navbar__left" @click="handleLeftClick">
       <slot name="left">
-        <tt-icon v-if="leftArrow" name="ri-arrow-left-s-line" :size="40" class="tt-navbar__arrow" />
+        <tt-icon v-if="leftArrow" name="ri-arrow-left-s-line" :size="40" color="var(--tt-foreground, #0a0a0a)" class="tt-navbar__arrow" />
         <text v-if="leftText" class="tt-navbar__left-text">{{ leftText }}</text>
       </slot>
     </view>

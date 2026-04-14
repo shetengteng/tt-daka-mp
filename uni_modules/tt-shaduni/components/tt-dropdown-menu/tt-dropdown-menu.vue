@@ -2,14 +2,14 @@
   <view class="tt-dropdown-menu" :class="{ 'tt-dropdown-menu--disabled': disabled }">
     <view class="tt-dropdown-menu__bar" @click="toggle">
       <text class="tt-dropdown-menu__title">{{ displayText }}</text>
-      <text class="tt-dropdown-menu__arrow" :class="{ 'tt-dropdown-menu__arrow--up': open }">▼</text>
+      <tt-icon class="tt-dropdown-menu__arrow" :class="{ 'tt-dropdown-menu__arrow--up': open }" name="ri-arrow-down-s-line" :size="32" color="var(--tt-muted-foreground, #737373)" />
     </view>
     <view v-if="open" class="tt-dropdown-menu__popup">
       <view class="tt-dropdown-menu__overlay" @click="open = false"></view>
       <view class="tt-dropdown-menu__content">
         <view v-for="opt in options" :key="opt.value" class="tt-dropdown-menu__option" :class="{ 'tt-dropdown-menu__option--active': modelValue === opt.value }" @click="select(opt)">
           <text>{{ opt.text }}</text>
-          <text v-if="modelValue === opt.value" class="tt-dropdown-menu__check">✓</text>
+          <tt-icon v-if="modelValue === opt.value" name="ri-check-line" :size="32" color="var(--tt-primary, #171717)" />
         </view>
       </view>
     </view>
@@ -50,7 +50,7 @@ function select(opt) {
   border-radius: var(--tt-radius, 12rpx);
 }
 .tt-dropdown-menu__title { font-size: 28rpx; font-weight: 500; color: var(--tt-foreground, #0a0a0a); }
-.tt-dropdown-menu__arrow { font-size: 24rpx; transition: transform .2s; color: var(--tt-muted-foreground, #737373); line-height: 1; }
+.tt-dropdown-menu__arrow { transition: transform .2s; line-height: 1; }
 .tt-dropdown-menu__arrow--up { transform: rotate(180deg); }
 .tt-dropdown-menu__popup { position: absolute; left: 0; right: 0; top: calc(100% + 8rpx); z-index: 100; }
 .tt-dropdown-menu__overlay { position: fixed; inset: 0; z-index: -1; background: transparent; }
@@ -73,5 +73,4 @@ function select(opt) {
 }
 .tt-dropdown-menu__option:active { background: var(--tt-muted, #f5f5f5); }
 .tt-dropdown-menu__option--active { color: var(--tt-primary, #171717); font-weight: 600; }
-.tt-dropdown-menu__check { font-size: 28rpx; color: var(--tt-primary, #171717); }
 </style>

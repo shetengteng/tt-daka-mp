@@ -2,8 +2,8 @@
   <view v-if="show" class="tt-toast" :class="{ 'tt-toast--fade': fading }">
     <view class="tt-toast__content">
       <view v-if="type === 'loading'" class="tt-toast__icon"><view class="tt-toast__spinner" /></view>
-      <view v-else-if="type === 'success'" class="tt-toast__icon"><text>✓</text></view>
-      <view v-else-if="type === 'fail'" class="tt-toast__icon"><text>✕</text></view>
+      <view v-else-if="type === 'success'" class="tt-toast__icon"><tt-icon name="ri-checkbox-circle-line" :size="56" color="#fff" /></view>
+      <view v-else-if="type === 'fail'" class="tt-toast__icon"><tt-icon name="ri-close-circle-line" :size="56" color="#fff" /></view>
       <text class="tt-toast__text">{{ message }}</text>
     </view>
   </view>

@@ -1,12 +1,20 @@
 <template>
   <view class="tt-rate">
-    <text v-for="i in count" :key="i" class="tt-rate__star" :class="{ 'tt-rate__star--active': i <= modelValue }" :style="{ fontSize: (typeof size === 'number' ? size + 'px' : size) }" @click="!disabled && !readonly && emit('update:modelValue', i)">★</text>
+    <view v-for="i in count" :key="i" class="tt-rate__star" :class="{ 'tt-rate__star--active': i <= modelValue }" @click="!disabled && !readonly && emit('update:modelValue', i)">
+      <tt-icon :name="i <= modelValue ? 'ri-star-fill' : 'ri-star-line'" :size="rateSize" />
+    </view>
   </view>
 </template>
 
-<script setup >import { rateProps } from "./props";
-defineProps(rateProps);
+<script setup >import { computed } from "vue";
+import { rateProps } from "./props";
+const props = defineProps(rateProps);
 const emit = defineEmits();
+const rateSize = computed(() => {
+  if (typeof props.size === "number") return props.size;
+  const n = parseInt(props.size, 10);
+  return isNaN(n) ? 40 : n;
+});
 </script>
 
 <style>

@@ -51,7 +51,7 @@
 					@touchend="handleDragHandleTouchEnd(item)">
 					<!-- 手柄插槽，允许用户自定义手柄内容 -->
 					<slot name="dragHandle" :item="item" :index="index">
-						<text style="font-size: 28rpx; color: #666;">☰</text>
+						<tt-icon name="ri-menu-line" :size="28" color="var(--tt-muted-foreground, #666)" />
 					</slot>
 				</view>					<!-- 内容区域 -->
 					<view
@@ -91,7 +91,7 @@
 							:style="{
 								borderRadius: '0 ' + borderRadius + 'rpx 0 12rpx'
 							}">
-							<text style="font-size: 24rpx; color: #ffffff;">✕</text>
+							<tt-icon name="ri-close-line" :size="24" color="#ffffff" />
 						</view>
 					</view>
 				</view>
@@ -102,8 +102,11 @@
 </template>
 
 <script>
+import TtIcon from '../tt-icon/tt-icon.vue'
+
 export default {
 	name: 'tt-drag',
+	components: { TtIcon },
 	emits: ['input', 'update:modelValue', 'change', 'delete'],
 	props: {
 		// Vue2 双向绑定

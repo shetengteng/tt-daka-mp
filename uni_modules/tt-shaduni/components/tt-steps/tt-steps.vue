@@ -10,7 +10,8 @@
         <view class="tt-steps__head">
           <view class="tt-steps__line" :class="{ 'tt-steps__line--done': i <= active, 'tt-steps__line--hide': i === 0 }" />
           <view class="tt-steps__circle" :class="{ 'tt-steps__circle--done': i < active, 'tt-steps__circle--active': i === active }">
-            <text class="tt-steps__icon">{{ i < active ? '✓' : (item.icon || String(i + 1)) }}</text>
+            <tt-icon v-if="i < active" name="ri-check-line" :size="22" color="#fff" />
+            <text v-else class="tt-steps__icon">{{ item.icon || String(i + 1) }}</text>
           </view>
           <view class="tt-steps__line" :class="{ 'tt-steps__line--done': i < active, 'tt-steps__line--hide': i === items.length - 1 }" />
         </view>
