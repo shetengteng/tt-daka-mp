@@ -5,7 +5,10 @@
     </view>
     
     <view class="calendar-section px-xl mt-xl">
-      <TtCalendar
+      <tt-calendar
+        v-model="selectedDate"
+        locale="zh"
+        :max-date="today"
         :formatter="formatter"
         @select="onDateSelect"
         @month-change="onMonthChange"
@@ -21,7 +24,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { onShow, onPullDownRefresh } from '@dcloudio/uni-app'
 import { useThemeStore } from '@/stores/theme'
 import { useRecordStore } from '@/stores/record'
@@ -38,10 +41,11 @@ const calendarStore = useCalendarStore()
 const { needRefresh, forceCheck, markLoaded } = usePageFresh('calendar')
 
 const headerPaddingTop = computed(() => `${themeStore.statusBarHeight + 12}px`)
+const today = formatDate(new Date())
+const selectedDate = ref(today)
 
 function formatter(day) {
-  const dateStr = formatDate(day.date)
-  const data = calendarStore.calendarData[dateStr]
+  const data = calendarStore.calendarData[day.dateStr]
   if (!data) return
   const { done, total } = data
   if (done === total && total > 0) {
@@ -53,8 +57,8 @@ function formatter(day) {
   }
 }
 
-function onDateSelect(date) {
-  calendarStore.setSelectedDate(formatDate(date))
+function onDateSelect(dateStr) {
+  calendarStore.setSelectedDate(dateStr)
 }
 
 async function onMonthChange(month) {

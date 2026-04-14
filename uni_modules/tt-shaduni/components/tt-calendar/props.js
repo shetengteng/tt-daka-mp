@@ -22,6 +22,14 @@ const calendarProps = {
   locale: {
     type: String,
     default: "en"
+  },
+  formatter: {
+    type: Function,
+    default: void 0
+  },
+  showBottom: {
+    type: Boolean,
+    default: true
   }
 };
 export {

@@ -33,7 +33,10 @@
     <!-- 日历 -->
     <view class="calendar-section mb-xl">
       <text class="text-sm font-semibold text-foreground mb-md block">打卡日历</text>
-      <TtCalendar
+      <tt-calendar
+        v-model="selectedDate"
+        locale="zh"
+        :max-date="today"
         :formatter="formatter"
         @select="onDateSelect"
       />
@@ -93,6 +96,8 @@ const records = ref([])
 const showCount = ref(10)
 const detail = ref({ totalDays: 0, currentStreak: 0, longestStreak: 0 })
 
+const today = formatDate(new Date())
+const selectedDate = ref(today)
 const recordDateSet = computed(() => new Set(records.value.map(r => r.date)))
 
 const frequencyLabel = computed(() => {
@@ -106,8 +111,7 @@ const frequencyLabel = computed(() => {
 const recentRecords = computed(() => records.value.slice(0, showCount.value))
 
 function formatter(day) {
-  const dateStr = formatDate(day.date)
-  if (recordDateSet.value.has(dateStr)) {
+  if (recordDateSet.value.has(day.dateStr)) {
     const color = project.value?.color || '#22C55E'
     day.style = { backgroundColor: `${color}25` }
   }
@@ -125,10 +129,7 @@ function formatRecordTime(dateTime) {
 const showRetroDialog = ref(false)
 const retroDate = ref('')
 
-async function onDateSelect(date) {
-  const dateStr = formatDate(date)
-  const today = formatDate(new Date())
-  
+async function onDateSelect(dateStr) {
   if (dateStr > today) return
   if (recordDateSet.value.has(dateStr)) return
   

@@ -40,20 +40,40 @@
       <view class="tt-calendar__weekdays">
         <text v-for="w in weekdays" :key="w" class="tt-calendar__weekday">{{ w }}</text>
       </view>
-      <view class="tt-calendar__days">
+      <view class="tt-calendar__days" :class="{ 'tt-calendar__days--compact': !showBottom }">
         <view
           v-for="(cell, idx) in cells"
           :key="idx"
           class="tt-calendar__cell"
           :class="{
             'tt-calendar__cell--empty': !cell.day,
-            'tt-calendar__cell--today': cell.isToday,
-            'tt-calendar__cell--selected': cell.isSelected,
             'tt-calendar__cell--disabled': cell.disabled,
+            'tt-calendar__cell--compact': !showBottom,
           }"
           @click="onSelect(cell)"
         >
-          <text v-if="cell.day" class="tt-calendar__day">{{ cell.day }}</text>
+          <view
+            v-if="cell.day"
+            class="tt-calendar__day-wrap"
+            :class="{
+              'tt-calendar__day-wrap--today': cell.isToday,
+              'tt-calendar__day-wrap--selected': cell.isSelected && !cell.isToday,
+            }"
+            :style="(cell.isSelected || cell.isToday) ? undefined : cell.style"
+          >
+            <text
+              class="tt-calendar__day"
+              :class="{
+                'tt-calendar__day--today': cell.isToday,
+                'tt-calendar__day--selected': cell.isSelected && !cell.isToday,
+              }"
+            >{{ cell.day }}</text>
+          </view>
+          <view v-if="cell.day && showBottom" class="tt-calendar__bottom">
+            <slot name="day" :day="cell">
+              <text v-if="cell.bottom" class="tt-calendar__bottom-text">{{ cell.bottom }}</text>
+            </slot>
+          </view>
         </view>
       </view>
     </template>
@@ -86,6 +106,10 @@ const L = {
 };
 const loc = computed(() => L[props.locale] || L.en);
 const weekdays = computed(() => props.firstDayOfWeek === 1 ? loc.value.weekMon : loc.value.weekSun);
+const currentMonthStr = computed(() => {
+  const m = viewMonth.value < 10 ? "0" + viewMonth.value : viewMonth.value;
+  return `${viewYear.value}-${m}`;
+});
 const displayTitle = computed(() => {
   return loc.value.fmt(loc.value.months[viewMonth.value - 1], viewYear.value);
 });
@@ -109,23 +133,31 @@ const cells = computed(() => {
   }
   const result = [];
   for (let i = 0; i < startDow; i++) {
-    result.push({ day: 0, dateStr: "", isToday: false, isSelected: false, disabled: true });
+    result.push({ date: new Date(y, m - 1, 0), dateStr: "", day: 0, isToday: false, isSelected: false, disabled: true });
   }
   for (let d = 1; d <= daysInMonth; d++) {
     const ds = fmt(y, m, d);
     const disabled = props.minDate && ds < props.minDate || props.maxDate && ds > props.maxDate;
-    result.push({
-      day: d,
+    const cell = {
+      date: new Date(y, m - 1, d),
       dateStr: ds,
+      day: d,
       isToday: ds === todayStr,
       isSelected: ds === props.modelValue,
       disabled: !!disabled
-    });
+    };
+    if (props.formatter) {
+      props.formatter(cell);
+    }
+    result.push(cell);
   }
   return result;
 });
 function fmt(y, m, d) {
   return `${y}-${m < 10 ? "0" + m : m}-${d < 10 ? "0" + d : d}`;
+}
+function emitMonthChange() {
+  emit("month-change", currentMonthStr.value);
 }
 function prevMonth() {
   if (viewMonth.value === 1) {
@@ -134,6 +166,7 @@ function prevMonth() {
   } else {
     viewMonth.value--;
   }
+  emitMonthChange();
 }
 function nextMonth() {
   if (viewMonth.value === 12) {
@@ -142,6 +175,7 @@ function nextMonth() {
   } else {
     viewMonth.value++;
   }
+  emitMonthChange();
 }
 function onTitleClick() {
   if (pickerMode.value === "none") {
@@ -170,6 +204,7 @@ function pickYear(y) {
 function pickMonth(m) {
   viewMonth.value = m;
   pickerMode.value = "none";
+  emitMonthChange();
 }
 function onSelect(cell) {
   if (!cell.day || cell.disabled || props.readonly) return;
@@ -180,8 +215,8 @@ function onSelect(cell) {
 
 <style>
 .tt-calendar {
-  background: var(--tt-background, #fff);
-  border-radius: var(--tt-radius, 12rpx);
+  background: var(--tt-card, #f4f4f5);
+  border-radius: 24rpx;
   padding: 24rpx;
 }
 .tt-calendar__header {
@@ -191,13 +226,12 @@ function onSelect(cell) {
   margin-bottom: 24rpx;
 }
 .tt-calendar__arrow {
-  width: 64rpx;
-  height: 64rpx;
+  padding: 8rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 40rpx;
-  color: var(--tt-foreground, #0a0a0a);
+  font-size: 36rpx;
+  color: var(--tt-muted-foreground, #71717a);
   cursor: pointer;
   border-radius: var(--tt-radius, 12rpx);
   transition: background .15s;
@@ -206,9 +240,9 @@ function onSelect(cell) {
   background: var(--tt-muted, #f5f5f5);
 }
 .tt-calendar__title {
-  font-size: 30rpx;
+  font-size: 28rpx;
   font-weight: 600;
-  color: var(--tt-foreground, #0a0a0a);
+  color: var(--tt-foreground, #09090b);
   cursor: pointer;
   padding: 4rpx 16rpx;
   border-radius: var(--tt-radius, 12rpx);
@@ -244,66 +278,93 @@ function onSelect(cell) {
   transform: scale(0.95);
 }
 .tt-calendar__picker-cell--active {
-  background: var(--tt-primary, #171717);
-  border-color: var(--tt-primary, #171717);
+  background: var(--tt-foreground, #09090b);
+  border-color: var(--tt-foreground, #09090b);
 }
 .tt-calendar__picker-cell--active .tt-calendar__picker-text {
-  color: var(--tt-primary-foreground, #fafafa);
+  color: var(--tt-background, #ffffff);
   font-weight: 600;
 }
 .tt-calendar__picker-text {
   font-size: 28rpx;
-  color: var(--tt-foreground, #0a0a0a);
+  color: var(--tt-foreground, #09090b);
 }
 .tt-calendar__weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  text-align: center;
   margin-bottom: 8rpx;
 }
 .tt-calendar__weekday {
-  text-align: center;
-  font-size: 24rpx;
-  font-weight: 500;
-  color: var(--tt-muted-foreground, #737373);
+  font-size: 22rpx;
+  color: var(--tt-muted-foreground, #71717a);
   padding: 8rpx 0;
 }
 .tt-calendar__days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4rpx;
+  gap: 4rpx 0;
 }
 .tt-calendar__cell {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 72rpx;
-  border-radius: var(--tt-radius, 12rpx);
+  justify-content: flex-start;
+  height: 88rpx;
+  padding: 4rpx 0;
+  border-radius: 12rpx;
   cursor: pointer;
-  transition: background .15s;
-}
-.tt-calendar__cell:active:not(.tt-calendar__cell--disabled):not(.tt-calendar__cell--empty) {
-  background: var(--tt-muted, #f5f5f5);
 }
 .tt-calendar__cell--empty {
+  height: 0;
   cursor: default;
-}
-.tt-calendar__cell--today .tt-calendar__day {
-  color: var(--tt-primary, #171717);
-  font-weight: 700;
-}
-.tt-calendar__cell--selected {
-  background: var(--tt-primary, #171717);
-}
-.tt-calendar__cell--selected .tt-calendar__day {
-  color: var(--tt-primary-foreground, #fafafa);
-  font-weight: 600;
 }
 .tt-calendar__cell--disabled {
   opacity: .3;
   cursor: not-allowed;
 }
+.tt-calendar__day-wrap {
+  width: 52rpx;
+  height: 52rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14rpx;
+}
 .tt-calendar__day {
-  font-size: 28rpx;
-  color: var(--tt-foreground, #0a0a0a);
+  font-size: 26rpx;
+  color: var(--tt-foreground, #09090b);
+}
+.tt-calendar__day-wrap--today {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background-color: var(--tt-foreground, #09090b);
+}
+.tt-calendar__day--today {
+  color: var(--tt-background, #ffffff);
+  font-weight: 600;
+}
+.tt-calendar__day-wrap--selected {
+  background-color: var(--tt-foreground, #09090b);
+}
+.tt-calendar__day--selected {
+  color: var(--tt-background, #ffffff);
+  font-weight: 600;
+}
+.tt-calendar__bottom {
+  min-height: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tt-calendar__bottom-text {
+  font-size: 18rpx;
+  color: var(--tt-muted-foreground, #71717a);
+  line-height: 1;
+  margin-top: 2rpx;
+}
+.tt-calendar__cell--compact {
+  height: 60rpx;
 }
 </style>
