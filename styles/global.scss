@@ -16,6 +16,7 @@
   background-color: var(--tt-card);
   border-radius: $tt-radius-xl;
 }
+.card .tt-cell { background: transparent; }
 
 .card-content { padding: $tt-spacing-lg; }
 
