@@ -19,6 +19,7 @@
       </view>
     </view>
     
+    <view class="py-xl"></view>
     <TtTabbar current="stats" />
   </view>
 </template>

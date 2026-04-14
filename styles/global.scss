@@ -1,194 +1,15 @@
 /**
- * 全局工具类样式 - Shadcn 风格
+ * 全局样式 - TT Daka
+ * 通用工具类和主题由 tt-shaduni 提供，此处仅保留项目特有样式。
  */
 
 @import '@/uni.scss';
+@import '@/uni_modules/tt-shaduni/styles/theme.css';
+@import '@/uni_modules/tt-shaduni/styles/utilities.scss';
 
-/* ===== CSS Custom Properties (Theme) ===== */
-:root,
-page,
-[data-theme="light"] {
-  --tt-background: #ffffff;
-  --tt-foreground: #0a0a0a;
-  --tt-card: #F4F4F5;
-  --tt-card-foreground: #0a0a0a;
-  --tt-popover: #ffffff;
-  --tt-popover-foreground: #0a0a0a;
-  --tt-primary: #171717;
-  --tt-primary-foreground: #fafafa;
-  --tt-secondary: #f5f5f5;
-  --tt-secondary-foreground: #171717;
-  --tt-muted: #f5f5f5;
-  --tt-muted-foreground: #737373;
-  --tt-accent: #f5f5f5;
-  --tt-accent-foreground: #171717;
-  --tt-border: #e5e5e5;
-  --tt-input: #e5e5e5;
-  --tt-ring: #0a0a0a;
-  --tt-success: #22C55E;
-  --tt-warning: #F97316;
-  --tt-error: #EF4444;
-  --tt-disabled: #D4D4D8;
-  --tt-shadow-color: rgba(0, 0, 0, 0.05);
-  --tt-shadow-md: rgba(0, 0, 0, 0.1);
-  --tt-overlay: rgba(0, 0, 0, 0.4);
-}
+/* ===== Daka 项目专用 ===== */
 
-[data-theme="dark"],
-.theme-dark {
-  --tt-background: #09090B;
-  --tt-foreground: #FAFAFA;
-  --tt-card: #1C1C1E;
-  --tt-card-foreground: #FAFAFA;
-  --tt-popover: #1C1C1E;
-  --tt-popover-foreground: #FAFAFA;
-  --tt-primary: #FAFAFA;
-  --tt-primary-foreground: #09090B;
-  --tt-secondary: #27272A;
-  --tt-secondary-foreground: #FAFAFA;
-  --tt-muted: #27272A;
-  --tt-muted-foreground: #A1A1AA;
-  --tt-accent: #27272A;
-  --tt-accent-foreground: #FAFAFA;
-  --tt-border: #3F3F46;
-  --tt-input: #3F3F46;
-  --tt-ring: #D4D4D8;
-  --tt-success: #4ADE80;
-  --tt-warning: #FB923C;
-  --tt-error: #F87171;
-  --tt-disabled: #52525B;
-  --tt-shadow-color: rgba(0, 0, 0, 0.3);
-  --tt-shadow-md: rgba(0, 0, 0, 0.4);
-  --tt-overlay: rgba(0, 0, 0, 0.6);
-}
-
-/* Flex */
-.flex-row { display: flex; flex-direction: row; }
-.flex-col { display: flex; flex-direction: column; }
-.flex-center { display: flex; align-items: center; justify-content: center; }
-.flex-between { display: flex; align-items: center; justify-content: space-between; }
-.flex-start { display: flex; align-items: center; justify-content: flex-start; }
-.flex-end { display: flex; align-items: center; justify-content: flex-end; }
-.flex-wrap { flex-wrap: wrap; }
-.flex-1 { flex: 1; min-width: 0; }
-.flex-shrink-0 { flex-shrink: 0; }
-.flex-center-v { display: flex; align-items: center; }
-.items-start { align-items: flex-start; }
-.min-w-0 { min-width: 0; }
-.nowrap { white-space: nowrap; }
-
-/* Gap */
-.gap-xs { gap: $tt-spacing-xs; }
-.gap-sm { gap: $tt-spacing-sm; }
-.gap-md { gap: $tt-spacing-md; }
-.gap-lg { gap: $tt-spacing-lg; }
-
-/* Text */
-.text-center { text-align: center; }
-.text-left { text-align: left; }
-.text-right { text-align: right; }
-.text-xs { font-size: 22rpx; }
-.text-sm { font-size: 26rpx; }
-.text-base { font-size: 28rpx; }
-.text-lg { font-size: 32rpx; }
-.text-xl { font-size: 36rpx; }
-.text-2xl { font-size: 44rpx; }
-.text-3xl { font-size: 56rpx; }
-.font-normal { font-weight: 400; }
-.font-medium { font-weight: 500; }
-.font-semibold { font-weight: 600; }
-.font-bold { font-weight: 700; }
-
-.text-foreground { color: var(--tt-foreground); }
-.text-muted { color: var(--tt-muted-foreground); }
 .text-placeholder { color: $tt-text-placeholder; }
-.text-brand { color: var(--tt-primary); }
-.text-success { color: var(--tt-success); }
-.text-warning { color: var(--tt-warning); }
-.text-error { color: var(--tt-error); }
-.text-disabled { color: var(--tt-disabled); }
-.text-white { color: #ffffff; }
-
-/* Background */
-.bg-background { background-color: var(--tt-background); }
-.bg-card { background-color: var(--tt-card); }
-.bg-muted { background-color: var(--tt-muted); }
-.bg-accent { background-color: var(--tt-accent); }
-.bg-primary { background-color: var(--tt-primary); }
-.bg-secondary { background-color: var(--tt-secondary); }
-.bg-transparent { background-color: transparent; }
-.bg-success { background-color: var(--tt-success); }
-.bg-warning { background-color: var(--tt-warning); }
-.bg-error { background-color: var(--tt-error); }
-.bg-success-light { background-color: rgba(34, 197, 94, 0.1); }
-.bg-warning-light { background-color: rgba(249, 115, 22, 0.1); }
-.bg-error-light { background-color: rgba(239, 68, 68, 0.1); }
-
-/* Border */
-.border { border: 1rpx solid var(--tt-border); }
-.border-t { border-top: 1rpx solid var(--tt-border); }
-.border-b { border-bottom: 1rpx solid var(--tt-border); }
-.border-none { border: none; }
-
-/* Radius */
-.rounded-none { border-radius: 0; }
-.rounded-sm { border-radius: $tt-radius-sm; }
-.rounded-md { border-radius: $tt-radius-md; }
-.rounded-lg { border-radius: $tt-radius-lg; }
-.rounded-xl { border-radius: $tt-radius-xl; }
-.rounded-full { border-radius: 9999rpx; }
-
-/* Spacing - Margin */
-.m-0 { margin: 0; }
-.mt-xs { margin-top: $tt-spacing-xs; }
-.mt-sm { margin-top: $tt-spacing-sm; }
-.mt-md { margin-top: $tt-spacing-md; }
-.mt-lg { margin-top: $tt-spacing-lg; }
-.mt-xl { margin-top: $tt-spacing-xl; }
-.mb-xs { margin-bottom: $tt-spacing-xs; }
-.mb-sm { margin-bottom: $tt-spacing-sm; }
-.mb-md { margin-bottom: $tt-spacing-md; }
-.mb-lg { margin-bottom: $tt-spacing-lg; }
-.mb-xl { margin-bottom: $tt-spacing-xl; }
-.ml-xs { margin-left: $tt-spacing-xs; }
-.ml-sm { margin-left: $tt-spacing-sm; }
-.ml-md { margin-left: $tt-spacing-md; }
-.mr-xs { margin-right: $tt-spacing-xs; }
-.mr-sm { margin-right: $tt-spacing-sm; }
-.mx-md { margin-left: $tt-spacing-md; margin-right: $tt-spacing-md; }
-.mx-lg { margin-left: $tt-spacing-lg; margin-right: $tt-spacing-lg; }
-.mx-xl { margin-left: 40rpx; margin-right: 40rpx; }
-
-/* Spacing - Padding */
-.p-0 { padding: 0; }
-.p-sm { padding: $tt-spacing-sm; }
-.p-md { padding: $tt-spacing-md; }
-.p-lg { padding: $tt-spacing-lg; }
-.pt-sm { padding-top: $tt-spacing-sm; }
-.pt-md { padding-top: $tt-spacing-md; }
-.pt-lg { padding-top: $tt-spacing-lg; }
-.pb-sm { padding-bottom: $tt-spacing-sm; }
-.pb-md { padding-bottom: $tt-spacing-md; }
-.pb-lg { padding-bottom: $tt-spacing-lg; }
-.px-xs { padding-left: $tt-spacing-xs; padding-right: $tt-spacing-xs; }
-.px-sm { padding-left: $tt-spacing-sm; padding-right: $tt-spacing-sm; }
-.px-md { padding-left: $tt-spacing-md; padding-right: $tt-spacing-md; }
-.px-lg { padding-left: $tt-spacing-lg; padding-right: $tt-spacing-lg; }
-.px-xl { padding-left: 40rpx; padding-right: 40rpx; }
-.py-sm { padding-top: $tt-spacing-sm; padding-bottom: $tt-spacing-sm; }
-.py-md { padding-top: $tt-spacing-md; padding-bottom: $tt-spacing-md; }
-.py-lg { padding-top: $tt-spacing-lg; padding-bottom: $tt-spacing-lg; }
-.py-xl { padding-top: $tt-spacing-xl; padding-bottom: $tt-spacing-xl; }
-
-/* Size */
-.w-full { width: 100%; }
-.h-full { height: 100%; }
-.min-h-screen { min-height: 100vh; }
-
-/* Shadow */
-.shadow-none { box-shadow: none; }
-.shadow-sm { box-shadow: 0 1rpx 2rpx var(--tt-shadow-color); }
-.shadow-md { box-shadow: 0 4rpx 12rpx var(--tt-shadow-md); }
 
 /* Card */
 .card {
@@ -206,7 +27,7 @@ page,
 .page { min-height: 100vh; background-color: var(--tt-background); }
 .page-gray { min-height: 100vh; background-color: var(--tt-muted); }
 
-/* 微信小程序原生 page 元素跟随主题 — 使用 inherit 以便子元素覆盖 */
+/* 微信小程序原生 page 元素跟随主题 */
 page { background-color: var(--tt-background); color: var(--tt-foreground); }
 
 /* H5: hide scrollbar to avoid layout shift */
@@ -238,24 +59,6 @@ uni-page-wrapper,
 uni-page-body {
   background-color: var(--tt-background) !important;
 }
-
-/* Utils */
-.overflow-hidden { overflow: hidden; }
-.relative { position: relative; }
-.absolute { position: absolute; }
-.fixed { position: fixed; }
-.z-10 { z-index: 10; }
-.z-50 { z-index: 50; }
-.z-100 { z-index: 100; }
-.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.block { display: block; }
-.hidden { display: none; }
-
-/* Divider */
-.divider { height: 1rpx; background-color: var(--tt-border); }
-
-/* Interaction */
-.hover-accent:active { background-color: var(--tt-accent); }
 
 /* List Item */
 .list-item {

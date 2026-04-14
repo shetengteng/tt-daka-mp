@@ -1,0 +1,61 @@
+/**
+ * TT ShadUni — CSS Custom Properties (Light / Dark)
+ * Import via: @import 'tt-shaduni/styles/theme.css'
+ */
+
+:root,
+page,
+[data-theme="light"] {
+  --tt-background: #ffffff;
+  --tt-foreground: #0a0a0a;
+  --tt-card: #f4f4f5;
+  --tt-card-foreground: #0a0a0a;
+  --tt-popover: #ffffff;
+  --tt-popover-foreground: #0a0a0a;
+  --tt-primary: #171717;
+  --tt-primary-foreground: #fafafa;
+  --tt-secondary: #f5f5f5;
+  --tt-secondary-foreground: #171717;
+  --tt-muted: #f5f5f5;
+  --tt-muted-foreground: #737373;
+  --tt-accent: #f5f5f5;
+  --tt-accent-foreground: #171717;
+  --tt-border: #e5e5e5;
+  --tt-input: #e5e5e5;
+  --tt-ring: #0a0a0a;
+  --tt-success: #22c55e;
+  --tt-warning: #f97316;
+  --tt-error: #ef4444;
+  --tt-disabled: #d4d4d8;
+  --tt-shadow-color: rgba(0, 0, 0, 0.05);
+  --tt-shadow-md: rgba(0, 0, 0, 0.1);
+  --tt-overlay: rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"],
+.theme-dark {
+  --tt-background: #09090b;
+  --tt-foreground: #fafafa;
+  --tt-card: #1c1c1e;
+  --tt-card-foreground: #fafafa;
+  --tt-popover: #1c1c1e;
+  --tt-popover-foreground: #fafafa;
+  --tt-primary: #fafafa;
+  --tt-primary-foreground: #09090b;
+  --tt-secondary: #27272a;
+  --tt-secondary-foreground: #fafafa;
+  --tt-muted: #27272a;
+  --tt-muted-foreground: #a1a1aa;
+  --tt-accent: #27272a;
+  --tt-accent-foreground: #fafafa;
+  --tt-border: #3f3f46;
+  --tt-input: #3f3f46;
+  --tt-ring: #d4d4d8;
+  --tt-success: #4ade80;
+  --tt-warning: #fb923c;
+  --tt-error: #f87171;
+  --tt-disabled: #52525b;
+  --tt-shadow-color: rgba(0, 0, 0, 0.3);
+  --tt-shadow-md: rgba(0, 0, 0, 0.4);
+  --tt-overlay: rgba(0, 0, 0, 0.6);
+}

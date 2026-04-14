@@ -15,6 +15,7 @@
     <DayDetail />
     <MonthStats />
     
+    <view class="py-xl"></view>
     <TtTabbar current="calendar" />
   </view>
 </template>

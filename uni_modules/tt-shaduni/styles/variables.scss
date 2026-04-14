@@ -1,0 +1,40 @@
+/**
+ * TT ShadUni — SCSS Design Tokens
+ * Spacing, radius, and color variables for utility classes and component styling.
+ * Import via: @import 'tt-shaduni/styles/variables.scss'
+ */
+
+/* Spacing */
+$tt-spacing-xs: 8rpx !default;
+$tt-spacing-sm: 16rpx !default;
+$tt-spacing-md: 24rpx !default;
+$tt-spacing-lg: 32rpx !default;
+$tt-spacing-xl: 48rpx !default;
+
+/* Border Radius */
+$tt-radius: 12rpx !default;
+$tt-radius-sm: 6rpx !default;
+$tt-radius-md: 12rpx !default;
+$tt-radius-lg: 16rpx !default;
+$tt-radius-xl: 24rpx !default;
+
+/* Semantic Colors (static fallback — prefer CSS custom properties in theme.css) */
+$tt-background: #ffffff !default;
+$tt-foreground: #0a0a0a !default;
+$tt-primary: #171717 !default;
+$tt-primary-foreground: #fafafa !default;
+$tt-secondary: #f5f5f5 !default;
+$tt-secondary-foreground: #171717 !default;
+$tt-muted: #f5f5f5 !default;
+$tt-muted-foreground: #737373 !default;
+$tt-accent: #f5f5f5 !default;
+$tt-accent-foreground: #171717 !default;
+$tt-card: #f4f4f5 !default;
+$tt-card-foreground: #0a0a0a !default;
+$tt-border: #e5e5e5 !default;
+$tt-input: #e5e5e5 !default;
+$tt-ring: #0a0a0a !default;
+$tt-success: #22c55e !default;
+$tt-warning: #f97316 !default;
+$tt-error: #ef4444 !default;
+$tt-disabled: #d4d4d8 !default;
