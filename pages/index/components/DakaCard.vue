@@ -21,14 +21,14 @@
         </view>
       </view>
       <view class="daka-card__action" @click.stop="onToggle">
-        <tt-button v-if="checked" variant="default" size="sm" class="daka-btn--checked">
+        <view v-if="checked" class="daka-btn daka-btn--checked" @click.stop>
           <tt-icon name="ri-check-line" :size="28" color="#ffffff" />
           <text class="text-xs text-white ml-xs font-medium">已打卡</text>
-        </tt-button>
-        <tt-button v-else variant="outline" size="sm">
+        </view>
+        <view v-else class="daka-btn daka-btn--normal" @click.stop>
           <tt-icon name="ri-checkbox-blank-circle-line" :size="28" :color="c.fg" />
           <text class="text-xs ml-xs font-medium text-foreground">打卡</text>
-        </tt-button>
+        </view>
       </view>
     </view>
   </view>
@@ -126,13 +126,28 @@ function onToggle() {
   }
 }
 
-.daka-card__action :deep(.tt-button) {
-  border-radius: 16rpx !important;
+.daka-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  height: 64rpx;
+  padding: 0 24rpx;
+  font-size: 24rpx;
+  border-radius: 16rpx;
+  font-weight: 500;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.daka-card__action :deep(.daka-btn--checked) {
-  background-color: #22C55E !important;
-  color: #ffffff !important;
-  border-radius: 16rpx !important;
+.daka-btn--checked {
+  background-color: #22C55E;
+  color: #ffffff;
+}
+
+.daka-btn--normal {
+  background-color: var(--tt-background, #ffffff);
+  color: var(--tt-foreground, #0a0a0a);
+  border: 2rpx solid var(--tt-border, #e5e5e5);
 }
 </style>
