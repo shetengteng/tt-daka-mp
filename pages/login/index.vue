@@ -187,6 +187,14 @@ function goPrivacy() {
 
 .agreement {
   gap: 8rpx;
+  
+  /* 防止文本点击时的抖动 */
+  -webkit-user-select: none;
+  user-select: none;
+  
+  text {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 .link {
