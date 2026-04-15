@@ -187,7 +187,8 @@ function goPrivacy() {
 
 .agreement {
   gap: 8rpx;
-  height: 44rpx;
+  min-height: 44rpx;
+  align-items: flex-start;
   
   /* 防止文本点击时的抖动 */
   -webkit-user-select: none;
