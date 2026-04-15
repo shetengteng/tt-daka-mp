@@ -187,8 +187,8 @@ function goPrivacy() {
 
 .agreement {
   gap: 8rpx;
-  min-height: 44rpx;
-  align-items: flex-start;
+  height: 44rpx;
+  align-items: center;
   
   /* 防止文本点击时的抖动 */
   -webkit-user-select: none;
@@ -196,6 +196,11 @@ function goPrivacy() {
   
   text {
     -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* 确保复选框垂直对齐 */
+  tt-checkbox {
+    vertical-align: middle;
   }
 }
 
