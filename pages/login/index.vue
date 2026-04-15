@@ -21,7 +21,7 @@
         </view>
 
         <!-- #ifdef MP-WEIXIN -->
-        <tt-button class="wechat-btn" block size="lg" :loading="loading" @click="handleWechatLogin">
+        <tt-button block size="lg" :loading="loading" @click="handleWechatLogin" variant="wechat">
           <tt-icon name="ri-wechat-fill" :size="36" color="#ffffff" />
           <text class="btn-text">{{ loading ? '登录中...' : '微信一键登录' }}</text>
         </tt-button>
@@ -192,10 +192,6 @@ function goPrivacy() {
 .link {
   color: var(--tt-foreground, #09090B);
   font-weight: 500;
-}
-
-.wechat-btn {
-  background-color: #07C160 !important;
 }
 
 .btn-text {

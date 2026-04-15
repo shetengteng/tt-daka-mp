@@ -74,6 +74,11 @@ function handleClick(e) {
   color: var(--tt-destructive-foreground, #fafafa) !important;
 }
 
+.tt-button--wechat {
+  background-color: #07C160 !important;
+  color: #ffffff !important;
+}
+
 .tt-button--outline {
   background-color: var(--tt-background, #ffffff) !important;
   color: var(--tt-foreground, #0a0a0a) !important;
