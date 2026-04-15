@@ -127,11 +127,12 @@ function onToggle() {
 }
 
 .daka-card__action :deep(.tt-button) {
-  border-radius: 16rpx;
+  border-radius: 16rpx !important;
 }
 
-.daka-btn--checked {
+.daka-card__action :deep(.daka-btn--checked) {
   background-color: #22C55E !important;
   color: #ffffff !important;
+  border-radius: 16rpx !important;
 }
 </style>
