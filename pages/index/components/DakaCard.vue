@@ -21,11 +21,11 @@
         </view>
       </view>
       <view class="daka-card__action" @click.stop="onToggle">
-        <view v-if="checked" class="daka-btn daka-btn--checked" @click.stop>
+        <view v-if="checked" class="daka-btn daka-btn--checked" @click="onToggle">
           <tt-icon name="ri-check-line" :size="24" color="#ffffff" />
           <text class="text-xs text-white ml-xs font-medium">已打卡</text>
         </view>
-        <view v-else class="daka-btn daka-btn--normal" @click.stop>
+        <view v-else class="daka-btn daka-btn--normal" @click="onToggle">
           <tt-icon name="ri-circle-line" :size="24" :color="c.fg" />
           <text class="text-xs ml-xs font-medium text-foreground">打卡</text>
         </view>
@@ -137,7 +137,6 @@ function onToggle() {
   font-weight: 500;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: all 0.2s;
 }
 
 .daka-btn--checked {
@@ -149,10 +148,5 @@ function onToggle() {
   background-color: transparent;
   color: var(--tt-foreground, #0a0a0a);
   border: 2rpx solid var(--tt-foreground, #0a0a0a);
-}
-
-.daka-btn--normal:hover {
-  background-color: var(--tt-foreground, #0a0a0a);
-  color: #ffffff;
 }
 </style>
