@@ -21,7 +21,7 @@
         </view>
       </view>
       <view class="daka-card__action" @click.stop="onToggle">
-        <tt-button v-if="checked" class="daka-btn--checked" size="sm">
+        <tt-button v-if="checked" variant="default" size="sm" class="daka-btn--checked">
           <tt-icon name="ri-check-line" :size="28" color="#ffffff" />
           <text class="text-xs text-white ml-xs font-medium">已打卡</text>
         </tt-button>
@@ -132,5 +132,6 @@ function onToggle() {
 
 .daka-btn--checked {
   background-color: #22C55E !important;
+  color: #ffffff !important;
 }
 </style>
