@@ -9,7 +9,7 @@
     </view>
     <view class="tt-cell__right">
       <slot><text class="tt-cell__value">{{ value }}</text></slot>
-      <text v-if="isLink" class="tt-cell__arrow">›</text>
+      <tt-icon v-if="isLink" name="ri-arrow-right-s-line" :size="32" color="var(--tt-muted-foreground, #737373)" />
     </view>
   </view>
 </template>
@@ -30,5 +30,4 @@ const emit = defineEmits();
 .tt-cell__label { font-size: 24rpx; color: var(--tt-muted-foreground, #737373); margin-top: 4rpx; }
 .tt-cell__right { display: flex; align-items: center; gap: 8rpx; flex-shrink: 0; }
 .tt-cell__value { font-size: 28rpx; color: var(--tt-muted-foreground, #737373); }
-.tt-cell__arrow { font-size: 40rpx; color: var(--tt-muted-foreground, #737373); }
 </style>

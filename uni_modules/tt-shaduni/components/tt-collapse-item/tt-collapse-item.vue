@@ -2,7 +2,7 @@
   <view class="tt-collapse-item" :class="{ 'tt-collapse-item--disabled': disabled }">
     <view class="tt-collapse-item__header" @click="toggle">
       <text class="tt-collapse-item__title">{{ title }}</text>
-      <text class="tt-collapse-item__arrow" :class="{ 'tt-collapse-item__arrow--up': open }">&#x203A;</text>
+      <tt-icon class="tt-collapse-item__arrow" :class="{ 'tt-collapse-item__arrow--up': open }" name="ri-arrow-right-s-line" :size="32" color="var(--tt-muted-foreground, #737373)" />
     </view>
     <view v-if="open" class="tt-collapse-item__body">
       <view class="tt-collapse-item__content">
@@ -48,8 +48,6 @@ function toggle() {
 .tt-collapse-item__header:active { background: var(--tt-muted, #f5f5f5); }
 .tt-collapse-item__title { font-size: 28rpx; font-weight: 500; color: var(--tt-foreground, #0a0a0a); }
 .tt-collapse-item__arrow {
-  font-size: 32rpx;
-  color: var(--tt-muted-foreground, #737373);
   transform: rotate(90deg);
   transition: transform .2s;
 }

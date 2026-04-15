@@ -1,11 +1,15 @@
 <template>
   <view class="tt-calendar">
     <view class="tt-calendar__header">
-      <view class="tt-calendar__arrow" @click="onPrev">&#x2039;</view>
+      <view class="tt-calendar__arrow" @click="onPrev">
+        <tt-icon name="ri-arrow-left-s-line" :size="32" color="var(--tt-muted-foreground, #71717a)" />
+      </view>
       <text class="tt-calendar__title" @click="onTitleClick">
         {{ headerTitle }}
       </text>
-      <view class="tt-calendar__arrow" @click="onNext">&#x203A;</view>
+      <view class="tt-calendar__arrow" @click="onNext">
+        <tt-icon name="ri-arrow-right-s-line" :size="32" color="var(--tt-muted-foreground, #71717a)" />
+      </view>
     </view>
 
     <view v-if="pickerMode === 'year'" class="tt-calendar__picker">
@@ -230,8 +234,6 @@ function onSelect(cell) {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 36rpx;
-  color: var(--tt-muted-foreground, #71717a);
   cursor: pointer;
   border-radius: var(--tt-radius, 12rpx);
   transition: background .15s;

@@ -1,7 +1,7 @@
 <template>
   <view class="tt-pagination">
     <view class="tt-pagination__btn" :class="{ 'tt-pagination__btn--disabled': modelValue <= 1 }" @click="go(modelValue - 1)">
-      <text>‹</text>
+      <tt-icon name="ri-arrow-left-s-line" :size="32" color="currentColor" />
     </view>
     <template v-if="mode === 'number'">
       <view v-for="p in pages" :key="p" class="tt-pagination__item" :class="{ 'tt-pagination__item--active': modelValue === p }" @click="go(p)">
@@ -14,7 +14,7 @@
       </view>
     </template>
     <view class="tt-pagination__btn" :class="{ 'tt-pagination__btn--disabled': modelValue >= totalPages }" @click="go(modelValue + 1)">
-      <text>›</text>
+      <tt-icon name="ri-arrow-right-s-line" :size="32" color="currentColor" />
     </view>
   </view>
 </template>
@@ -46,7 +46,7 @@ function go(p) {
 
 <style>
 .tt-pagination { display: flex; align-items: center; gap: 8rpx; }
-.tt-pagination__btn { width: 64rpx; height: 64rpx; display: flex; align-items: center; justify-content: center; border: 2rpx solid var(--tt-border, #e5e5e5); border-radius: var(--tt-radius, 12rpx); cursor: pointer; font-size: 32rpx; transition: background .15s; }
+.tt-pagination__btn { width: 64rpx; height: 64rpx; display: flex; align-items: center; justify-content: center; border: 2rpx solid var(--tt-border, #e5e5e5); border-radius: var(--tt-radius, 12rpx); cursor: pointer; transition: background .15s; }
 .tt-pagination__btn:active { background: var(--tt-muted, #f5f5f5); }
 .tt-pagination__btn--disabled { opacity: .4; pointer-events: none; }
 .tt-pagination__item { min-width: 64rpx; height: 64rpx; display: flex; align-items: center; justify-content: center; border-radius: var(--tt-radius, 12rpx); font-size: 26rpx; cursor: pointer; transition: all .15s; }
