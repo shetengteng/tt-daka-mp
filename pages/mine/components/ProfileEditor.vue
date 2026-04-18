@@ -27,7 +27,7 @@
           </view>
           <!-- #endif -->
           <!-- #ifndef MP-WEIXIN -->
-          <tt-input v-model="localNickname" placeholder="请输入昵称" :maxlength="20" clearable />
+          <tt-input v-model="localNickname" type="nickname" placeholder="请输入昵称" :maxlength="20" clearable />
           <!-- #endif -->
         </view>
       </view>
