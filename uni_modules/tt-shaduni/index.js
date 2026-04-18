@@ -32,6 +32,7 @@ import { TtTabbar, tabbarProps } from "./components/tt-tabbar";
 import { TtPopup, popupProps } from "./components/tt-popup";
 import { TtDialog, dialogProps } from "./components/tt-dialog";
 import { TtToast, toastProps } from "./components/tt-toast";
+import { TtNotify, notifyProps, notify, closeNotify, notifyState, openNotify } from "./components/tt-notify";
 import { TtLoading, loadingProps } from "./components/tt-loading";
 import { TtActionSheet, actionSheetProps } from "./components/tt-action-sheet";
 import { TtNoticeBar, noticeBarProps } from "./components/tt-notice-bar";
@@ -63,6 +64,7 @@ export {
   TtLoading,
   TtNavbar,
   TtNoticeBar,
+  TtNotify,
   TtNumberBox,
   TtPopup,
   TtProgress,
@@ -89,6 +91,7 @@ export {
   cellProps,
   checkboxProps,
   clearSvgIconCache,
+  closeNotify,
   collapseProps,
   configProviderProps,
   countDownProps,
@@ -106,7 +109,11 @@ export {
   loadingProps,
   navbarProps,
   noticeBarProps,
+  notify,
+  notifyProps,
+  notifyState,
   numberBoxProps,
+  openNotify,
   popupProps,
   preloadSvgIcons,
   progressProps,

@@ -1,6 +1,6 @@
 <template>
   <view class="tt-textarea" :class="{ 'tt-textarea--disabled': disabled, 'tt-textarea--focused': focused }">
-    <textarea class="tt-textarea__inner" :value="modelValue" :placeholder="placeholder" :maxlength="maxlength" :disabled="disabled" :auto-height="autoHeight" :placeholder-style="'color: var(--tt-muted-foreground, #737373)'" @input="(e: any) => emit('update:modelValue', e.detail.value)" @focus="focused = true" @blur="focused = false" />
+    <textarea class="tt-textarea__inner" :value="modelValue" :placeholder="placeholder" :maxlength="maxlength" :disabled="disabled" :auto-height="autoHeight" :placeholder-style="'color: var(--tt-muted-foreground, #737373)'" @input="onInput" @focus="focused = true" @blur="focused = false" />
     <text v-if="showCount" class="tt-textarea__count">{{ String(modelValue).length }}{{ maxlength > 0 ? '/' + maxlength : '' }}</text>
   </view>
 </template>
@@ -10,6 +10,9 @@ import { textareaProps } from "./props";
 defineProps(textareaProps);
 const emit = defineEmits();
 const focused = ref(false);
+function onInput(e) {
+  emit("update:modelValue", e.detail.value);
+}
 </script>
 
 <style>
