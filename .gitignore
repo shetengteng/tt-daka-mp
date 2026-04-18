@@ -17,6 +17,19 @@ dist/
 # HBuilderX
 .hbuilderx/
 
+# AI agent skills (installed via npx skills)
+.agents/
+.claude/
+.continue/
+.junie/
+.qoder/
+.trae/
+skills/
+skills-lock.json
+
+# Design candidates (keep source in design/, only final assets checked in)
+logo/logo-candidates/
+
 # Env
 .env
 .env.local

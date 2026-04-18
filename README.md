@@ -1,4 +1,6 @@
-# DaKa
+<p align="center">
+  <img src="./logo/share-cover.png" alt="DaKa - 坚持每一天的好习惯" width="500" />
+</p>
 
 DaKa 是一款简洁高效的打卡习惯养成小程序，基于 uni-app 开发，支持 H5 和微信小程序双端运行。
 
