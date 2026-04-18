@@ -21,12 +21,7 @@
         
         <view class="edit-nickname-section">
           <text class="text-sm text-muted mb-sm block">昵称</text>
-          <!-- #ifdef MP-WEIXIN -->
-          <tt-input v-model="localNickname" type="nickname" placeholder="请输入昵称" :maxlength="20" />
-          <!-- #endif -->
-          <!-- #ifndef MP-WEIXIN -->
           <tt-input v-model="localNickname" type="nickname" placeholder="请输入昵称" :maxlength="20" clearable />
-          <!-- #endif -->
         </view>
       </view>
       
