@@ -12,14 +12,10 @@
             <tt-icon v-else name="ri-user-fill" :size="48" color="#ffffff" />
           </view>
           <!-- #ifdef MP-WEIXIN -->
-          <button class="choose-avatar-btn" open-type="chooseAvatar" @chooseavatar="onChooseAvatar">
-            <text class="text-sm" style="color: var(--tt-primary)">更换头像</text>
-          </button>
+          <tt-button variant="outline" size="sm" open-type="chooseAvatar" @chooseavatar="onChooseAvatar">更换头像</tt-button>
           <!-- #endif -->
           <!-- #ifndef MP-WEIXIN -->
-          <view class="choose-avatar-btn" @click="onChooseAvatarFallback">
-            <text class="text-sm" style="color: var(--tt-primary)">更换头像</text>
-          </view>
+          <tt-button variant="outline" size="sm" @click="onChooseAvatarFallback">更换头像</tt-button>
           <!-- #endif -->
         </view>
         
