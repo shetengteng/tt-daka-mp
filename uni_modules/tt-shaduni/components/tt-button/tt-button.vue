@@ -1,23 +1,53 @@
 <template>
   <button
+    v-if="openType"
     class="tt-button"
     :class="rootClass"
-    :disabled="disabled || loading"
-    :open-type="openType || undefined"
-    :aria-disabled="disabled || loading"
+    :disabled="isDisabled"
+    :open-type="openType"
+    :aria-disabled="isDisabled"
     @click="handleClick"
+    @getuserinfo="forward('getuserinfo', $event)"
+    @getphonenumber="forward('getphonenumber', $event)"
+    @chooseavatar="forward('chooseavatar', $event)"
+    @launchapp="forward('launchapp', $event)"
+    @opensetting="forward('opensetting', $event)"
+    @contact="forward('contact', $event)"
+    @error="forward('error', $event)"
   >
     <view v-if="loading" class="tt-button__loading">
       <view class="tt-button__spinner" />
     </view>
     <slot />
   </button>
+  <view
+    v-else
+    class="tt-button"
+    :class="rootClass"
+    :aria-disabled="isDisabled"
+    @click="handleClick"
+  >
+    <view v-if="loading" class="tt-button__loading">
+      <view class="tt-button__spinner" />
+    </view>
+    <slot />
+  </view>
 </template>
 
 <script setup >import { computed } from "vue";
 import { buttonProps } from "./props";
 const props = defineProps(buttonProps);
-const emit = defineEmits();
+const emit = defineEmits([
+  "click",
+  "getuserinfo",
+  "getphonenumber",
+  "chooseavatar",
+  "launchapp",
+  "opensetting",
+  "contact",
+  "error"
+]);
+const isDisabled = computed(() => props.disabled || props.loading);
 const rootClass = computed(() => [
   `tt-button--${props.variant}`,
   `tt-button--${props.size}`,
@@ -28,9 +58,11 @@ const rootClass = computed(() => [
   }
 ]);
 function handleClick(e) {
-  if (!props.disabled && !props.loading) {
-    emit("click", e);
-  }
+  if (isDisabled.value) return;
+  emit("click", e);
+}
+function forward(name, e) {
+  emit(name, e);
 }
 </script>
 

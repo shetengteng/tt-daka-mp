@@ -18,6 +18,7 @@ import { TtFormItem, formItemProps } from "./components/tt-form-item";
 import { TtSearch, searchProps } from "./components/tt-search";
 import { TtRate, rateProps } from "./components/tt-rate";
 import { TtNumberBox, numberBoxProps } from "./components/tt-number-box";
+import { TtColorPicker, colorPickerProps } from "./components/tt-color-picker";
 import { TtCard, cardProps } from "./components/tt-card";
 import { TtCell, cellProps } from "./components/tt-cell";
 import { TtCollapse, collapseProps } from "./components/tt-collapse";
@@ -51,6 +52,7 @@ export {
   TtCell,
   TtCheckbox,
   TtCollapse,
+  TtColorPicker,
   TtConfigProvider,
   TtCountDown,
   TtDialog,
@@ -91,6 +93,7 @@ export {
   cellProps,
   checkboxProps,
   clearSvgIconCache,
+  colorPickerProps,
   closeNotify,
   collapseProps,
   configProviderProps,
