@@ -38,6 +38,7 @@ import { TtLoading, loadingProps } from "./components/tt-loading";
 import { TtActionSheet, actionSheetProps } from "./components/tt-action-sheet";
 import { TtNoticeBar, noticeBarProps } from "./components/tt-notice-bar";
 import { TtSheet, sheetProps } from "./components/tt-sheet";
+import { TtTooltip, tooltipProps } from "./components/tt-tooltip";
 import { useTheme } from "./composables/use-theme";
 import { useSvgIcon, preloadSvgIcons, clearSvgIconCache } from "./composables/use-svg-icon";
 import { builtinIcons } from "./icons/builtin";
@@ -84,6 +85,7 @@ export {
   TtTag,
   TtTextarea,
   TtToast,
+  TtTooltip,
   actionSheetProps,
   avatarProps,
   badgeProps,
@@ -93,9 +95,9 @@ export {
   cellProps,
   checkboxProps,
   clearSvgIconCache,
-  colorPickerProps,
   closeNotify,
   collapseProps,
+  colorPickerProps,
   configProviderProps,
   countDownProps,
   darkTokens,
@@ -136,6 +138,7 @@ export {
   toastProps,
   tokenToVar,
   tokensToStyle,
+  tooltipProps,
   useSvgIcon,
   useTheme
 };

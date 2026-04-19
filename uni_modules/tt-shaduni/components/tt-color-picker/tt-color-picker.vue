@@ -14,7 +14,7 @@
         @click="onSelectInline(item.value)"
       >
         <view
-          v-if="isSame(item.value, modelValue)"
+          v-if="showTick && isSame(item.value, modelValue)"
           class="tt-color-picker__swatch-tick"
           :style="{ borderColor: getTickColor(item.value) }"
         />

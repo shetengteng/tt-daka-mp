@@ -35,6 +35,10 @@ const colorPickerProps = {
     type: Boolean,
     default: false
   },
+  showTick: {
+    type: Boolean,
+    default: true
+  },
   popupTitle: {
     type: String,
     default: "选择颜色"
